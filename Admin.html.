@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Playbook Admin</title>
+<style>
+:root{--bg:#EEF1EA;--c:#fff;--ink:#14261E;--mu:#5F6F66;--ln:#D5DCD1;--g:#0F4A35;--y:#E8A317;--yi:#3A2600;--ok:#137A45;--no:#B3372B}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,sans-serif}
+header{background:var(--g);color:#fff;padding:14px 16px;display:flex;justify-content:space-between;align-items:center}
+h1,h2,h3{margin:0}h1{font-size:21px}h2{font-size:18px;margin-bottom:8px}small{display:block;opacity:.8;font-size:12px}
+.banner{background:var(--y);color:var(--yi);font-size:12.5px;padding:6px 16px}
+main{max-width:860px;margin:0 auto;padding:12px}
+button{font:inherit;cursor:pointer}
+.tabs{display:flex;gap:6px;overflow-x:auto;margin-bottom:12px}
+.tabs button{flex:none;padding:9px 14px;border:1px solid var(--ln);background:var(--c);color:var(--ink);border-radius:99px;font-weight:700}
+.tabs button[aria-selected=true]{background:var(--g);color:#fff}
+.card{background:var(--c);border:1px solid var(--ln);border-radius:14px;padding:14px;margin-bottom:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+label{display:block;font-size:13px;color:var(--mu);margin-bottom:3px}
+input[type=text],input[type=password],input[type=number]{width:100%;padding:10px;border:1.5px solid var(--ln);border-radius:9px;background:var(--bg);color:var(--ink);font:inherit}
+.btn{padding:10px 14px;border:0;border-radius:10px;background:var(--y);color:var(--yi);font-weight:800}
+.sm{padding:7px 10px;border:1.5px solid var(--ln);border-radius:9px;background:none;color:var(--ink);font-weight:700;font-size:13px}
+.sm.bad{color:var(--no)}
+.row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:10px}.row input{width:110px}
+.top{display:flex;justify-content:space-between;gap:8px}
+.id{font-weight:800;font-size:17px;letter-spacing:.03em}.meta{color:var(--mu);font-size:13px}
+.pill{font-weight:700;font-size:12px;padding:3px 9px;border-radius:99px;border:1.5px solid currentColor}
+.on{color:var(--ok)}.off{color:var(--no)}.msg{color:var(--no);font-weight:500}
+.reveal{border:2px solid var(--y)}
+.cred{font:700 18px ui-monospace,monospace;background:var(--bg);padding:8px 10px;border-radius:8px;display:inline-block;margin:4px 0}
+.chk{display:flex;gap:8px;align-items:center;margin:6px 0}.chk input{width:18px;height:18px}
+.empty{color:var(--mu);text-align:center;padding:18px}.log{font-size:13.5px;padding:7px 0;border-top:1px solid var(--ln)}
+.narrow{max-width:420px;margin:24px auto}
+</style>
+</head>
+<body>
+<header><div><h1>Playbook Admin</h1><small id="who">Control panel</small></div><button class="sm" id="out" style="color:#fff;border-color:#fff8" hidden>Log out</button></header>
+<div class="banner">Play-money demo. Coins are virtual. There are no deposits, withdrawals or payments.</div>
+<main id="app"></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script>
+var CFG={url:"https://jmvvuitwjixgsmhrdapg.supabase.co",anon:"sb_publishable_VZRaBdHeQk0YAWzJammc1w_9NL6owyx"};
+var GAMES=[["cricket","Cricket"],["casino","Casino"],["roulette","Roulette"],["lucky7","Lucky 7"],["kingjack","King Jack"],["num","1–9"]];
+var sb=null,me=null,S=null,MS=[],CS=[],LG=[],tab="",reveal=null,msg="";
+function $(i){return document.getElementById(i)}
+function v(i){return $(i)?$(i).value.trim():""}
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+function fmt(n){return Math.round(n).toLocaleString()}
+function nn(i){var n=Math.floor(+v(i));return isFinite(n)?n:NaN}
+function emailFor(c){return c.toLowerCase()+"@id.playbook.example"}
+function app(h){$("app").innerHTML=h}
+function err(t){msg=t;render()}
+function tabs(){return me.role==="admin"?[["masters","Master IDs"],["customers","Customer IDs"],["control","Control panel"],["activity","Activity"],["account","Account"]]:[["customers","My customers"],["activity","Activity"],["account","Account"]]}
+async function callFn(b){
+  var m={create:["admin_create",{p_name:b.name,p_coins:b.coins,p_max:b.max_customers==null?null:b.max_customers}],
+    reset_password:["admin_reset",{p_code:b.code}],
+    set_active:["admin_set_active",{p_code:b.code,p_active:b.active}],
+    add_coins:["admin_add_coins",{p_code:b.code,p_amount:b.amount}],
+    delete:["admin_delete",{p_code:b.code}]}[b.action];
+  var r=await sb.rpc(m[0],m[1]);
+  if(r.error)throw new Error(r.error.message);
+  return r.data||{}}
+async function load(){
+  var all=await sb.from("profiles").select("*").order("created_at",{ascending:false}),rows=all.data||[];
+  MS=rows.filter(function(r){return r.role==="master"});CS=rows.filter(function(r){return r.role==="customer"});
+  if(me.role==="master")me=rows.filter(function(r){return r.id===me.id})[0]||me;
+  var s=await sb.from("settings").select("data").eq("id",1).single();S=s.data?s.data.data:null;
+  var l=await sb.from("activity").select("*").order("at",{ascending:false}).limit(50);LG=l.data||[]}
+async function enter(){
+  var u=(await sb.auth.getUser()).data.user,p=u?await sb.from("profiles").select("*").eq("id",u.id).single():{};
+  var bad=null;
+  if(!p.data)bad="Could not load this account.";
+  else if(p.data.role==="customer")bad="Customer IDs sign in to the games app, not this panel.";
+  else if(!p.data.active)bad="This ID is suspended. Contact the admin.";
+  if(bad){await sb.auth.signOut();me=null;return err(bad)}
+  me=p.data;msg="";await load();render()}
+async function boot(){
+  sb=supabase.createClient(CFG.url,CFG.anon);
+  app('<div class="empty">Loading…</div>');
+  var s=await sb.auth.getSession();if(s.data.session)await enter();else render()}
+
+function render(){
+  $("who").textContent=me?(me.role==="admin"?"Admin":"Master")+" · "+me.code:"Control panel";$("out").hidden=!me;
+  if(!me){app(login());return}
+  if(!tab||!tabs().some(function(t){return t[0]===tab}))tab=tabs()[0][0];
+  var h='<div class="tabs" role="tablist">'+tabs().map(function(t){return '<button role="tab" data-act="tab" data-t="'+t[0]+'" aria-selected="'+(t[0]===tab)+'">'+t[1]+'</button>'}).join("")+'</div>';
+  if(msg)h+='<p class="msg" role="alert">'+esc(msg)+'</p>';
+  if(reveal)h+='<div class="card reveal"><h2>'+esc(reveal.what)+'</h2><div class="meta">ID</div><div class="cred">'+esc(reveal.id)+'</div><div class="meta">Temporary password</div><div class="cred">'+esc(reveal.pw)+'</div><p class="meta">Shown once and not stored. Share it securely and ask the holder to change it.</p><button class="sm" data-act="dismiss">I have saved it</button></div>';
+  h+={masters:vMasters,customers:vCustomers,control:vControl,activity:vActivity,account:vAccount}[tab]();app(h)}
+function login(){return '<div class="card narrow"><h2>Sign in</h2><label for="li">Admin or Master ID</label><input id="li" type="text" autocapitalize="characters" autocomplete="username"><label for="lp" style="margin-top:8px">Password</label><input id="lp" type="password" autocomplete="current-password">'+(msg?'<p class="msg" role="alert">'+esc(msg)+'</p>':'')+'<div class="row"><button class="btn" data-act="login">Sign in</button></div><p class="meta">Customer IDs sign in to the games app, not this panel.</p></div>'}
+function btn(a,c,l,cls){return '<button class="sm '+(cls||"")+'" data-act="'+a+'" data-id="'+c.code+'" data-on="'+(c.active?1:0)+'">'+l+'</button>'}
+function vMasters(){
+  var h='<div class="card"><h2>Create a Master ID</h2><div class="grid"><div><label for="mn">Master name</label><input id="mn" type="text"></div><div><label for="mp">Virtual coin pool</label><input id="mp" type="number" min="0" value="10000"></div><div><label for="mm">Max customers</label><input id="mm" type="number" min="1" value="50"></div></div><div class="row"><button class="btn" data-act="addMaster">Create Master ID</button></div></div>';
+  if(!MS.length)return h+'<div class="empty">No Master IDs yet.</div>';
+  return h+MS.map(function(m){var n=CS.filter(function(c){return c.parent===m.id}).length;
+    return '<div class="card"><div class="top"><div><div class="id">'+m.code+'</div><div>'+esc(m.name)+'</div></div><span class="pill '+(m.active?"on":"off")+'">'+(m.active?"Active":"Suspended")+'</span></div><div class="meta">Pool '+fmt(m.coins)+' coins · Customers '+n+' / '+m.max_customers+'</div><div class="row"><input type="number" min="1" id="in-'+m.code+'" placeholder="Coins" aria-label="Coins to add to pool"><button class="sm" data-act="coins" data-id="'+m.code+'">Add to pool</button>'+btn("toggle",m,m.active?"Suspend":"Activate")+btn("reset",m,"Reset password")+btn("del",m,"Delete","bad")+'</div></div>'}).join("")}
+function vCustomers(){var h="",mine=me.role==="master";
+  if(mine)h+='<div class="card"><h2>Create a Customer ID</h2><p class="meta">Pool left: '+fmt(me.coins)+' coins · Customers '+CS.length+' / '+me.max_customers+'</p><div class="grid"><div><label for="cn">Customer name</label><input id="cn" type="text"></div><div><label for="cc">Starting coins</label><input id="cc" type="number" min="0" value="'+(S?S.start:1000)+'"></div></div><div class="row"><button class="btn" data-act="addCust">Create Customer ID</button></div></div>';
+  if(!CS.length)return h+'<div class="empty">No Customer IDs yet.'+(mine?"":" Masters create them from their own panel.")+'</div>';
+  return h+CS.map(function(c){var pm=MS.filter(function(m){return m.id===c.parent})[0];
+    return '<div class="card"><div class="top"><div><div class="id">'+c.code+'</div><div>'+esc(c.name)+'</div></div><span class="pill '+(c.active?"on":"off")+'">'+(c.active?"Active":"Suspended")+'</span></div><div class="meta">'+fmt(c.coins)+' coins'+(pm?' · Master '+pm.code:'')+'</div><div class="row">'+(mine?'<input type="number" min="1" id="in-'+c.code+'" placeholder="Coins" aria-label="Coins to add"><button class="sm" data-act="coins" data-id="'+c.code+'">Add coins</button>':'')+btn("toggle",c,c.active?"Suspend":"Activate")+btn("reset",c,"Reset password")+btn("del",c,"Delete","bad")+'</div></div>'}).join("")}
+function vControl(){var s=S;if(!s)return '<div class="empty">Settings could not be loaded.</div>';
+  return '<div class="card"><h2>Game settings</h2><p class="meta">Enforced by the server for every customer: the games app reads them at sign-in, and the database checks every round.</p><div class="grid"><div><label for="s1">Default starting coins</label><input id="s1" type="number" min="0" value="'+s.start+'"></div><div><label for="s2">Daily bonus coins</label><input id="s2" type="number" min="0" value="'+s.bonus+'"></div><div><label for="s3">Max stake per round</label><input id="s3" type="number" min="1" value="'+s.maxStake+'"></div></div><h3 style="margin:14px 0 4px;font-size:15px">Games available</h3>'+GAMES.map(function(g){return '<label class="chk"><input type="checkbox" id="g-'+g[0]+'"'+(s.games[g[0]]?" checked":"")+'>'+g[1]+'</label>'}).join("")+'<label class="chk"><input type="checkbox" id="s4"'+(s.maint?" checked":"")+'>Maintenance mode (pause all games)</label><div class="row"><button class="btn" data-act="saveSet">Save settings</button></div></div>'}
+function vActivity(){return '<div class="card"><h2>Recent activity</h2>'+(LG.length?LG.map(function(e){return '<div class="log"><b>'+esc(e.actor)+'</b> · '+esc(e.message)+'<div class="meta">'+esc(new Date(e.at).toLocaleString())+'</div></div>'}).join(""):'<div class="empty">Nothing yet.</div>')+'</div>'}
+function vAccount(){return '<div class="card"><h2>Change password</h2><label for="a0">Current password</label><input id="a0" type="password" autocomplete="current-password"><label for="a1" style="margin-top:8px">New password (8+ characters)</label><input id="a1" type="password" autocomplete="new-password"><label for="a2" style="margin-top:8px">Repeat new password</label><input id="a2" type="password" autocomplete="new-password"><div class="row"><button class="btn" data-act="chpw">Update password</button></div></div>'}
+
+async function run(b,what){var d=await callFn(b);if(what)reveal={what:what,id:d.code,pw:d.password};msg="";await load();render()}
+var A={
+tab:function(t){tab=t.dataset.t;msg="";render()},
+dismiss:function(){reveal=null;render()},
+login:async function(){var id=v("li").toUpperCase();msg="";
+  var r=await sb.auth.signInWithPassword({email:emailFor(id),password:$("lp").value});
+  if(r.error)return err("ID or password is incorrect.");await enter()},
+addMaster:function(){var n=nn("mm");if(!v("mn"))throw new Error("Enter the master's name.");if(!(nn("mp")>=0))throw new Error("Pool must be 0 or more.");if(!(n>=1))throw new Error("Allow at least 1 customer.");
+  return run({action:"create",name:v("mn"),coins:nn("mp"),max_customers:n},"Master ID created")},
+addCust:function(){if(!v("cn"))throw new Error("Enter the customer's name.");if(!(nn("cc")>=0))throw new Error("Coins must be 0 or more.");
+  return run({action:"create",name:v("cn"),coins:nn("cc")},"Customer ID created")},
+coins:function(t){return run({action:"add_coins",code:t.dataset.id,amount:nn("in-"+t.dataset.id)})},
+toggle:function(t){return run({action:"set_active",code:t.dataset.id,active:t.dataset.on!=="1"})},
+reset:function(t){return run({action:"reset_password",code:t.dataset.id},"Password reset")},
+del:function(t){return run({action:"delete",code:t.dataset.id})},
+saveSet:async function(){var a=nn("s1"),b=nn("s2"),c=nn("s3");
+  if(!(a>=0&&b>=0))throw new Error("Coin amounts must be 0 or more.");if(!(c>=1))throw new Error("Max stake must be at least 1.");
+  var s={start:a,bonus:b,maxStake:c,maint:$("s4").checked,games:{}};GAMES.forEach(function(g){s.games[g[0]]=$("g-"+g[0]).checked?1:0});
+  var r=await sb.from("settings").update({data:s}).eq("id",1);if(r.error)throw new Error(r.error.message);
+  await sb.from("activity").insert({actor:"ADMIN",message:"Updated game settings"});msg="";await load();render()},
+chpw:async function(){var n=$("a1").value;
+  var ok=await sb.auth.signInWithPassword({email:emailFor(me.code),password:$("a0").value});
+  if(ok.error)throw new Error("Current password is incorrect.");if(n.length<8)throw new Error("Use at least 8 characters.");if(n!==$("a2").value)throw new Error("The two new passwords don't match.");
+  var r=await sb.auth.updateUser({password:n});if(r.error)throw new Error(r.error.message);msg="Password updated.";render()}
+};
+$("app").addEventListener("click",async function(e){var t=e.target.closest("[data-act]");if(!t||!A[t.dataset.act])return;try{await A[t.dataset.act](t)}catch(x){err(x.message)}});
+$("app").addEventListener("keydown",function(e){if(e.key==="Enter"&&(e.target.id==="lp"||e.target.id==="li"))A.login().catch(function(x){err(x.message)})});
+$("out").onclick=async function(){await sb.auth.signOut();me=null;reveal=null;msg="";tab="";render()};
+boot();
+</script>
+</body>
+</html>
