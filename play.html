@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Playbook Games</title>
+<style>
+:root{--bg:#EEF1EA;--c:#fff;--ink:#14261E;--mu:#5F6F66;--ln:#D5DCD1;--g:#0F4A35;--g2:#17624A;--y:#E8A317;--yi:#3A2600;--ok:#137A45;--no:#B3372B}
+[data-t=dark]{--bg:#0D1A14;--c:#152A21;--ink:#E7EFE9;--mu:#93A89C;--ln:#274436;--g:#0A3325;--g2:#1B6B50;--ok:#4CC98A;--no:#F0796C}
+[data-t=midnight]{--bg:#0B1220;--c:#131D33;--ink:#E6EEFB;--mu:#8FA3C4;--ln:#24345A;--g:#0E2A5C;--g2:#2563EB;--y:#22D3EE;--yi:#04222B;--ok:#4ADE80;--no:#F87171}
+[data-t=royal]{--bg:#F3EFFA;--c:#fff;--ink:#231A3A;--mu:#6B6087;--ln:#DDD3F0;--g:#3B1E78;--g2:#5B34B5;--y:#F4B63D}
+[data-t=sunset]{--bg:#FFF3E8;--c:#fff;--ink:#3A1D12;--mu:#7C5B4C;--ln:#F0D5C0;--g:#8A2C1B;--g2:#C4471F;--y:#FFC145;--yi:#3A2100}
+[data-t=neon]{--bg:#0A0A12;--c:#15152A;--ink:#F1EFFF;--mu:#9C98C8;--ln:#2E2C5A;--g:#1A0B3D;--g2:#D01CA0;--y:#39F5A0;--yi:#012B1A;--ok:#39F5A0;--no:#FF6B8B}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,sans-serif}
+header{background:linear-gradient(135deg,var(--g),var(--g2));color:#fff;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+h1,h2{margin:0}h1{font-size:21px}h2{font-size:20px}small{display:block;opacity:.8;font-size:12px}
+.r{display:flex;align-items:center;gap:10px}#bal{color:var(--y);font-size:18px}
+.banner{background:var(--y);color:var(--yi);font-size:12.5px;padding:6px 16px}
+.themes{display:flex;align-items:center;gap:8px;padding:10px 16px 0;max-width:760px;margin:0 auto;color:var(--mu);font-size:13px}
+.sw{width:26px;height:26px;border-radius:50%;border:3px solid var(--c);box-shadow:0 0 0 1.5px var(--ln);padding:0;cursor:pointer}
+.sw[aria-pressed=true]{box-shadow:0 0 0 3px var(--y)}
+main{max-width:760px;margin:0 auto;padding:12px}
+button{font:inherit;cursor:pointer}
+.tabs{display:flex;gap:6px;overflow-x:auto;margin-bottom:10px}
+.tabs button{flex:none;padding:9px 14px;border:1px solid var(--ln);background:var(--c);color:var(--ink);border-radius:99px;font-weight:700}
+.tabs button[aria-selected=true]{background:var(--g);color:#fff;border-color:var(--g)}
+.card{background:var(--c);border:1px solid var(--ln);border-radius:14px;padding:14px;margin-bottom:10px}
+.warn{border-color:var(--no);color:var(--no);font-weight:600}
+.meta{color:var(--mu);font-size:13px;margin:4px 0 8px}
+.opts{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:6px;margin:6px 0}
+.opt{border:1.5px solid var(--ln);background:none;color:var(--ink);border-radius:9px;padding:9px 4px;display:flex;flex-direction:column;align-items:center}
+.opt small{opacity:.8}.opt[aria-pressed=true]{background:var(--g2);border-color:var(--g2);color:#fff}
+.nums{display:flex;flex-wrap:wrap;gap:4px;margin:8px 0}
+.num{width:38px;height:38px;border:3px solid transparent;border-radius:7px;color:#fff;font-weight:800}
+.num[aria-pressed=true]{border-color:var(--y)}
+.row{display:flex;gap:6px;align-items:center;margin:10px 0}
+input{width:100%;padding:10px;border:1.5px solid var(--ln);border-radius:9px;background:var(--bg);color:var(--ink);font:inherit}
+.sm{padding:8px 11px;border:1.5px solid var(--ln);border-radius:9px;background:none;color:var(--ink);font-weight:700}
+.btn{padding:12px 14px;border:0;border-radius:11px;background:var(--y);color:var(--yi);font-weight:800;font-size:16px}
+.btn:disabled{opacity:.5}.wide{width:100%}
+.msg{color:var(--no);min-height:18px;margin:6px 0}
+.res{margin-top:6px;background:var(--bg);border-radius:12px;min-height:170px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:10px;text-align:center}
+.on{color:var(--ok);font-weight:800}.off{color:var(--no);font-weight:800}
+.log{display:flex;justify-content:space-between;font-size:13.5px;padding:5px 0;border-top:1px solid var(--ln)}
+.narrow{max-width:420px;margin:24px auto}
+label{display:block;font-size:13px;color:var(--mu);margin:8px 0 3px}
+.wb{position:relative;width:130px;height:140px}
+.wheel{position:absolute;top:10px;left:0;width:130px;height:130px;border-radius:50%;border:3px solid var(--y);transition:transform 1.4s cubic-bezier(.1,.7,.2,1)}
+.wheel.spin{transform:rotate(1440deg)}
+.ptr{position:absolute;top:-4px;left:50%;transform:translateX(-50%);font-size:20px}
+.ball{position:absolute;top:45px;left:35px;width:60px;height:60px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;font-size:24px;opacity:0;transition:opacity .3s}
+.ball.show{opacity:1}
+.reels{display:flex;gap:8px}.rl{width:66px;height:78px;border-radius:12px;background:var(--c);border:1px solid var(--ln);display:grid;place-items:center;font-size:36px}
+.bignum{width:96px;height:110px;border-radius:12px;background:var(--c);border:1px solid var(--ln);display:grid;place-items:center;font-size:52px;font-weight:800}
+.cd{perspective:600px;width:92px;height:128px}
+.cdi{position:relative;width:100%;height:100%;transition:transform .9s;transform-style:preserve-3d}.cdi.flip{transform:rotateY(180deg)}
+.cf{position:absolute;inset:0;backface-visibility:hidden;border-radius:12px;display:grid;place-items:center;font-size:34px;font-weight:800;border:1px solid #0003}
+.cb{background:var(--g2);color:#fff}.cfr{background:#fff;color:#111;transform:rotateY(180deg)}.cfr.rd{color:#DC2626}
+.bar{width:180px;height:8px;background:var(--ln);border-radius:9px;overflow:hidden}.bar i{display:block;height:100%;width:0;background:var(--g2);transition:width 1.4s linear}
+</style>
+</head>
+<body>
+<header><div><h1>Playbook Games</h1><small id="who"></small></div><div class="r"><b id="bal"></b><button class="sm" id="out" style="color:#fff;border-color:#fff8" hidden>Log out</button></div></header>
+<div class="banner">Play-money only. Coins have no cash value and can't be bought or withdrawn.</div>
+<div class="themes" id="th">Theme</div>
+<main id="app"></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script>
+var CFG={url:"https://jmvvuitwjixgsmhrdapg.supabase.co",anon:"sb_publishable_VZRaBdHeQk0YAWzJammc1w_9NL6owyx"};
+var G=[["cricket","🏏","Cricket"],["casino","🎰","Casino"],["roulette","🎡","Roulette"],["lucky7","7️⃣","Lucky 7"],["kingjack","👑","King Jack"],["num","🔢","1–9"]];
+var RULE={cricket:"Pick the winner of a one-day match. Winning pays your stake × the odds.",casino:"Spin three reels. Two matching pay 1.5×, three pay 10×, triple 7️⃣ pays 25×.",roulette:"Tap a number for a straight bet (36×), or pick red, black, odd, even, low or high (2×).",lucky7:"One card is drawn. Below 7 (A–6) and above 7 (8–K) pay 1.95×. A seven pays 12×.",kingjack:"Cards are drawn until a King or a Jack appears. Bet which comes first. Pays 1.95×.",num:"Pick a number from 1 to 9. A match pays 8× your stake."};
+var MT=[["India","Australia",1.80,2.05],["England","South Africa",1.95,1.90],["Pakistan","New Zealand",2.10,1.75]];
+var RED=[1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36],SYM=["🏏","🎲","7️⃣","👑","🍒","🃏"];
+var TH=[["light","#17624A"],["dark","#0A3325"],["midnight","#2563EB"],["royal","#5B34B5"],["sunset","#C4471F"],["neon","#D01CA0"]];
+var sb,me=null,S=null,game="",pick=null,busy=false,hist={},msg="";
+var D=matchMedia("(prefers-reduced-motion: reduce)").matches?300:1500,K=D/1500;
+function $(i){return document.getElementById(i)}
+function fmt(n){return Math.round(n).toLocaleString()}
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+function emailFor(c){return c.trim().toLowerCase()+"@id.playbook.example"}
+function today(){return new Date().toISOString().slice(0,10)}
+function err(t){msg=t;render()}
+function setTheme(t){document.documentElement.dataset.t=t;try{localStorage.setItem("pbtheme",t)}catch(e){}
+  document.querySelectorAll(".sw").forEach(function(b){b.setAttribute("aria-pressed",b.dataset.t===t)})}
+function friendly(m){m=String(m);
+  if(m.indexOf("maintenance")>-1)return "Games are paused for maintenance.";
+  if(m.indexOf("game disabled")>-1)return "This game is turned off right now.";
+  if(m.indexOf("bad stake")>-1)return "That stake isn't allowed. Check the maximum and your balance.";
+  if(m.indexOf("bad pick")>-1)return "Choose an option first.";
+  return "Something went wrong. Your coins are unchanged."}
+function loginHtml(){return '<div class="card narrow"><h2>Sign in</h2><label for="li">Customer ID</label><input id="li" type="text" autocapitalize="characters" autocomplete="username" placeholder="CUS123456"><label for="lp">Password</label><input id="lp" type="password" autocomplete="current-password">'+(msg?'<p class="msg" role="alert">'+esc(msg)+'</p>':'')+'<div class="row"><button class="btn" id="lb" data-act="login">Sign in</button></div><p class="meta">Your Customer ID and temporary password come from your Master.</p></div>'}
+function ob(p,l,s){return '<button class="opt" data-p="'+p+'" aria-pressed="'+(pick===p)+'"><b>'+l+'</b>'+(s?'<small>'+s+'</small>':'')+'</button>'}
+function opts(){
+  if(game==="cricket")return MT.map(function(m,i){return '<div class="meta"><b>'+m[0]+' v '+m[1]+'</b></div><div class="opts">'+ob(i+"a",m[0],m[2].toFixed(2))+ob(i+"b",m[1],m[3].toFixed(2))+'</div>'}).join("");
+  if(game==="roulette"){var o=[["red","Red"],["black","Black"],["odd","Odd"],["even","Even"],["low","1–18"],["high","19–36"]],nums="";
+    for(var n=0;n<=36;n++){var c=n===0?"#16A34A":RED.indexOf(n)>-1?"#DC2626":"#1F2937";nums+='<button class="num" data-p="'+n+'" aria-pressed="'+(pick===String(n))+'" style="background:'+c+'">'+n+'</button>'}
+    return '<div class="opts">'+o.map(function(x){return ob(x[0],x[1],"2×")}).join("")+'</div><div class="nums">'+nums+'</div>'}
+  if(game==="lucky7")return '<div class="opts">'+ob("lo","Below 7","1.95×")+ob("7","Seven","12×")+ob("hi","Above 7","1.95×")+'</div>';
+  if(game==="kingjack")return '<div class="opts">'+ob("K","King 👑","1.95×")+ob("J","Jack 🃏","1.95×")+'</div>';
+  if(game==="num"){var s="";for(var i=1;i<=9;i++)s+=ob(String(i),String(i),"8×");return '<div class="opts">'+s+'</div>'}
+  return ""}
+function histHtml(){return (hist[game]||[]).map(function(e){return '<div class="log"><span>'+esc(e.t)+'</span><b class="'+(e.d>0?"on":"off")+'">'+(e.d>0?"+":"")+fmt(e.d)+'</b></div>'}).join("")}
+function bonusDone(){try{return localStorage.getItem("pbbonus")===today()}catch(e){return false}}
+function render(){
+  $("who").textContent=me?me.code+" · "+me.name:"";$("out").hidden=!me;$("bal").textContent=me?fmt(me.coins)+" coins":"";
+  if(!me){$("app").innerHTML=loginHtml();return}
+  var gs=G.filter(function(g){return S.games&&S.games[g[0]]});
+  if(!gs.length){$("app").innerHTML='<div class="card">No games are available right now. Please check back soon.</div>';return}
+  if(!game||!gs.some(function(g){return g[0]===game}))game=gs[0][0];
+  var h="";
+  if(S.maint)h+='<div class="card warn">Games are paused for maintenance. Please check back soon.</div>';
+  if(msg)h+='<div class="card">'+esc(msg)+'</div>';
+  if(S.bonus>0&&!bonusDone())h+='<div class="card row" style="justify-content:space-between"><span>🎁 Daily bonus: <b>+'+fmt(S.bonus)+' coins</b></span><button class="sm" data-act="bonus">Claim</button></div>';
+  h+='<div class="tabs">'+gs.map(function(g){return '<button data-g="'+g[0]+'" aria-selected="'+(g[0]===game)+'">'+g[1]+' '+g[2]+'</button>'}).join("")+'</div><div class="card" id="panel"></div>';
+  $("app").innerHTML=h;panel()}
+function panel(){
+  var g=G.filter(function(x){return x[0]===game})[0];
+  $("panel").innerHTML='<h2>'+g[1]+' '+g[2]+'</h2><p class="meta">'+RULE[game]+'</p>'+opts()+
+  '<div class="row"><input id="st" type="number" inputmode="numeric" min="1" placeholder="Stake (max '+fmt(S.maxStake)+')" aria-label="Stake in coins">'+[10,50,100].map(function(n){return '<button class="sm" data-s="'+n+'">'+n+'</button>'}).join("")+'</div>'+
+  '<button class="btn wide" id="go" data-act="play"'+(S.maint?" disabled":"")+'>'+(game==="casino"?"Spin":"Place bet")+'</button><p class="msg" id="err" role="alert"></p>'+
+  '<div class="res" id="vis"><span class="meta">Your result shows here.</span></div><div id="out2" class="meta"></div>'+histHtml()}
+function wheelBg(){var s=[],a=360/37;for(var i=0;i<37;i++){var c=i===0?"#16A34A":RED.indexOf(i)>-1?"#DC2626":"#1F2937";s.push(c+" "+(i*a)+"deg "+((i+1)*a)+"deg")}return "conic-gradient("+s.join(",")+")"}
+function animate(o){return new Promise(function(done){
+  var box=$("vis"),iv=null,t0=Date.now(),v=o.vis;
+  if(v==="wheel"){var n=+o.big,col=n===0?"#16A34A":RED.indexOf(n)>-1?"#DC2626":"#1F2937";
+    box.innerHTML='<div class="wb"><span class="ptr">▼</span><div class="wheel" id="wh"></div><div class="ball" id="bl" style="background:'+col+'"></div></div>';
+    $("wh").style.background=wheelBg();setTimeout(function(){$("wh").classList.add("spin")},30);
+    setTimeout(function(){$("bl").textContent=n;$("bl").classList.add("show")},D)}
+  else if(v==="reels"){box.innerHTML='<div class="reels"><span class="rl"></span><span class="rl"></span><span class="rl"></span></div>';
+    var rl=box.querySelectorAll(".rl");
+    iv=setInterval(function(){var el=Date.now()-t0;rl.forEach(function(x,i){x.textContent=el>=(700+i*350)*K?o.parts[i]:SYM[Math.floor(Math.random()*6)]})},80)}
+  else if(v==="card"){var c=o.big,red=/[♥♦]/.test(c);
+    box.innerHTML='<div class="cd"><div class="cdi" id="cdi"><div class="cf cb">★</div><div class="cf cfr'+(red?" rd":"")+'">'+esc(c)+'</div></div></div>';
+    setTimeout(function(){$("cdi").classList.add("flip")},400*K)}
+  else if(v==="number"){box.innerHTML='<div class="bignum" id="bn">?</div>';
+    iv=setInterval(function(){$("bn").textContent=Date.now()-t0>=1300*K?o.big:1+Math.floor(Math.random()*9)},80)}
+  else{box.innerHTML='<div class="meta">Match in progress…</div><div class="bar"><i id="pb"></i></div>';setTimeout(function(){$("pb").style.width="100%"},30)}
+  setTimeout(function(){if(iv)clearInterval(iv);
+    if(v==="reels")box.querySelectorAll(".rl").forEach(function(x,i){x.textContent=o.parts[i]});
+    if(v==="number")$("bn").textContent=o.big;
+    done()},D)})}
+async function play(){
+  if(busy)return;var st=Math.floor(+$("st").value||0),m=$("err");m.textContent="";
+  if(S.maint){m.textContent="Games are paused for maintenance.";return}
+  if(game!=="casino"&&pick===null){m.textContent="Choose an option first.";return}
+  if(st<1){m.textContent="Enter a stake of at least 1 coin.";return}
+  if(st>S.maxStake){m.textContent="The maximum stake is "+fmt(S.maxStake)+" coins.";return}
+  if(st>me.coins){m.textContent="Not enough coins. You have "+fmt(me.coins)+".";return}
+  busy=true;$("go").disabled=true;$("out2").textContent="";
+  var r=await sb.rpc("play_round",{p_game:game,p_pick:game==="casino"?"":pick,p_stake:st});
+  if(r.error){busy=false;$("go").disabled=false;m.textContent=friendly(r.error.message);return}
+  var o=r.data;await animate(o);
+  var pay=st*o.mult,d=pay-st;me.coins=o.balance;$("bal").textContent=fmt(me.coins)+" coins";
+  (hist[game]=hist[game]||[]).unshift({t:o.txt,d:d});hist[game]=hist[game].slice(0,5);
+  $("out2").innerHTML=esc(o.txt)+'<br><span class="'+(o.mult>0?"on":"off")+'">'+(o.mult>0?"You won "+fmt(pay)+" coins":"You lost "+fmt(st)+" coins")+'</span>';
+  var hh=histHtml(),old=document.querySelectorAll("#panel .log");old.forEach(function(x){x.remove()});$("panel").insertAdjacentHTML("beforeend",hh);
+  busy=false;$("go").disabled=!!S.maint}
+async function bonus(){var r=await sb.rpc("claim_bonus");
+  if(r.error)return err("Could not reach the server. Try again.");
+  try{localStorage.setItem("pbbonus",today())}catch(e){}
+  if(r.data===null)return err("You already claimed today's bonus.");
+  me.coins=r.data;err("Bonus added to your balance!")}
+async function login(){var id=$("li").value.trim().toUpperCase(),pw=$("lp").value;msg="";
+  if(!id||!pw)return err("Enter your Customer ID and password.");
+  $("lb").disabled=true;
+  var r=await sb.auth.signInWithPassword({email:emailFor(id),password:pw});
+  if(r.error)return err("ID or password is incorrect.");
+  await enter()}
+async function enter(){
+  var u=(await sb.auth.getUser()).data.user,p=u?await sb.from("profiles").select("*").eq("id",u.id).single():{},bad=null;
+  if(!p.data)bad="Could not load your account.";
+  else if(p.data.role!=="customer")bad="Master and admin IDs sign in to the admin panel, not here.";
+  else if(!p.data.active)bad="This ID is suspended. Contact your Master.";
+  var s=bad?{}:await sb.from("settings").select("data").eq("id",1).single();
+  if(!bad&&!s.data)bad="Could not load the game settings.";
+  if(bad){await sb.auth.signOut();me=null;return err(bad)}
+  me=p.data;S=s.data.data;msg="";render()}
+$("app").addEventListener("click",async function(e){
+  var t=e.target.closest("[data-p],[data-g],[data-s],[data-act]");if(!t)return;
+  try{
+    if(t.dataset.p!==undefined){pick=t.dataset.p;document.querySelectorAll("[data-p]").forEach(function(x){x.setAttribute("aria-pressed",x.dataset.p===pick)})}
+    else if(t.dataset.g){if(busy)return;game=t.dataset.g;pick=null;render()}
+    else if(t.dataset.s){$("st").value=t.dataset.s}
+    else if(t.dataset.act==="play")await play();
+    else if(t.dataset.act==="bonus")await bonus();
+    else if(t.dataset.act==="login")await login()
+  }catch(x){busy=false;err("Something went wrong. Please try again.")}});
+$("app").addEventListener("keydown",function(e){if(e.key==="Enter"&&(e.target.id==="lp"||e.target.id==="li"))login()});
+$("out").onclick=async function(){await sb.auth.signOut();me=null;msg="";game="";pick=null;render()};
+TH.forEach(function(t){var b=document.createElement("button");b.className="sw";b.dataset.t=t[0];b.style.background=t[1];b.setAttribute("aria-label",t[0]+" theme");b.onclick=function(){setTheme(t[0])};$("th").appendChild(b)});
+try{setTheme(localStorage.getItem("pbtheme")||"light")}catch(e){setTheme("light")}
+sb=supabase.createClient(CFG.url,CFG.anon);
+(async function(){$("app").innerHTML='<div class="card">Loading…</div>';var s=await sb.auth.getSession();if(s.data.session)await enter();else render()})();
+</script>
+</body>
+</html>
