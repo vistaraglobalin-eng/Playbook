@@ -44,8 +44,8 @@ select{padding:9px;border:1.5px solid var(--ln);border-radius:9px;background:var
 <script>
 // 1) Paste your Supabase project values here (Project settings > API). The anon key is safe to ship.
 var CFG={url:"https://jmvvuitwjixgsmhrdapg.supabase.co",anon:"sb_publishable_VZRaBdHeQk0YAWzJammc1w_9NL6owyx"};
-var GAMES=[["cricket","Cricket"],["casino","Casino"],["roulette","Roulette"],["lucky7","Lucky 7"],["kingjack","King Jack"],["num","1–9"]];
-var sb=null,me=null,S=null,MS=[],CS=[],LG=[],tab="",reveal=null,msg="",LCC=null,LCL=[],LCE=null;
+var GAMES=[["cricket","Cricket"],["casino","Casino"],["roulette","Roulette"],["lucky7","Lucky 7"],["kingjack","King Jack"],["num","1–9"],["satta","Satta King"],["jqk","JQK Cards"]];
+var sb=null,me=null,S=null,MS=[],CS=[],LG=[],tab="",reveal=null,msg="",LCC=null,LCL=[],LCE=null,SKS=[],SKC=null,SKE=null;
 function $(i){return document.getElementById(i)}
 function v(i){return $(i)?$(i).value.trim():""}
 function esc(s){return String(s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
@@ -54,7 +54,7 @@ function nn(i){var n=Math.floor(+v(i));return isFinite(n)?n:NaN}
 function emailFor(c){return c.toLowerCase()+"@id.playbook.example"}
 function app(h){$("app").innerHTML=h}
 function err(t){msg=t;render()}
-function tabs(){return me.role==="admin"?[["masters","Master IDs"],["customers","Customer IDs"],["control","Control panel"],["live","Live cricket"],["activity","Activity"],["account","Account"]]:[["customers","My customers"],["activity","Activity"],["account","Account"]]}
+function tabs(){return me.role==="admin"?[["masters","Master IDs"],["customers","Customer IDs"],["control","Control panel"],["live","Live cricket"],["satta","Satta King"],["activity","Activity"],["account","Account"]]:[["customers","My customers"],["activity","Activity"],["account","Account"]]}
 async function callFn(b){
   var m={create:["admin_create",{p_name:b.name,p_coins:b.coins,p_max:b.max_customers==null?null:b.max_customers}],
     reset_password:["admin_reset",{p_code:b.code}],
@@ -70,7 +70,8 @@ async function load(){
   if(me.role==="master")me=rows.filter(function(r){return r.id===me.id})[0]||me;
   var s=await sb.from("settings").select("data").eq("id",1).single();S=s.data?s.data.data:null;
   var l=await sb.from("activity").select("*").order("at",{ascending:false}).limit(50);LG=l.data||[];
-  if(me.role==="admin"){var g=await sb.rpc("lc_admin_get");if(g.error){LCE=g.error.message;LCC=null;LCL=[]}else{LCE=null;LCC=g.data;var li=await sb.rpc("lc_admin_list");LCL=li.data||[]}}}
+  if(me.role==="admin"){var g=await sb.rpc("lc_admin_get");if(g.error){LCE=g.error.message;LCC=null;LCL=[]}else{LCE=null;LCC=g.data;var li=await sb.rpc("lc_admin_list");LCL=li.data||[]}
+    var k=await sb.rpc("sk_admin_summary");if(k.error){SKE=k.error.message;SKS=[];SKC=null}else{SKE=null;SKS=k.data||[];var kc=await sb.from("sk_config").select("*").eq("id",1).single();SKC=kc.data||null}}}
 async function enter(){
   var u=(await sb.auth.getUser()).data.user,p=u?await sb.from("profiles").select("*").eq("id",u.id).single():{};
   var bad=null;
@@ -92,7 +93,7 @@ function render(){
   var h='<div class="tabs" role="tablist">'+tabs().map(function(t){return '<button role="tab" data-act="tab" data-t="'+t[0]+'" aria-selected="'+(t[0]===tab)+'">'+t[1]+'</button>'}).join("")+'</div>';
   if(msg)h+='<p class="msg" role="alert">'+esc(msg)+'</p>';
   if(reveal)h+='<div class="card reveal"><h2>'+esc(reveal.what)+'</h2><div class="meta">ID</div><div class="cred">'+esc(reveal.id)+'</div><div class="meta">Temporary password</div><div class="cred">'+esc(reveal.pw)+'</div><p class="meta">Shown once and not stored. Share it securely and ask the holder to change it.</p><button class="sm" data-act="dismiss">I have saved it</button></div>';
-  h+={masters:vMasters,customers:vCustomers,control:vControl,live:vLive,activity:vActivity,account:vAccount}[tab]();app(h)}
+  h+={masters:vMasters,customers:vCustomers,control:vControl,live:vLive,satta:vSatta,activity:vActivity,account:vAccount}[tab]();app(h)}
 function login(){return '<div class="card narrow"><h2>Sign in</h2><label for="li">Admin or Master ID</label><input id="li" type="text" autocapitalize="characters" autocomplete="username"><label for="lp" style="margin-top:8px">Password</label><input id="lp" type="password" autocomplete="current-password">'+(msg?'<p class="msg" role="alert">'+esc(msg)+'</p>':'')+'<div class="row"><button class="btn" data-act="login">Sign in</button></div><p class="meta">Customer IDs sign in to the games app, not this panel.</p></div>'}
 function btn(a,c,l,cls){return '<button class="sm '+(cls||"")+'" data-act="'+a+'" data-id="'+c.code+'" data-on="'+(c.active?1:0)+'">'+l+'</button>'}
 function vMasters(){
@@ -143,6 +144,20 @@ function vMarkets(m){var id=esc(m.id),mk=m.markets||[],h='<div class="mkt"><h3 s
   '<div class="row"><input type="text" id="mn-'+id+'" placeholder="Name (custom only)" style="width:160px"><input type="number" step="0.01" id="m1-'+id+'" placeholder="Odds 1 / Yes" value="1.95"><input type="number" step="0.01" id="m2-'+id+'" placeholder="Odds 2 / No" value="1.95"></div>'+
   '<div class="row"><input type="number" id="mi-'+id+'" placeholder="Innings" value="1" aria-label="Innings (line)"><input type="number" step="0.1" id="mo-'+id+'" placeholder="Overs e.g. 10" aria-label="Overs (line)"><input type="number" step="0.5" id="ml-'+id+'" placeholder="Line e.g. 54.5" aria-label="Runs line"></div>'+
   '<div class="row"><button class="btn" data-act="mkAdd" data-id="'+id+'">Add market</button></div><p class="meta">Over line: players bet Under or Over the runs line after that many overs (odds field 1 is used for both). It settles itself when the live score reaches that over exactly; otherwise settle it here.</p></div>'}
+function sk2(n){return n==null?"--":String(n).padStart(2,"0")}
+function vSatta(){
+  if(SKE||!SKC)return '<div class="card"><h2>Satta King</h2><p class="msg">Satta King isn\'t installed yet.</p><p class="meta">Run the Satta King SQL in the Supabase SQL Editor, then tap Refresh.</p><div class="row"><button class="sm" data-act="skRefresh">Refresh</button></div></div>';
+  var c=SKC,h='<div class="card"><h2>Satta King · settings</h2><p class="meta">Each market draws one number 00–99 at its time (India time). The server picks every result at random and pays winners automatically.</p>'+
+  '<div class="grid"><div><label for="k1">Jodi pays ×</label><input id="k1" type="number" step="0.5" min="1" value="'+c.jodi_x+'"></div><div><label for="k2">Andar pays ×</label><input id="k2" type="number" step="0.1" min="1" value="'+c.andar_x+'"></div><div><label for="k3">Bahar pays ×</label><input id="k3" type="number" step="0.1" min="1" value="'+c.bahar_x+'"></div><div><label for="k4">Close betting (minutes before draw)</label><input id="k4" type="number" min="0" max="180" value="'+c.close_min+'"></div><div><label for="k5">Max coins per bet slip</label><input id="k5" type="number" min="1" value="'+c.max_total+'"></div></div>'+
+  '<label class="chk"><input type="checkbox" id="k6"'+(c.enabled?" checked":"")+'>Satta King betting on</label><div class="row"><button class="btn" data-act="skSave">Save Satta King settings</button><button class="sm" data-act="skRefresh">Refresh</button></div></div>';
+  h+='<div class="card"><h2>Add a market</h2><div class="grid"><div><label for="kn">Market name</label><input id="kn" type="text" placeholder="e.g. Lucky Noon"></div><div><label for="kt">Draw time (India)</label><input id="kt" type="time" value="12:00"></div></div><div class="row"><button class="btn" data-act="skAdd">Add market</button></div></div>';
+  if(!SKS.length)return h+'<div class="empty">No markets yet.</div>';
+  return h+SKS.map(function(m){var id=m.id,l=m.last;
+    return '<div class="card"><div class="top"><div><div class="id" style="font-size:16px">'+esc(m.name)+'</div><div class="meta">Draws daily at '+esc(m.time)+' IST · next draw '+esc(m.next)+'</div></div><span class="pill '+(m.active?"on":"off")+'" style="white-space:nowrap;align-self:flex-start">'+(m.active?"OPEN":"PAUSED")+'</span></div>'+
+    (l?'<div class="meta">Last result ('+esc(l.date)+'): <b style="font-size:16px">'+(l.void?"VOID":sk2(l.num))+'</b> · staked '+fmt(l.stake)+' · paid '+fmt(l.paid)+'</div>':'<div class="meta">No results yet.</div>')+
+    '<div class="meta">Next draw: <b>'+m.open_bets+'</b> bets from '+m.players+' player(s) · '+fmt(m.open_stake)+' coins'+(m.top&&m.top.length?' · most played: '+m.top.map(function(x){return esc(x.pick)+' ('+fmt(x.amt)+')'}).join(", "):'')+'</div>'+
+    '<div class="row"><input type="text" id="kmn-'+id+'" value="'+esc(m.name)+'" aria-label="Name" style="width:150px"><input type="time" id="kmt-'+id+'" value="'+esc(m.time)+'" aria-label="Draw time"><input type="number" id="kms-'+id+'" value="'+m.sort+'" aria-label="Order" title="Order" style="width:60px"><label class="chk" style="margin:0"><input type="checkbox" id="kma-'+id+'"'+(m.active?" checked":"")+'>Open</label><button class="sm" data-act="skMk" data-id="'+id+'">Save</button></div>'+
+    '<div class="row"><button class="sm" data-act="skDraw" data-id="'+id+'" data-c="draw the '+esc(m.name)+' result now, before its time">Draw result now</button><button class="sm bad" data-act="skVoid" data-id="'+id+'" data-d="'+esc(m.next)+'" data-c="cancel the next '+esc(m.name)+' draw and refund every bet on it">Cancel next draw &amp; refund</button>'+(m.open_bets==0?'<button class="sm bad" data-act="skDel" data-id="'+id+'" data-c="delete '+esc(m.name)+'">Delete</button>':'')+'</div></div>'}).join("")}
 function vActivity(){return '<div class="card"><h2>Recent activity</h2>'+(LG.length?LG.map(function(e){return '<div class="log"><b>'+esc(e.actor)+'</b> · '+esc(e.message)+'<div class="meta">'+esc(new Date(e.at).toLocaleString())+'</div></div>'}).join(""):'<div class="empty">Nothing yet.</div>')+'</div>'}
 function vAccount(){return '<div class="card"><h2>Change password</h2><label for="a0">Current password</label><input id="a0" type="password" autocomplete="current-password"><label for="a1" style="margin-top:8px">New password (8+ characters)</label><input id="a1" type="password" autocomplete="new-password"><label for="a2" style="margin-top:8px">Repeat new password</label><input id="a2" type="password" autocomplete="new-password"><div class="row"><button class="btn" data-act="chpw">Update password</button></div></div>'}
 
@@ -174,6 +189,17 @@ lcM:async function(t){if(t.dataset.c&&!confirm("Are you sure: "+t.dataset.c+"?")
   var r=await sb.rpc("lc_admin_match",{p_match:t.dataset.id,p_action:t.dataset.x});if(r.error)throw new Error(r.error.message);
   msg=r.data&&r.data.bets?("Settled "+r.data.bets+" bet(s)."):"";await load();render()},
 
+skRefresh:async function(){msg="";await load();render()},
+skSave:async function(){var j=+v("k1"),a=+v("k2"),b=+v("k3"),c=nn("k4"),mx=nn("k5");
+  if(!(j>=1&&a>=1&&b>=1))throw new Error("Payouts must be at least 1×.");if(!(c>=0&&c<=180))throw new Error("Closing minutes must be 0–180.");if(!(mx>=1))throw new Error("Max per slip must be at least 1.");
+  var r=await sb.rpc("sk_admin_config",{p_jodi:j,p_andar:a,p_bahar:b,p_close:c,p_max:mx,p_enabled:$("k6").checked});if(r.error)throw new Error(r.error.message);msg="Satta King settings saved.";await load();render()},
+skAdd:async function(){if(!v("kn"))throw new Error("Enter the market name.");if(!v("kt"))throw new Error("Pick a draw time.");
+  var r=await sb.rpc("sk_admin_market",{p_id:null,p_name:v("kn"),p_time:v("kt"),p_active:true,p_sort:SKS.length+1});if(r.error)throw new Error(r.error.message);msg="Market added.";await load();render()},
+skMk:async function(t){var id=+t.dataset.id;if(!v("kmn-"+id))throw new Error("Enter the market name.");
+  var r=await sb.rpc("sk_admin_market",{p_id:id,p_name:v("kmn-"+id),p_time:v("kmt-"+id),p_active:$("kma-"+id).checked,p_sort:nn("kms-"+id)||0});if(r.error)throw new Error(r.error.message);msg="Market saved.";await load();render()},
+skDraw:async function(t){if(!confirm("Are you sure: "+t.dataset.c+"?"))return;var r=await sb.rpc("sk_admin_draw_now",{p_market:+t.dataset.id});if(r.error)throw new Error(r.error.message);msg=r.data==null?"That draw already has a result.":"Result drawn: "+sk2(r.data);await load();render()},
+skVoid:async function(t){if(!confirm("Are you sure: "+t.dataset.c+"?"))return;var r=await sb.rpc("sk_admin_void",{p_market:+t.dataset.id,p_date:t.dataset.d});if(r.error)throw new Error(r.error.message);msg="Draw cancelled and bets refunded.";await load();render()},
+skDel:async function(t){if(!confirm("Are you sure: "+t.dataset.c+"?"))return;var r=await sb.rpc("sk_admin_delete",{p_id:+t.dataset.id});if(r.error)throw new Error(r.error.message);msg="Market deleted.";await load();render()},
 dismiss:function(){reveal=null;render()},
 login:async function(){var id=v("li").toUpperCase();msg="";
   var r=await sb.auth.signInWithPassword({email:emailFor(id),password:$("lp").value});

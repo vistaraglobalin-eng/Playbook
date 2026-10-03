@@ -415,7 +415,7 @@ body.rlt main{max-width:520px;padding:0;padding-bottom:calc(66px + env(safe-area
 .rtimer.warn .fg{stroke:#ff3b3b}.rtimer.warn b{color:#ffd0d0;text-shadow:0 0 10px #ff3b3b}.rtimer.warn{animation:rtp .5s infinite alternate}
 .rtimer.off{opacity:.45;transform:scale(.9);animation:none}
 .tg .rtimer{transform:scale(.82);transform-origin:0 0}.tg .rtimer.off{transform:scale(.74)}
-.tg-kingjack .rtimer{left:auto;right:58px}.tg-num .rtimer{left:0;transform:scale(.72)}.tg-num .rtimer.off{transform:scale(.66)}
+.tg-kingjack .rtimer{left:auto;right:58px}.tg-cricket .rtimer{top:98px;left:0}.tg-casino .rtimer{left:0;transform:scale(.72)}.tg-casino .rtimer.off{transform:scale(.66)}.tg-num .rtimer{left:0;transform:scale(.72)}.tg-num .rtimer.off{transform:scale(.66)}
 .tg .rtimer.warn{animation-name:rtp2}@keyframes rtp2{to{transform:scale(.9);box-shadow:0 0 0 2px #ff3b3b,0 0 22px #ff3b3b}}
 @keyframes rtp{to{transform:scale(1.08);box-shadow:0 0 0 2px #ff3b3b,0 0 22px #ff3b3b}}
 .rl-mid{display:grid;grid-template-columns:40px minmax(0,1fr) 60px;gap:7px;padding:6px 8px 4px;align-items:start}
@@ -817,6 +817,83 @@ body.rlt .xv~*{}
 .skc-t tbody th{position:sticky;left:0;background:#cfc6e8;color:#d01c1c;font-size:12px;font-weight:700;padding:10px 6px;border:1px solid #000;white-space:nowrap}
 .skc-t td{text-align:center;padding:10px 6px;border:1px solid #000;color:#000;font-size:17px;font-weight:700}
 .skc-t tr.td th{background:#fff23a}.skc-t tr.td td{background:#fffbd1}
+/* JQK Cards */
+.jq-stage{position:relative;height:196px;margin:6px 8px 0;border-radius:6px 6px 190px 190px/6px 6px 80px 80px;background:repeating-linear-gradient(45deg,rgba(0,0,0,.05) 0 2px,transparent 2px 5px),radial-gradient(ellipse at 50% 15%,#c41a33,#7a0a1b 70%,#4f0511);box-shadow:inset 0 0 0 2px #d4ae55,inset 0 0 0 7px #3b1607,inset 0 0 0 8.5px #d4ae55,inset 0 -24px 40px rgba(0,0,0,.45),0 12px 26px rgba(0,0,0,.55);overflow:hidden}
+.jq-arc{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.jq-arc text{font:900 11px Georgia,serif;letter-spacing:2.5px;fill:#e9c66a;opacity:.9}
+.jq-round{position:absolute;left:0;right:0;top:9px;text-align:center;font-size:9.5px;font-weight:900;letter-spacing:2px;color:#ffe9a8;opacity:.85}
+.jq-shoe{position:absolute;left:20px;top:42px;width:58px;height:82px;transform:rotate(-9deg)}
+.jq-shoe svg{position:absolute;left:0;top:0;width:58px;height:81px;filter:drop-shadow(0 2px 2px #0008)}
+.jq-shoe svg:nth-child(2){transform:translate(2px,-3px)}.jq-shoe svg:nth-child(3){transform:translate(4px,-6px)}
+.jq-shoe i{position:absolute;left:-7px;right:-9px;bottom:-10px;height:46px;border-radius:6px 6px 12px 12px;background:linear-gradient(#4a250d,#1c0c03);box-shadow:inset 0 0 0 2px #d4ae55,0 6px 10px #000a}
+.jq-shoe i::after{content:"JQK";position:absolute;inset:0;display:grid;place-items:center;font:900 13px Georgia,serif;letter-spacing:2px;color:#e9c66a}
+.jq-slot{position:absolute;left:50%;top:24px;width:92px;height:129px;margin-left:-46px;perspective:900px;z-index:2}
+.jq-slot::before{content:"";position:absolute;left:50%;top:50%;width:250px;height:250px;margin:-125px;border-radius:50%;background:repeating-conic-gradient(rgba(255,214,110,.32) 0 8deg,transparent 8deg 22deg);opacity:0;transition:opacity .4s;animation:spin 9s linear infinite;pointer-events:none;-webkit-mask:radial-gradient(circle,#000 30%,transparent 70%);mask:radial-gradient(circle,#000 30%,transparent 70%)}
+.jq-slot.glow::before{opacity:1}
+.jq-flip{position:relative;width:100%;height:100%;transform-style:preserve-3d;-webkit-transform-style:preserve-3d;transition:transform .6s cubic-bezier(.3,1.35,.5,1)}
+.jq-flip.open{transform:rotateY(180deg)}
+.jq-f{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:9px;box-shadow:0 10px 20px rgba(0,0,0,.55)}
+.jq-front{transform:rotateY(180deg)}
+.jq-f svg{width:100%;height:100%;display:block}
+.jq-flip.won .jq-front{box-shadow:0 0 0 3px #ffd35c,0 0 26px #ffd35c,0 0 60px #ff9f1c}
+.jq-flip.won .jq-front::after{content:"";position:absolute;inset:0;border-radius:9px;background:linear-gradient(110deg,transparent 35%,rgba(255,255,255,.8) 50%,transparent 65%);background-size:260% 100%;animation:jqsh 1.3s ease-out 2;pointer-events:none}
+@keyframes jqsh{from{background-position:130% 0}to{background-position:-30% 0}}
+.jq-stage .rtimer{left:auto;right:18px;top:42px}
+.jq-stage .ann{top:auto;bottom:6px}
+.jq-name{position:absolute;left:0;right:0;top:140px;text-align:center;z-index:3;pointer-events:none}
+.jq-name b{display:inline-block;padding:3px 14px;border-radius:99px;background:linear-gradient(#ffe27a,#d99a1e);color:#3a2600;font-size:12px;font-weight:900;letter-spacing:1.5px;box-shadow:0 4px 10px #0009;animation:resIn .6s cubic-bezier(.2,1.6,.4,1) both}
+.jq-hist{display:flex;gap:5px;overflow-x:auto;padding:6px 10px 2px;scrollbar-width:none}
+.jq-hist::-webkit-scrollbar{display:none}
+.jq-hist em{font-size:11px;opacity:.7;padding:10px 0}
+.jq-h{flex:0 0 auto;width:26px;height:36px;border-radius:5px;background:#fbf6ea;display:flex;flex-direction:column;align-items:center;justify-content:center;font:700 15px/1 Georgia,serif;color:#17171a;box-shadow:0 2px 4px #0009,inset 0 0 0 1px #d9d0bd}
+.jq-h.red{color:#c4161c}.jq-h i{font-style:normal;font-size:13px;margin-top:1px}
+.jq-h.nw{box-shadow:0 0 0 2px #ffd35c,0 0 10px #ffd35c;animation:chipIn .5s cubic-bezier(.2,1.5,.4,1)}
+.jq-stat{display:flex;gap:4px;justify-content:center;flex-wrap:nowrap;font-size:9.5px;font-weight:900;letter-spacing:.3px;padding:4px 8px 0}
+.jq-stat span{padding:2px 7px;border-radius:99px;background:rgba(0,0,0,.35);border:1px solid rgba(212,174,85,.45)}
+.jq-stat .r{color:#ff6b78}.jq-stat .k{color:#e5e5e5}
+.jq-board{margin:6px 8px 0;padding:7px;border-radius:14px;background:rgba(20,0,4,.42);box-shadow:inset 0 0 0 1.5px rgba(212,174,85,.55),0 6px 14px rgba(0,0,0,.35)}
+.jq-row{display:grid;gap:6px;margin-bottom:6px}.jq-row.two{grid-template-columns:1fr 1fr}
+.jq-z{position:relative;border:1.5px solid rgba(212,174,85,.75);border-radius:10px;padding:5px 3px;color:#fff;background:rgba(0,0,0,.28);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;font-weight:900;letter-spacing:1px;transition:transform .15s,box-shadow .2s;min-width:0}
+.jq-z:active,.jq-card:active{transform:scale(.95)}
+.jq-z b{font-size:13px}.jq-z small{font-size:10.5px;color:#ffe08a;letter-spacing:.5px}.jq-z span{font-size:13px;line-height:1.1}
+.jq-row.two .jq-z{flex-direction:row;gap:8px;height:42px}
+.jq-z.cr{background:linear-gradient(#d11a2e,#8d0b1c)}.jq-z.cb2{background:linear-gradient(#34343a,#0b0b0d)}
+.jq-z.cr span{color:#ffd0d6}.jq-z.cb2 span{color:#fff}
+.jq-z.rk{background:linear-gradient(160deg,#3a0610,#14020a)}
+.jq-z.rk i{font:italic 900 30px/1 Georgia,serif;background:linear-gradient(180deg,#fff6c9,#ffd35c 50%,#c9851a);-webkit-background-clip:text;background-clip:text;color:transparent}
+.jq-z.rk b{font-size:8.5px;letter-spacing:1px;color:#ffe9a8}.jq-z.rk small{font-size:9.5px}
+.jq-z.su{background:linear-gradient(#fffdf6,#efe6d2);color:#17171a;border-color:#d4ae55;height:52px}
+.jq-z.su span{font-size:20px;line-height:1}.jq-z.su.rs span{color:#c4161c}.jq-z.su small{color:#7a5200;font-size:9.5px}.jq-z.su b{font-size:7.5px;letter-spacing:.8px}
+.jq-corner{display:grid;place-items:center;text-align:center;font-size:8px;font-weight:900;letter-spacing:1px;color:#e9c66a;opacity:.75;line-height:1.3}
+.jq-grid{display:grid;grid-template-columns:54px repeat(4,minmax(0,1fr));gap:8px 6px;padding:0 0 6px}
+.jq-card{position:relative;padding:0;border:0;background:none;border-radius:7px;aspect-ratio:250/350;filter:drop-shadow(0 3px 4px rgba(0,0,0,.55));transition:transform .15s,filter .2s}
+.jq-card svg{width:100%;height:100%;display:block}
+.jq-card small{position:absolute;left:50%;bottom:0;transform:translate(-50%,55%);background:#14020a;color:#ffe08a;border:1px solid #d4ae55;border-radius:99px;font-size:9.5px;font-weight:900;padding:1px 6px;z-index:2;white-space:nowrap}
+.jq-card.spot{transform:translateY(-4px) scale(1.07);filter:drop-shadow(0 0 9px #ffd35c) drop-shadow(0 0 2px #fff)}
+.jq-card.hit{transform:translateY(-6px) scale(1.12);z-index:3;filter:drop-shadow(0 0 14px #ffd35c) drop-shadow(0 0 3px #fff);animation:jqhit .7s ease-in-out infinite alternate}
+@keyframes jqhit{to{filter:drop-shadow(0 0 22px #ffb400) drop-shadow(0 0 5px #fff)}}
+.jq-z.win{box-shadow:0 0 0 2px #ffd35c,0 0 18px #ffd35c;animation:jqwin .7s ease-in-out infinite alternate;z-index:2}
+@keyframes jqwin{to{box-shadow:0 0 0 3px #fff3b0,0 0 28px #ffb400}}
+.jq-board.lock .jq-z:not(.win),.jq-board.lock .jq-card:not(.hit):not(.spot){opacity:.62}
+.jq-tc{position:absolute;right:3px;top:3px;width:28px;height:28px;font-size:9px;z-index:3;pointer-events:none;animation:chipIn .28s cubic-bezier(.2,1.5,.4,1)}
+.jq-z .jq-tc{right:-5px;top:-7px;width:25px;height:25px;font-size:8.5px}
+.jq-card .jq-tc{left:50%;top:46%;right:auto;margin:-14px 0 0 -14px}
+.jq-tc.pend{outline:2px dashed #fff;outline-offset:2px}
+.jq-tc.pay{box-shadow:0 0 0 2px #ffd35c,0 0 14px #ffd35c,0 3px 0 #0008}
+.jq-act{display:flex;gap:8px;align-items:center;justify-content:center;margin:12px 8px 6px}
+.jq-go{flex:1;max-width:170px;height:50px;border-radius:99px;border:3px solid #fff1a8;font-weight:900;font-size:14px;letter-spacing:1.5px;color:#3a2600;background:radial-gradient(circle at 40% 35%,#fff0a0,#e0a52a 55%,#8a5a00);box-shadow:0 4px 0 #6b4300,0 8px 16px #0008}
+.jq-go:not(:disabled){animation:breath 2s ease-in-out infinite}
+.jq-go:disabled{opacity:.45;animation:none}
+.jq-go small{display:block;font-size:9.5px;letter-spacing:.5px;opacity:.8}
+.jq-chips{display:flex;gap:5px;justify-content:center;padding:6px 6px 8px}
+.jq-chips .cp{width:38px;height:38px;font-size:10px;flex:0 0 auto}
+.jq-chips .cp.sel{transform:translateY(-6px) scale(1.12);box-shadow:0 0 0 3px #ffd35c,0 0 16px #ffd35c,0 4px 7px #0008}
+.jq-err{margin:10px;padding:12px;border-radius:12px;background:#0007;border:1px solid #d4ae55;font-size:13px;text-align:center}
+.t-jq{background:radial-gradient(circle at 82% 50%,#ffd35c44,transparent 45%),linear-gradient(120deg,#14020a,#8a0f1f 55%,#2b030b);grid-column:1/-1}
+.a-jq{position:relative;width:120px;height:92px}
+.a-jq svg{position:absolute;width:50px;height:70px;left:35px;top:10px;filter:drop-shadow(0 3px 4px #000a);transform-origin:50% 110%;animation:ajq 3s ease-in-out infinite}
+.a-jq svg:nth-child(1){--r:-20deg}.a-jq svg:nth-child(2){--r:0deg;animation-delay:.2s}.a-jq svg:nth-child(3){--r:20deg;animation-delay:.4s}
+@keyframes ajq{0%,100%{transform:rotate(var(--r))}50%{transform:rotate(calc(var(--r) * 1.3)) translateY(-3px)}}
 </style>
 </head>
 <body>
@@ -992,15 +1069,15 @@ function art(g){
  return `<div class="a-cr"><span class="bt">🏏</span><i class="bl"></i></div>`}
 const bonusDone=()=>{try{return localStorage.getItem("pbbonus")===today()}catch(e){return false}};
 function render(){
- W.alive=false;D.alive=false;if(view!=="live")lcStop();if(view!=="satta")skStop();
+ W.alive=false;D.alive=false;if(view!=="live")lcStop();if(view!=="satta")skStop();if(view!=="jqk")jqStop();
  document.body.classList.toggle("ingame",!!me&&view==="game");
  $("balp").hidden=!me;$("menu").hidden=!me;$("lv").innerHTML=me&&prof?lvHtml():"";if(me&&!busy)setBal(me.coins);
  if(!me){document.body.classList.remove("rlt");$("app").innerHTML=loginHtml();return}
  const gs=G.filter(g=>S.games&&S.games[g[0]]);
  if(view==="game"&&!gs.some(g=>g[0]===game))view="lobby";
- const rl=view==="game"||view==="live"||view==="satta";
+ const rl=view==="game"||view==="live"||view==="satta"||view==="jqk";
  document.body.classList.toggle("ingame",view==="game"&&!rl);document.body.classList.toggle("rlt",rl);
- if(view==="lobby")lobby(gs);else if(view==="live")liveView();else if(view==="satta")skView();else if(game==="roulette")rouletteView();else tableView()}
+ if(view==="lobby")lobby(gs);else if(view==="live")liveView();else if(view==="satta")skView();else if(view==="jqk")jqView();else if(game==="roulette")rouletteView();else tableView()}
 function lobby(gs){
  const bon=S.bonus>0&&!bonusDone();
  let h=`<section class="hero"><div><small>Welcome back</small><h2>${esc(me.name)}</h2><div class="lv">${lvHtml()}</div></div>${bon?`<button class="gift" id="gift" data-act="bonus">🎁 +${fmt(S.bonus)}<small>Daily bonus</small></button>`:""}</section>`;
@@ -1008,6 +1085,7 @@ function lobby(gs){
  if(msg)h+=`<div class="card" style="margin-top:10px">${esc(msg)}</div>`;
  h+='<h3 class="sec">Sports</h3><button class="tile t-live wide-tile" data-act="live"><span class="badge livebadge">● LIVE</span><div class="art"><div class="a-live"><span>🏏</span><i></i><i></i><i></i></div></div><div class="tl"><b>📡 Live Cricket</b><small>Real matches · live odds and scores</small></div></button>';
  if(S.games&&S.games.satta)h+='<h3 class="sec">Satta King</h3><button class="tile t-sk wide-tile" data-act="satta"><span class="badge">DAILY</span><div class="art"><div class="a-sk"><span>👑</span><b>4</b><b>7</b></div></div><div class="tl"><b>👑 Satta King</b><small>Daily markets · Jodi, Andar, Bahar</small></div></button>';
+ if(S.games&&S.games.jqk){jqEnsureDefs();h+=`<h3 class="sec">Card draw</h3><button class="tile t-jq wide-tile" data-act="jqk"><span class="badge livebadge">● EVERY MINUTE</span><div class="art"><div class="a-jq">${jqCard("J","S","")}${jqCard("Q","H","")}${jqCard("K","D","")}</div></div><div class="tl"><b>🃏 JQK Cards</b><small>Jack · Queen · King · new card every 60 seconds</small></div></button>`}
  h+='<h3 class="sec">Games</h3>';
  if(!gs.length)h+='<div class="card">No games are available right now. Please check back soon.</div>';
  h+='<div class="tiles">'+gs.map((g,i)=>`<button class="tile t-${g[0]}" data-g="${g[0]}" style="animation-delay:${i*70}ms"><span class="badge">${g[4]}</span><div class="art">${art(g[0])}</div><div class="tl"><b>${g[1]} ${g[2]}</b><small>${g[3]}</small></div></button>`).join("")+'</div>';
@@ -1197,7 +1275,7 @@ async function rCall(bets){let r=await sb.rpc("play_roulette",{p_bets:bets});if(
    return{data:{balance:q.data.balance,n:+q.data.big,total:bets[k],payout:bets[k]*q.data.mult,wins:q.data.mult>0?[k]:[]}}}
   return{error:{message:"PB:Several bets need the roulette update (roulette_multi.sql)"}}}
  return r}
-const RTSEC=30,RT={end:0,iv:0,last:-1},TIMED=["roulette","lucky7","kingjack","num"];
+const RTSEC=30,RT={end:0,iv:0,last:-1},TIMED=["roulette","lucky7","kingjack","num","casino","cricket"];
 function rTimerHtml(){return TIMED.includes(game)?'<div class="rtimer" id="rtimer" aria-label="Betting time left"><svg viewBox="0 0 60 60"><circle class="bg" cx="30" cy="30" r="26"/><circle class="fg" cx="30" cy="30" r="26"/></svg><b>30</b><small>BET TIME</small></div>':""}
 function rTimerStop(off){clearInterval(RT.iv);RT.iv=0;const el=$("rtimer");if(el&&off){el.className="rtimer off";el.querySelector("b").textContent="—"}}
 function rTimerStart(){rTimerStop();RT.end=Date.now()+RTSEC*1000;RT.last=-1;rTimerTick();RT.iv=setInterval(rTimerTick,100)}
@@ -1727,6 +1805,226 @@ async function enter(){
  if(bad){await sb.auth.signOut();me=null;return err(bad)}
  me=p.data;S=s.data.data;msg="";view="lobby";loadProf();setBal(me.coins);render()}
 async function logout(){closeSheet();await sb.auth.signOut();me=null;prof=null;msg="";view="lobby";game="";pick=null;stake=0;sess=0;hist={};lastB={};RB={};RBundo=[];RBlast=null;RH=null;lastB2={};GH={};lcStop();LC.m=[];LC.b=[];LC.mk=[];LC.slip=null;skStop();SK.st=null;SK.res=[];SK.bets=[];SK.seen={};SK.slip={};render()}
+/* ---------------- JQK Cards ---------------- */
+/* ---- JQK original court cards (SVG) ---- */
+const JQ_RED="#c4161c",JQ_BLK="#17171a",JQ_G="#c99a2e",JQ_G2="#efd27a",JQ_SK="#f7e8cf",JQ_L="#1b1b1b",JQ_NV="#1f3a7a";
+const JQ_PIP={H:"M50 92C22 68 0 52 0 29 0 12 12 0 27 0 38 0 46 7 50 17 54 7 62 0 73 0 88 0 100 12 100 29 100 52 78 68 50 92Z",
+ D:"M50 0 86 50 50 100 14 50Z",
+ S:"M50 0C62 20 100 40 100 63 100 79 88 89 74 89 64 89 57 84 53 77 54 89 58 96 67 100H33C42 96 46 89 47 77 43 84 36 89 26 89 12 89 0 79 0 63 0 40 38 20 50 0Z",
+ C:"M50 2A23 23 0 0 1 69 38 23 23 0 1 1 55 75C56 87 60 95 68 100H32C40 95 44 87 45 75A23 23 0 1 1 31 38 23 23 0 0 1 50 2Z"};
+const jqRed=s=>s==="H"||s==="D";
+function jqPip(s,x,y,sz,fill,extra){return `<path d="${JQ_PIP[s]}" fill="${fill}" transform="translate(${x} ${y}) scale(${sz/100})"${extra||""}/>`}
+function jqDefs(){return `<svg id="jqdefs" width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<pattern id="jqLinen" width="4" height="4" patternUnits="userSpaceOnUse"><path d="M0 0H4M0 2H4" stroke="#000" stroke-opacity=".035" stroke-width=".6"/><path d="M0 0V4M2 0V4" stroke="#000" stroke-opacity=".025" stroke-width=".6"/></pattern>
+<pattern id="jqHatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path d="M0 0V5" stroke="#fff" stroke-opacity=".28" stroke-width="1.4"/></pattern>
+<pattern id="jqHatchD" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)"><path d="M0 0V4" stroke="#000" stroke-opacity=".28" stroke-width="1"/></pattern>
+<pattern id="jqDots" width="7" height="7" patternUnits="userSpaceOnUse"><circle cx="3.5" cy="3.5" r="1.3" fill="${JQ_G}"/></pattern>
+<linearGradient id="jqGold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6dc8a"/><stop offset=".5" stop-color="${JQ_G}"/><stop offset="1" stop-color="#8e6516"/></linearGradient>
+<linearGradient id="jqSteel" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#9aa3ad"/><stop offset=".5" stop-color="#f4f6f8"/><stop offset="1" stop-color="#8a939c"/></linearGradient>
+<linearGradient id="jqSheen" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".22"/><stop offset=".3" stop-color="#fff" stop-opacity="0"/><stop offset=".65" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff" stop-opacity=".18"/></linearGradient>
+<clipPath id="jqClip"><rect x="42" y="36" width="166" height="278" rx="3"/></clipPath>
+<pattern id="jqBack" width="22" height="22" patternUnits="userSpaceOnUse"><rect width="22" height="22" fill="#7a0d18"/><path d="M11 0L22 11 11 22 0 11Z" fill="none" stroke="${JQ_G}" stroke-opacity=".75" stroke-width="1"/><circle cx="11" cy="11" r="2.2" fill="${JQ_G}" fill-opacity=".8"/><circle cx="0" cy="0" r="1.4" fill="${JQ_G}" fill-opacity=".6"/><circle cx="22" cy="22" r="1.4" fill="${JQ_G}" fill-opacity=".6"/></pattern>
+</defs></svg>`}
+/* top half of a court figure, drawn in a 250x350 card, mirrored for the bottom */
+function jqFig(r,s){const P=jqRed(s)?JQ_RED:JQ_BLK,S=jqRed(s)?JQ_BLK:JQ_RED,L=JQ_L,G="url(#jqGold)",w='stroke="'+L+'" stroke-width="1.6" stroke-linejoin="round"';
+ const sx=r==="K"?176:74; // side of the big pip
+ let h="";
+ // big pip
+ h+=jqPip(s,sx-15,46,30,P,` stroke="${L}" stroke-width="2"`);
+ // held item (behind the robe)
+ if(r==="K")h+=`<path d="M70 40 76 34 82 40 86 128 76 129Z" fill="url(#jqSteel)" ${w}/><path d="M78 40 80 124" stroke="${L}" stroke-width=".8"/><rect x="66" y="124" width="30" height="7" rx="3" fill="${G}" ${w}/><rect x="77" y="131" width="8" height="18" fill="${S}" ${w}/>`;
+ if(r==="J")h+=`<path d="M174 30 178 30 179 170 173 170Z" fill="#7a4a1d" ${w}/><path d="M176 22 186 34 176 40 166 34Z" fill="url(#jqSteel)" ${w}/><path d="M178 40C196 42 200 56 196 66 190 58 184 56 178 58Z" fill="url(#jqSteel)" ${w}/><path d="M174 42C160 46 158 54 160 60 165 55 170 54 174 55Z" fill="url(#jqSteel)" ${w}/><rect x="170" y="62" width="12" height="6" fill="${G}" ${w}/>`;
+ if(r==="Q")h+=`<path d="M160 140C162 116 166 98 170 84" fill="none" stroke="#1e6b2e" stroke-width="3"/><path d="M164 112C172 108 178 110 182 114 174 118 168 117 164 112Z" fill="#2c8a3e" ${w}/>`+[0,72,144,216,288].map(a=>`<ellipse cx="170" cy="72" rx="6" ry="11" transform="rotate(${a} 170 82)" fill="${JQ_RED}" ${w}/>`).join("")+`<circle cx="170" cy="82" r="5" fill="${G}" ${w}/>`;
+ // robe
+ h+=`<path d="M44 175 50 148C62 132 86 126 104 123H146C164 126 188 132 200 148L206 175Z" fill="${P}" ${w}/>`;
+ h+=`<path d="M50 148C62 132 86 126 104 123L110 175H44Z" fill="url(#jqHatch)"/>`;
+ h+=`<path d="M146 123C164 126 188 132 200 148L206 175H140Z" fill="${S}" ${w}/><path d="M146 123C164 126 188 132 200 148L206 175H140Z" fill="url(#jqDots)" opacity=".55"/>`;
+ h+=`<path d="M106 123H144L150 175H100Z" fill="${G}" ${w}/><path d="M106 123H144L150 175H100Z" fill="url(#jqHatchD)" opacity=".5"/>`;
+ h+=[136,152,168].map(y=>jqPip(s,118,y-7,14,P,` stroke="${L}" stroke-width="3"`)).join("");
+ h+=`<path d="M56 150C70 140 90 134 104 131M194 150C180 140 160 134 146 131" fill="none" stroke="${JQ_G2}" stroke-width="3"/>`;
+ h+=`<path d="M48 165C70 158 90 156 102 156M202 165C180 158 160 156 148 156" fill="none" stroke="${L}" stroke-width="1.2" stroke-dasharray="3 2"/>`;
+ h+=`<path d="M52 150C60 160 62 168 60 175M198 150C190 160 188 168 190 175" fill="none" stroke="${L}" stroke-width="1.2"/>`;
+ h+=`<path d="M100 175`+[...Array(10)].map((_,i)=>`a2.5 2.5 0 0 1 5 0`).join("")+`" fill="none" stroke="${JQ_G2}" stroke-width="1.6"/>`;
+ // hands
+ if(r==="K")h+=`<ellipse cx="81" cy="137" rx="8" ry="7" fill="${JQ_SK}" ${w}/>`;
+ if(r==="J")h+=`<ellipse cx="176" cy="138" rx="8" ry="7" fill="${JQ_SK}" ${w}/>`;
+ if(r==="Q")h+=`<ellipse cx="160" cy="142" rx="8" ry="7" fill="${JQ_SK}" ${w}/>`;
+ // neck + collar
+ h+=`<path d="M114 110H136L138 126H112Z" fill="${JQ_SK}" ${w}/>`;
+ if(r==="K")h+=`<path d="M90 126C104 116 146 116 160 126L157 138C141 130 109 130 93 138Z" fill="#fff" ${w}/>`+[100,112,125,138,150].map(x=>`<path d="M${x} 127l1.5 5 1.5-5z" fill="${L}"/>`).join("");
+ if(r==="Q")h+=[...Array(11)].map((_,i)=>{const t=i/10,x=104+42*t,y=124+10*Math.sin(Math.PI*t);return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="2.6" fill="#fffaf0" stroke="${L}" stroke-width=".8"/>`}).join("")+`<path d="M121 135 125 142 129 135 125 131Z" fill="${JQ_RED}" ${w}/>`;
+ if(r==="J")h+=`<path d="M96 124 102 132 108 124 114 132 120 124 125 132 130 124 136 132 142 124 148 132 154 124 152 138H98Z" fill="#fff" ${w}/>`;
+ // hair behind
+ if(r==="Q")h+=`<path d="M104 76C96 96 98 120 90 140 100 140 108 132 110 120 108 104 108 92 110 82Z" fill="${G}" ${w}/><path d="M146 76C154 96 152 120 160 140 150 140 142 132 140 120 142 104 142 92 140 82Z" fill="${G}" ${w}/><path d="M98 104C100 118 96 128 93 136M152 104C150 118 154 128 157 136" stroke="${L}" stroke-width=".9" fill="none"/>`;
+ // face
+ h+=`<ellipse cx="125" cy="92" rx="17" ry="21" fill="${JQ_SK}" ${w}/>`;
+ h+=`<path d="M114 89Q118 85.5 122 89 118 91.5 114 89ZM128 89Q132 85.5 136 89 132 91.5 128 89Z" fill="#fff" stroke="${L}" stroke-width="1"/><circle cx="118.3" cy="88.8" r="1.5" fill="${L}"/><circle cx="132.3" cy="88.8" r="1.5" fill="${L}"/>`;
+ h+=`<path d="M112.5 84Q118 80.5 122.5 83.5M127.5 83.5Q132 80.5 137.5 84" fill="none" stroke="${L}" stroke-width="1.7" stroke-linecap="round"/><path d="M125 89 123 99Q125 101.5 127.5 99.5" fill="none" stroke="${L}" stroke-width="1.2" stroke-linecap="round"/>`;
+ h+=`<path d="M116 96.5Q118 98 120 96.5M130 96.5Q132 98 134 96.5" fill="none" stroke="#d98c7a" stroke-width="1.6" stroke-linecap="round"/>`;
+ if(r==="Q")h+=`<path d="M120 106Q125 103.5 130 106 125 110 120 106Z" fill="${JQ_RED}" stroke="${L}" stroke-width=".8"/>`;
+ else h+=`<path d="M120.5 106.5Q125 108.5 129.5 106.5" fill="none" stroke="${L}" stroke-width="1.3" stroke-linecap="round"/>`;
+ if(r==="K")h+=`<path d="M108 100C108 120 115 134 125 136 135 134 142 120 142 100 138 111 132 115 125 115 118 115 112 111 108 100Z" fill="${G}" ${w}/><path d="M114 112C116 120 119 126 121 130M125 116V134M136 112C134 120 131 126 129 130" stroke="${L}" stroke-width=".9" fill="none"/><path d="M112 104C117 99.5 122 101 125 103.5 128 101 133 99.5 138 104 133 106.5 128.5 106 125 105 121.5 106 117 106.5 112 104Z" fill="${G}" ${w}/>`;
+ if(r==="J")h+=`<circle cx="105" cy="96" r="7" fill="${G}" ${w}/><circle cx="145" cy="96" r="7" fill="${G}" ${w}/><path d="M105 96m-3 0a3 3 0 1 0 3-3M145 96m3 0a3 3 0 1 1-3-3" fill="none" stroke="${L}" stroke-width=".9"/><path d="M117 103.5Q121 101.5 125 103 129 101.5 133 103.5 129 104.5 125 104 121 104.5 117 103.5Z" fill="${L}"/>`;
+ if(r==="K")h+=`<circle cx="106" cy="88" r="6" fill="${G}" ${w}/><circle cx="144" cy="88" r="6" fill="${G}" ${w}/>`;
+ // headgear
+ if(r==="K")h+=`<path d="M106 66C108 46 142 46 144 66Z" fill="${P}" ${w}/><path d="M104 66 99 40 113 54 118 32 125 50 132 32 137 54 151 40 146 66Z" fill="${G}" ${w}/>`+[[99,40],[118,32],[132,32],[151,40]].map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="3.2" fill="${JQ_G2}" ${w}/>`).join("")+`<circle cx="125" cy="46" r="4" fill="${JQ_G2}" ${w}/><rect x="103" y="64" width="44" height="10" rx="2" fill="${G}" ${w}/>`+[[112,JQ_RED],[125,JQ_NV],[138,JQ_RED]].map(p=>`<circle cx="${p[0]}" cy="69" r="2.8" fill="${p[1]}" stroke="${L}" stroke-width=".8"/>`).join("");
+ if(r==="Q")h+=`<path d="M106 68C105 56 113 50 118 57 120 47 130 47 132 57 137 50 145 56 144 68Z" fill="${G}" ${w}/>`+[[118,55],[125,46],[132,55]].map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="2.8" fill="#fffaf0" ${w}/>`).join("")+`<path d="M105 67H145L143 74H107Z" fill="${G}" ${w}/><path d="M121 70.5 125 66 129 70.5 125 75Z" fill="${JQ_RED}" stroke="${L}" stroke-width=".8"/>`;
+ if(r==="J")h+=`<path d="M146 62C160 40 174 34 184 26 178 44 166 56 152 68Z" fill="${S}" ${w}/><path d="M150 64C162 50 172 40 182 30" stroke="#fff" stroke-opacity=".7" stroke-width="1" fill="none"/><path d="M100 76C98 54 148 48 154 72 140 67 114 68 100 76Z" fill="${P}" ${w}/><path d="M100 76C112 69 140 67 154 72L154 78C140 73 112 75 100 82Z" fill="${G}" ${w}/>`;
+ return h}
+function jqCard(r,s,cls){const P=jqRed(s)?JQ_RED:JQ_BLK,top=jqFig(r,s);
+ const idx=`<text x="25" y="50" text-anchor="middle" font-family="Georgia,'Times New Roman',serif" font-weight="700" font-size="40" fill="${P}">${r}</text>`+jqPip(s,13,58,24,P);
+ return `<svg class="${cls||"jqsvg"}" viewBox="0 0 250 350" role="img" aria-label="${({J:"Jack",Q:"Queen",K:"King"})[r]} of ${({S:"spades",H:"hearts",D:"diamonds",C:"clubs"})[s]}">
+<rect x="1" y="1" width="248" height="348" rx="16" fill="#fbf6ea" stroke="#d9d0bd" stroke-width="2"/><rect x="1" y="1" width="248" height="348" rx="16" fill="url(#jqLinen)"/>
+<rect x="40" y="34" width="170" height="282" rx="4" fill="#fffdf6" stroke="${JQ_G}" stroke-width="2.4"/>
+<g clip-path="url(#jqClip)">${top}<g transform="rotate(180 125 175)">${top}</g>
+<path d="M42 175H208" stroke="${JQ_G}" stroke-width="3"/><path d="M42 175H208" stroke="${JQ_L}" stroke-width=".8"/><path d="M125 168 131 175 125 182 119 175Z" fill="url(#jqGold)" stroke="${JQ_L}" stroke-width="1"/></g>
+<rect x="44.5" y="38.5" width="161" height="273" rx="2" fill="none" stroke="${JQ_G}" stroke-width=".9"/>
+${idx}<g transform="rotate(180 125 175)">${idx}</g>
+<rect x="1" y="1" width="248" height="348" rx="16" fill="url(#jqSheen)"/></svg>`}
+function jqBack(cls){return `<svg class="${cls||"jqsvg"}" viewBox="0 0 250 350" aria-hidden="true"><rect x="1" y="1" width="248" height="348" rx="16" fill="#fbf6ea" stroke="#d9d0bd" stroke-width="2"/><rect x="14" y="14" width="222" height="322" rx="9" fill="url(#jqBack)" stroke="${JQ_G}" stroke-width="3"/><rect x="22" y="22" width="206" height="306" rx="6" fill="none" stroke="${JQ_G}" stroke-width="1"/><circle cx="125" cy="175" r="52" fill="#5a0912" stroke="${JQ_G}" stroke-width="3"/><circle cx="125" cy="175" r="45" fill="none" stroke="${JQ_G}" stroke-width="1"/><text x="125" y="188" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="34" fill="url(#jqGold)" letter-spacing="2">JQK</text><rect x="1" y="1" width="248" height="348" rx="16" fill="url(#jqSheen)"/></svg>`}
+
+const JQ={off:0,round:0,drawAt:0,closeAt:0,cfg:null,hist:[],mine:{},pend:{},undo:[],prev:null,chip:10,phase:"wait",iv:null,rev:false,sub:false,ls:-1,err:null,newest:null,fl:null};
+const JQCH=[10,20,50,100,500,1000,5000,10000],JQCC={10:"#1f5fd6",20:"#0e9488",50:"#15913f",100:"#c81e1e",500:"#6d28d9",1000:"#d97706",5000:"#db2777",10000:"#1b1b1b"};
+const JQR=["J","Q","K"],JQS=["S","H","D","C"],JQSY={S:"♠",H:"♥",D:"♦",C:"♣"},JQRN={J:"JACK",Q:"QUEEN",K:"KING"},JQSN={S:"SPADES",H:"HEARTS",D:"DIAMONDS",C:"CLUBS"};
+const jqNow=()=>Date.now()+JQ.off,jqSum=o=>Object.values(o).reduce((a,b)=>a+b,0),jqZz=ms=>new Promise(r=>setTimeout(r,ms));
+const jqT=s=>Date.parse(String(s).replace(/(\.\d{3})\d+/,"$1"));
+const jqCol=v=>{let c=JQCC[10];JQCH.forEach(x=>{if(v>=x)c=JQCC[x]});return c};
+const jqShort=v=>v>=1000?(v/1000).toFixed(v%1000?1:0)+"K":String(v);
+function jqEnsureDefs(){if(!$("jqdefs"))document.body.insertAdjacentHTML("afterbegin",jqDefs())}
+function jqMult(k){const c=JQ.cfg||{color:1.95,suit:3.8,rank:2.85,card:11};return +(k==="red"||k==="black"?c.color:k[0]==="s"?c.suit:k[0]==="r"?c.rank:c.card)}
+function jqWins(k,card){const r=card[0],s=card[1];return k==="red"?(s==="H"||s==="D"):k==="black"?(s==="S"||s==="C"):k[0]==="s"?s===k[1]:k[0]==="r"?r===k[1]:k===card}
+const jqX=v=>(+v).toFixed(2).replace(/\.?0+$/,"")+"×";
+function jqBoardHtml(){
+ return `<div class="jq-row two"><button class="jq-z cr" data-jq="red"><b>RED</b><span>♥ ♦</span><small>${jqX(jqMult("red"))}</small></button><button class="jq-z cb2" data-jq="black"><b>BLACK</b><span>♠ ♣</span><small>${jqX(jqMult("black"))}</small></button></div>
+ <div class="jq-grid"><div class="jq-corner">TAP<br>TO BET</div>${JQS.map(s=>`<button class="jq-z su${jqRed(s)?" rs":""}" data-jq="s${s}" aria-label="${JQSN[s]}"><span>${JQSY[s]}</span><b>${JQSN[s]}</b><small>${jqX(jqMult("s"+s))}</small></button>`).join("")}
+ ${JQR.map(r=>`<button class="jq-z rk" data-jq="r${r}" aria-label="Any ${JQRN[r]}"><i>${r}</i><b>${JQRN[r]}</b><small>${jqX(jqMult("r"+r))}</small></button>`+JQS.map(s=>`<button class="jq-card" data-jq="${r}${s}">${jqCard(r,s)}<small>${jqX(jqMult(r+s))}</small></button>`).join("")).join("")}</div>`}
+function jqHistHtml(){const h=JQ.hist.slice(0,30);if(!h.length)return '<em>Results appear here</em>';
+ return h.map(x=>`<b class="jq-h${jqRed(x.c[1])?" red":""}${x.r===JQ.newest?" nw":""}" title="Round ${x.r}">${x.c[0]}<i>${JQSY[x.c[1]]}</i></b>`).join("")}
+function jqStatHtml(){const h=JQ.hist.slice(0,40);if(!h.length)return"";const n=k=>h.filter(x=>jqWins(k,x.c)).length;
+ return `<span>LAST ${h.length}</span><span class="r">RED ${n("red")}</span><span class="k">BLACK ${n("black")}</span><span>J ${n("rJ")}</span><span>Q ${n("rQ")}</span><span>K ${n("rK")}</span>`}
+async function jqLoad(pr){const r=await sb.rpc("jqk_state",pr!=null?{p_round:pr}:{});if(r.error)throw r.error;const d=r.data;
+ JQ.off=jqT(d.now)-Date.now();JQ.round=+d.round;JQ.drawAt=jqT(d.draw_at);JQ.closeAt=jqT(d.close_at);const nc=JSON.stringify(d.cfg)!==JSON.stringify(JQ.cfg);JQ.cfg=d.cfg;JQ.err=null;
+ if(nc&&$("jqboard"))$("jqboard").innerHTML=jqBoardHtml();return d}
+function jqPhaseNow(){const left=JQ.drawAt-jqNow();return left<=JQ.cfg.close*1000?"closed":"open"}
+async function jqView(){jqEnsureDefs();game="jqk";
+ $("app").innerHTML=`<div class="rl jq"><div class="rl-top"><button class="cb sm" data-act="lobby" aria-label="Back to games">‹</button><div class="rl-logo"><b>JQK Cards</b><small>PLAYBOOK · LIVE CARD DRAW</small></div><span class="streak" id="strk">${streakHtml()}</span><button class="cb sm" data-act="rules" aria-label="How to play">?</button><button class="cb sm" id="rmu" data-act="mute" aria-label="Sound on or off">${mute?"🔇":"🔊"}</button><button class="cb sm" data-act="menu" aria-label="Menu">☰</button></div>
+${S.maint?'<div class="card warn" style="margin:8px">Games are paused for maintenance.</div>':""}
+<div class="jq-stage" id="stage"><svg class="jq-arc" viewBox="0 0 374 196" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><path id="jqarc" d="M24 104A190 96 0 0 0 350 104" fill="none"/><path d="M12 108A204 106 0 0 0 362 108" fill="none" stroke="#d4ae55" stroke-width="1.5" opacity=".8"/><path d="M36 100A178 86 0 0 0 338 100" fill="none" stroke="#d4ae55" stroke-width=".8" opacity=".6"/><text><textPath href="#jqarc" startOffset="50%" text-anchor="middle">JACK · QUEEN · KING  ·  CARD PAYS 11 TO 1</textPath></text></svg>
+ <div class="jq-round" id="jqround">CONNECTING…</div>
+ <div class="jq-shoe" aria-hidden="true">${jqBack()}${jqBack()}${jqBack()}<i></i></div>
+ <div class="jq-slot" id="jqslot"><div class="jq-flip" id="jqflip"><div class="jq-f jq-back">${jqBack()}</div><div class="jq-f jq-front" id="jqfront"></div></div></div>
+ <div class="rtimer" id="jqtimer" aria-label="Seconds to the result"><svg viewBox="0 0 60 60"><circle class="bg" cx="30" cy="30" r="26"/><circle class="fg" cx="30" cy="30" r="26"/></svg><b>--</b><small>BET TIME</small></div>
+ <div class="jq-name" id="jqname"></div><div class="ann" id="ann"></div></div>
+<div class="jq-hist" id="jqhist"></div><div class="jq-stat" id="jqstat"></div>
+<div class="jq-board" id="jqboard">${jqBoardHtml()}</div>
+<div class="jq-act"><button class="cb" data-jqa="rebet" aria-label="Repeat last round's bets">↻</button><button class="cb tx" data-jqa="x2" aria-label="Double my chips">2X</button><button class="jq-go" id="jqgo" data-jqa="confirm">PLACE BET<small id="jqgos">pick chips first</small></button><button class="cb" data-jqa="undo" aria-label="Undo last chip">↶</button><button class="cb" data-jqa="clear" aria-label="Clear chips not yet placed">✕</button></div>
+<div class="jq-chips">${JQCH.map(v=>`<button class="cp${v===JQ.chip?" sel":""}" data-jqc="${v}" style="--cc:${JQCC[v]}" aria-label="Chip ${v}">${jqShort(v)}</button>`).join("")}</div>
+<p class="rl-note">Play money only · coins have no cash value · the server draws one card at random every minute</p></div>
+<div class="rl-bar"><div><small>BALANCE</small><b id="rbal">${fmt(shown)}</b></div><div><small>BET</small><b id="rbet">0</b></div><div><small>WIN</small><b id="rwin">0</b></div></div>`;
+ JQ.pend={};JQ.undo=[];JQ.phase="wait";JQ.rev=false;jqStop();JQ.iv=setInterval(jqTick,200);
+ try{const d=await jqLoad();JQ.hist=d.hist||[];JQ.mine=d.mine||{};if(d.balance!=null){me.coins=+d.balance;setBal(me.coins)}
+  const l=JQ.hist[0];if(l&&$("jqfront")){$("jqfront").innerHTML=jqCard(l.c[0],l.c[1]);$("jqflip").classList.add("open")}
+  JQ.phase=jqPhaseNow();announce(JQ.phase==="open"?"PLACE YOUR BETS":"NO MORE BETS",true,JQ.phase==="open"?"":"red")}
+ catch(e){JQ.err=String(e.message||e);const b=$("jqboard");if(b)b.insertAdjacentHTML("beforebegin",`<div class="jq-err">JQK isn't set up yet.<br><small>Ask your admin to run the JQK database update.</small></div>`);console.error(e)}
+ jqPaint()}
+function jqStop(){clearInterval(JQ.iv);JQ.iv=null}
+function jqChips(){document.querySelectorAll("#jqboard .jq-tc").forEach(e=>e.remove());
+ const keys=new Set([...Object.keys(JQ.mine),...Object.keys(JQ.pend)]);
+ keys.forEach(k=>{const el=document.querySelector(`#jqboard [data-jq="${k}"]`);if(!el)return;const v=(JQ.mine[k]||0)+(JQ.pend[k]||0);
+  el.insertAdjacentHTML("beforeend",`<span class="cp jq-tc${JQ.pend[k]?" pend":""}" style="--cc:${jqCol(v)}">${jqShort(v)}</span>`)})}
+function jqTotals(){const p=jqSum(JQ.pend),m=jqSum(JQ.mine);if($("rbet"))$("rbet").textContent=fmt(p+m);
+ const g=$("jqgo"),gs=$("jqgos");if(g){g.disabled=!p||JQ.phase!=="open"||JQ.sub||JQ.rev;const sl=JQ.drawAt&&JQ.cfg?Math.max(0,Math.floor((JQ.drawAt-jqNow()-JQ.cfg.close*1000)/1000)):0,cs=JQ.phase==="open"&&!JQ.rev?" · closes in "+sl+"s":"";gs.textContent=JQ.sub?"sending…":p?fmt(p)+" coins"+cs:m?fmt(m)+" placed"+cs:JQ.phase==="open"&&!JQ.rev?"closes in "+sl+"s":"wait for next round"}}
+function jqPaint(){if(view!=="jqk")return;const rd=$("jqround");if(rd&&JQ.round)rd.textContent="ROUND "+String(JQ.round).slice(-6)+" · "+new Date(JQ.drawAt).toLocaleTimeString("en-IN",{timeZone:"Asia/Kolkata",hour:"2-digit",minute:"2-digit",hour12:true}).toUpperCase();
+ if($("jqhist"))$("jqhist").innerHTML=jqHistHtml();if($("jqstat"))$("jqstat").innerHTML=jqStatHtml();
+ const b=$("jqboard");if(b)b.classList.toggle("lock",JQ.phase!=="open"||JQ.rev);jqChips();jqTotals()}
+function jqFlash(t){announce(t,false,"red");tone(200,.12,"square",.05);clearTimeout(JQ.fl);JQ.fl=setTimeout(()=>{if(view==="jqk"&&!JQ.rev)announce(JQ.phase==="open"?"PLACE YOUR BETS":"NO MORE BETS",true,JQ.phase==="open"?"":"red")},2400)}
+function jqTick(){if(view!=="jqk"||!$("jqtimer")){jqStop();return}if(!JQ.cfg||!JQ.drawAt)return;
+ const now=jqNow(),left=JQ.drawAt-now,cl=JQ.cfg.close*1000,tot=JQ.cfg.round*1000,el=$("jqtimer");
+ if(!JQ.rev){const sec=Math.max(0,Math.min(59,Math.floor(left/1000)));el.querySelector("b").textContent=sec;
+  el.querySelector(".fg").style.strokeDashoffset=(163.4*(1-Math.max(0,left)/tot)).toFixed(1);
+  el.className="rtimer"+(left<=cl?" warn":left<=cl+10000?" mid":"");el.querySelector("small").textContent=left<=cl?"NO BETS":"BET TIME"}
+ if(JQ.phase==="open"&&!JQ.rev&&left<=cl+1500&&jqSum(JQ.pend)>0&&!JQ.sub)jqConfirm(true);
+ if((JQ.tk=(JQ.tk||0)+1)%5===0)jqTotals();
+ if(JQ.phase==="open"&&!JQ.rev&&left<=cl){JQ.phase="closed";announce("NO MORE BETS",true,"red");SND.nomore();jqPaint()}
+ if(JQ.phase==="closed"){const s=Math.ceil(left/1000);if(s!==JQ.ls){JQ.ls=s;if(s<=5&&s>0)tone(s<=3?1180:880,.07,"square",.035)}}
+ if(!JQ.rev&&JQ.phase!=="wait"&&left<=0)jqReveal(JQ.round)}
+function jqPlace(k,el){if(JQ.err)return jqFlash("JQK isn't set up yet");if(S.maint)return jqFlash("Paused for maintenance");
+ if(JQ.rev||JQ.phase!=="open")return jqFlash(JQ.rev?"Wait for the next round":"No more bets · next round soon");
+ const cap=+JQ.cfg.max,v=JQ.chip,used=jqSum(JQ.mine)+jqSum(JQ.pend);
+ if(jqSum(JQ.pend)+v>me.coins)return jqFlash("Not enough coins");
+ if(used+v>cap)return jqFlash("Max "+fmt(cap)+" per round");
+ JQ.undo.push(JSON.stringify(JQ.pend));JQ.pend[k]=(JQ.pend[k]||0)+v;chipSound(1);cpFly(document.querySelector(".jq-chips .sel"),el,v);setTimeout(jqChips,300*Math.max(K,.3));jqTotals()}
+function jqAct(a){
+ if(a==="confirm")return jqConfirm(false);
+ if(JQ.rev||JQ.phase!=="open")return jqFlash("No more bets · next round soon");
+ if(a==="undo"){if(!JQ.undo.length)return jqFlash(jqSum(JQ.mine)?"Placed bets can't be taken back":"Nothing to undo");JQ.pend=JSON.parse(JQ.undo.pop());chipSound(1);jqChips();jqTotals()}
+ else if(a==="clear"){if(!jqSum(JQ.pend))return jqFlash(jqSum(JQ.mine)?"Placed bets can't be taken back":"No chips to clear");JQ.undo.push(JSON.stringify(JQ.pend));JQ.pend={};chipSound(3);jqChips();jqTotals()}
+ else if(a==="x2"||a==="rebet"){const src=a==="x2"?(()=>{const o={};new Set([...Object.keys(JQ.mine),...Object.keys(JQ.pend)]).forEach(k=>o[k]=(JQ.mine[k]||0)+(JQ.pend[k]||0));return o})():JQ.prev;
+  if(!src||!jqSum(src))return jqFlash(a==="x2"?"Place chips first":"No previous bet yet");const add=jqSum(src);
+  if(jqSum(JQ.pend)+add>me.coins)return jqFlash("Not enough coins");if(jqSum(JQ.mine)+jqSum(JQ.pend)+add>+JQ.cfg.max)return jqFlash("Max "+fmt(JQ.cfg.max)+" per round");
+  JQ.undo.push(JSON.stringify(JQ.pend));Object.keys(src).forEach(k=>JQ.pend[k]=(JQ.pend[k]||0)+src[k]);chipSound(3);jqChips();jqTotals()}}
+async function jqConfirm(auto){if(JQ.sub)return;const b=Object.assign({},JQ.pend);
+ if(!jqSum(b)){if(!auto)jqFlash("Tap a card or a box to put chips on it");return}
+ if(JQ.phase!=="open"||JQ.rev)return jqFlash("No more bets · next round soon");
+ JQ.sub=true;jqTotals();let r;try{r=await sb.rpc("jqk_place",{p_bets:b})}catch(e){r={error:{message:String(e)}}}JQ.sub=false;
+ if(view!=="jqk")return;
+ if(r.error){const m=String(r.error.message);if(/closed/.test(m)){JQ.pend={};JQ.undo=[]}
+  jqFlash(/closed/.test(m)?"Too late · betting closed for this round":/round limit/.test(m)?"Max "+fmt(JQ.cfg.max)+" per round":/bad stake/.test(m)?"Not enough coins":/disabled/.test(m)?"JQK is switched off":friendly(m));jqPaint();return}
+ Object.keys(b).forEach(k=>{JQ.pend[k]-=b[k];if(JQ.pend[k]<=0)delete JQ.pend[k]});JQ.undo=[];
+ JQ.mine=r.data.mine||{};me.coins=+r.data.balance;tweenBal(me.coins,400);chipSound(3);
+ announce(auto?"CHIPS PLACED FOR YOU · GOOD LUCK":"BET PLACED · GOOD LUCK!",false,"gold");jqPaint()}
+function jqFanfare(){[784,988,1175,1568,1976].forEach((f,i)=>tone(f,.38,"triangle",.11,i*.075));tone(2637,1.3,"sine",.05,.42);tone(1319,1.3,"sine",.05,.42);noise(.9,2000,1,.05,.35,"highpass",5000)}
+async function jqReveal(r){JQ.rev=true;busy=true;const had=jqSum(JQ.mine);if(had)JQ.prev=Object.assign({},JQ.mine);JQ.pend={};JQ.undo=[];
+ const el=$("jqtimer");if(el){el.className="rtimer off";el.querySelector("b").textContent="—";el.querySelector("small").textContent="DRAWING"}
+ announce("DRAWING THE CARD…",true,"gold");jqPaint();scrollTo({top:0,behavior:RM?"auto":"smooth"});
+ let d=null;for(let i=0;i<25&&view==="jqk";i++){try{d=await jqLoad(r)}catch(e){}if(d&&d.last)break;await jqZz(i<4?700:1500)}
+ try{if(d&&d.last&&view==="jqk")await jqShow(d.last,d)}catch(e){console.error(e)}
+ busy=false;JQ.rev=false;if(view!=="jqk")return;
+ if(d){JQ.hist=d.hist||JQ.hist;JQ.mine=d.mine||{};if(d.balance!=null){me.coins=+d.balance;tweenBal(me.coins,500)}}
+ document.querySelectorAll("#jqboard .win,#jqboard .hit,#jqboard .spot").forEach(e=>e.classList.remove("win","hit","spot"));
+ if($("jqname"))$("jqname").innerHTML="";if($("jqslot"))$("jqslot").classList.remove("glow");if($("jqflip"))$("jqflip").classList.remove("won");
+ JQ.phase=jqPhaseNow();JQ.ls=-1;announce(JQ.phase==="open"?"PLACE YOUR BETS":"NO MORE BETS",true,JQ.phase==="open"?"":"red");jqPaint()}
+async function jqShow(L,d){const card=L.card,cr=card[0],cs=card[1],slot=$("jqslot"),flip=$("jqflip"),front=$("jqfront");
+ // a fresh card comes out of the shoe, face down
+ flip.classList.remove("open","won");slot.classList.remove("glow");$("jqname").innerHTML="";await jqZz(250);
+ front.innerHTML=jqCard(cr,cs);slot.getAnimations().forEach(a=>a.cancel());SND.deal();
+ await anim(slot,[{transform:"translate(-118px,8px) rotate(-30deg) scale(.45)",opacity:.4},{transform:"translate(-40px,-14px) rotate(-8deg) scale(.85)",opacity:1,offset:.6},{transform:"none",opacity:1}],620,"cubic-bezier(.2,.8,.3,1)");
+ // spotlight runs over the 12 cards on the table and stops on the drawn card
+ const cards=[...document.querySelectorAll("#jqboard .jq-card")],ti=cards.findIndex(c=>c.dataset.jq===card),hops=14+rnd(4);let idx=rnd(12);
+ SND.drum(10);
+ for(let i=0;i<hops&&view==="jqk";i++){idx=i===hops-1?ti:(idx+1+rnd(4))%12;if(i===hops-2&&idx===ti)idx=(ti+5)%12;
+  cards.forEach(c=>c.classList.remove("spot"));if(cards[idx])cards[idx].classList.add("spot");sfx("fret",.13,1+i*.025);await jqZz((40+i*i*1.1)*Math.max(K,.3))}
+ if(view!=="jqk")return;
+ // flip the big card
+ SND.flip();SND.whoosh();flip.classList.add("open");await jqZz(420);
+ jqFanfare();flip.classList.add("won");slot.classList.add("glow");
+ const sr=slot.getBoundingClientRect();burst(40,false,sr.left+sr.width/2,sr.top+sr.height/2);
+ $("jqname").innerHTML=`<b>${JQRN[cr]} OF ${JQSN[cs]}</b>`;
+ announce((jqRed(cs)?"RED":"BLACK")+" · "+JQSY[cs]+" "+JQSN[cs]+" · "+JQRN[cr],true,"gold");
+ cards.forEach(c=>c.classList.remove("spot"));if(cards[ti])cards[ti].classList.add("hit");
+ document.querySelectorAll("#jqboard [data-jq]").forEach(z=>{if(z.classList.contains("jq-z"))z.classList.toggle("win",jqWins(z.dataset.jq,card))});
+ JQ.newest=L.round;JQ.hist=d.hist||JQ.hist;if($("jqhist"))$("jqhist").innerHTML=jqHistHtml();if($("jqstat"))$("jqstat").innerHTML=jqStatHtml();
+ await jqZz(900);
+ const st=+L.stake,pay=+L.payout;
+ if(st>0){const bets=L.bets||{};let i=0;
+  Object.keys(bets).forEach(k=>{const z=document.querySelector(`#jqboard [data-jq="${k}"]`),c=z&&z.querySelector(".jq-tc");if(!z)return;
+   if(+bets[k].payout>0){z.insertAdjacentHTML("beforeend",`<span class="cp jq-tc pay" style="--cc:${jqCol(+bets[k].payout)};right:auto;left:3px">+${jqShort(Math.round(+bets[k].payout))}</span>`)}
+   else if(c){cpFly(c,$("jqslot"),bets[k].stake,{fade:1,delay:i*45,ms:520});c.remove();i++}});
+  if(i)setTimeout(()=>chipSound(4),150);
+  if(pay>0){chipSound(3);await jqZz(400);tween(900,u=>{if($("rwin"))$("rwin").textContent=fmt(pay*u)});
+   const mult=pay/st,tier=mult>=10?"MEGA WIN":mult>=5?"BIG WIN":"";let src=slot;
+   if(tier){const rr=await bigWin(tier,pay);if(rr)src=rr}else{SND.win();popText("+"+fmt(pay));await jqZz(700)}
+   if(view!=="jqk")return;document.querySelectorAll("#jqboard .jq-tc").forEach((t,j)=>{cpFly(t,$("rbal"),1,{fade:1,delay:j*50,ms:600});t.remove()});
+   flyCoins(src,tier?18:10);await jqZz(600);me.coins=+d.balance;tweenBal(me.coins,900)}
+  else{SND.lose();if($("rwin"))$("rwin").textContent="0";const sg=$("stage");sg.classList.remove("shake");void sg.offsetWidth;sg.classList.add("shake");await jqZz(500)}
+  try{progress(st,pay>0,st?pay/st:0,pay)}catch(e){}
+  await jqZz(1600)}
+ else await jqZz(2200)}
+function jqRulesHtml(){const c=JQ.cfg||{color:1.95,suit:3.8,rank:2.85,card:11,close:15,round:60,max:20000};
+ return `<h3>🃏 How to play JQK Cards</h3><p>A new round starts every minute for everyone. Pick a chip, tap the boxes or cards you want to back, then tap <b>PLACE BET</b>. Chips still on the table are placed for you just before betting closes. Betting closes ${c.close} seconds before the result.</p><p>When the timer reaches 0, the server draws one of the 12 cards (Jack, Queen or King in any of the 4 suits) at random and it's turned over on the table. Winnings are added to your balance straight away.</p>
+ <ul class="pays"><li><span>Colour · Red (♥ ♦) or Black (♠ ♣)</span><b>${jqX(c.color)}</b></li><li><span>Suit · ♠ ♥ ♦ or ♣</span><b>${jqX(c.suit)}</b></li><li><span>Rank · any Jack, Queen or King</span><b>${jqX(c.rank)}</b></li><li><span>One exact card, e.g. King of Hearts</span><b>${jqX(c.card)}</b></li></ul>
+ <p class="meta">Up to ${fmt(c.max)} coins per round. Placed bets can't be taken back. Play money only: coins have no cash value.</p>`}
+
 /* ---------------- Satta King ---------------- */
 const SK={st:null,res:[],bets:[],page:"home",mk:null,tab:"jodi",amt:10,slip:{},cA:[],cB:[],cut:false,btab:"open",off:0,chan:null,iv:null,poll:null,err:null,seen:{},busy:false,last:0};
 const SKAMT=[10,50,100,500,1000];
@@ -1877,10 +2175,13 @@ function skRulesHtml(){const c=(SK.st&&SK.st.cfg)||{jodi:90,andar:9,bahar:9,clos
  return `<h3>👑 How to play Satta King</h3><p>Every market draws one number from <b>00 to 99</b> once a day at its fixed time (India time). Betting closes ${c.close} minutes before the draw. The server picks every result at random.</p><ul class="pays"><li><span>Jodi · exact number (e.g. 47)</span><b>${c.jodi}×</b></li><li><span>Andar · first digit (the 4 in 47)</span><b>${c.andar}×</b></li><li><span>Bahar · second digit (the 7 in 47)</span><b>${c.bahar}×</b></li></ul><p class="meta">Crossing: pick some Andar digits and some Bahar digits, and every combination is added as a Jodi bet. "Without doubles" leaves out 00, 11, 22… Winnings are added to your balance as soon as the result is declared. Coins are play-money only.</p><button class="btn wide" data-act="close">GOT IT</button>`}
 document.addEventListener("click",async e=>{
  if(e.target.id==="sheet")return closeSheet();
- const t=e.target.closest("[data-p],[data-g],[data-s],[data-act],[data-t],[data-b],[data-rc],[data-xo],[data-xm],[data-xk],[data-xnav],[data-xt],[data-xbt],[data-sk]");if(!t||t.disabled)return;
+ const t=e.target.closest("[data-p],[data-g],[data-s],[data-act],[data-t],[data-b],[data-rc],[data-xo],[data-xm],[data-xk],[data-xnav],[data-xt],[data-xbt],[data-sk],[data-jq],[data-jqa],[data-jqc]");if(!t||t.disabled)return;
  try{
   if(t.dataset.t)return setTheme(t.dataset.t);
   if(t.dataset.sk)return skAct(t.dataset.sk);
+  if(t.dataset.jq)return jqPlace(t.dataset.jq,t);
+  if(t.dataset.jqa)return jqAct(t.dataset.jqa);
+  if(t.dataset.jqc){JQ.chip=+t.dataset.jqc;document.querySelectorAll(".jq-chips .cp").forEach(x=>x.classList.toggle("sel",x===t));chipSound(1);return}
   if(t.dataset.xo)return xOdds(t.dataset.xo);
   if(t.dataset.xm)return xOpenMatch(t.dataset.xm);
   if(t.dataset.xk)return xKey(t.dataset.xk);
@@ -1905,7 +2206,8 @@ document.addEventListener("click",async e=>{
   else if(a==="x2"){if(stake<1)return flash("Add chips first");addStake(stake,t)}
   else if(a==="skip"){ff=true;t.hidden=true}
   else if(a==="lobby"){if(busy)return;view="lobby";SND.click();render();scrollTo(0,0)}
-  else if(a==="rules")openSheet(view==="live"?lcRulesHtml():view==="satta"?skRulesHtml():rulesHtml());
+  else if(a==="rules")openSheet(view==="live"?lcRulesHtml():view==="satta"?skRulesHtml():view==="jqk"?jqRulesHtml():rulesHtml());
+  else if(a==="jqk"){if(busy)return;view="jqk";SND.click();ac();render();scrollTo(0,0)}
   else if(a==="satta"){if(busy)return;view="satta";SK.page="home";SK.slip={};SND.click();ac();render();scrollTo(0,0)}
   else if(a==="live"){if(busy)return;view="live";LC.page="home";LC.slip=null;SND.click();ac();render();scrollTo(0,0)}
 
