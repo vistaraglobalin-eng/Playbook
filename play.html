@@ -916,6 +916,26 @@ body.rlt .xv~*{}
 .jq-h{background:#f5eedc;font-family:Didot,"Bodoni 72",Georgia,serif;font-weight:400}
 .jq-h.red{color:#c8102e}
 .jq-slot{top:20px}.jq-shoe{top:36px}.jq-stage .rtimer{top:36px}.jq-name{top:134px}
+
+.jq-live{position:absolute;right:14px;top:34px;width:82px;padding:6px 4px;border-radius:12px;text-align:center;background:linear-gradient(#fffdf4,#f1e6c8);color:#1a1a1a;box-shadow:0 0 0 2px #e3bf6a,0 6px 14px rgba(0,0,0,.5);z-index:3}
+.jq-live small{display:block;font-size:7.5px;font-weight:900;letter-spacing:1px;color:#7a5200}
+.jq-live b{display:block;font:900 15px/1.2 Georgia,serif;color:#1a1a1a}
+.jq-live i{display:block;font-style:normal;font-weight:900;font-size:19px;line-height:1.1;color:#2d7a1f;animation:blink 1.4s infinite}
+.jq-live em{display:block;font-style:normal;font-size:8px;font-weight:800;color:#555;margin-top:1px}
+.jq-live.closed i{color:#c8102e}.jq-live.rv i{color:#b8862b;animation:none}
+.jq-hi{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:2px}
+.jq-hi small{font-size:7.5px;font-weight:800;color:#ffe9a8;opacity:.85}
+.jq-res{margin:12px 6px 0;padding:10px 8px;border-radius:14px;background:#fffdf4;color:#1a1a1a;box-shadow:0 0 0 2px #e3bf6a,0 10px 22px rgba(0,0,0,.5)}
+.jq-rh{text-align:center;font:900 13px/1 system-ui,sans-serif;letter-spacing:2px;padding:8px;margin:-10px -8px 8px;border-radius:14px 14px 0 0;background:#ffd400;color:#000}
+.jq-rg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
+.jq-rb{border-radius:8px;padding:5px 3px;text-align:center;background:#0b3d91;color:#fff}
+.jq-rb:nth-child(6n+4),.jq-rb:nth-child(6n+5),.jq-rb:nth-child(6n+6){background:#7a1020}
+.jq-rb span{display:block;font-size:10px;font-weight:900;letter-spacing:.3px}
+.jq-rb div{font-size:11px;font-weight:800;white-space:nowrap}
+.jq-rb b{display:inline-block;min-width:20px;padding:0 2px;border-radius:3px;background:#f5eedc;color:#141414;font:700 11px/1.35 Georgia,serif}
+.jq-rb b.red{color:#c8102e}.jq-rb b.e{background:transparent;color:#ffffffaa}.jq-rb b i{font-style:normal}
+.jq-rb em{font-style:normal;color:#ffd400}.jq-rb u{text-decoration:none;color:#3ddc84;animation:blink 1.4s infinite}
+.jq-rb.nx{box-shadow:0 0 0 2px #ffd400}
 </style>
 </head>
 <body>
@@ -962,7 +982,7 @@ function err(t){msg=t;render()}
 
 /* ---------------- sound ---------------- */
 let AC=null,NB=null,lastCoin=0;const BUF={};
-function ac(){try{if(!AC){const C=window.AudioContext||window.webkitAudioContext;if(C)AC=new C()}if(AC&&AC.state==="suspended")AC.resume()}catch(e){}return AC}
+function ac(){try{if(!AC){try{if(navigator.audioSession)navigator.audioSession.type="playback"}catch(e){}const C=window.AudioContext||window.webkitAudioContext;if(C)AC=new C()}if(AC&&AC.state==="suspended")AC.resume()}catch(e){}return AC}
 function nbuf(a){if(!NB){NB=a.createBuffer(1,a.sampleRate*2,a.sampleRate);const d=NB.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1}return NB}
 function tone(f,d,ty,v,dl){if(mute)return;const a=ac();if(!a)return;try{const t=a.currentTime+(dl||0),o=a.createOscillator(),g=a.createGain();o.type=ty||"sine";o.frequency.setValueAtTime(f,t);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v||.15,t+.01);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(a.destination);o.start(t);o.stop(t+d+.05)}catch(e){}}
 function noise(dur,f,q,v,dl,type,f2){if(mute)return;const a=ac();if(!a)return;try{
@@ -1020,7 +1040,11 @@ const SND={
  big:()=>{[523,659,784,1047,1319,1568,2093].forEach((f,i)=>tone(f,.4,"triangle",.2,i*.09));[1047,1319,1568].forEach(f=>tone(f,1.1,"sine",.08,.7))},
  lose:()=>{tone(230,.3,"sawtooth",.06);tone(170,.45,"sawtooth",.06,.16)},
  levelup:()=>[392,523,659,784,1047].forEach((f,i)=>tone(f,.2,"square",.07,i*.07)),
- spin:()=>{tone(260,.25,"sine",.07);tone(340,.25,"sine",.07,.12)}};
+ spin:()=>{tone(260,.25,"sine",.07);tone(340,.25,"sine",.07,.12)},
+ drumroll:d=>{const n=Math.floor(d/.045);for(let i=0;i<n;i++)noise(.06,200+Math.random()*80,1,.05+.13*i/n,i*.045,"lowpass");noise(1.3,5000,.7,.13,d,"highpass",9000);tone(65,.5,"sine",.3,d)},
+ fanfare:()=>{[784,988,1175,1568,1976].forEach((f,i)=>tone(f,.38,"triangle",.11,i*.075));tone(2637,1.3,"sine",.05,.42);tone(1319,1.3,"sine",.05,.42);noise(.9,2000,1,.05,.35,"highpass",5000)},
+ chime:()=>{[1319,1760,2093].forEach((f,i)=>tone(f,.9,"sine",.07,i*.12))}};
+["pointerdown","touchend"].forEach(ev=>document.addEventListener(ev,()=>{ac()},{passive:true}));
 function setMute(m){mute=m;$("mu").textContent=m?"🔇":"🔊";if($("rmu"))$("rmu").textContent=m?"🔇":"🔊";try{localStorage.setItem("pbmute",m?"1":"0")}catch(e){}}
 
 /* ---------------- effects ---------------- */
@@ -1107,7 +1131,7 @@ function lobby(gs){
  if(msg)h+=`<div class="card" style="margin-top:10px">${esc(msg)}</div>`;
  h+='<h3 class="sec">Sports</h3><button class="tile t-live wide-tile" data-act="live"><span class="badge livebadge">● LIVE</span><div class="art"><div class="a-live"><span>🏏</span><i></i><i></i><i></i></div></div><div class="tl"><b>📡 Live Cricket</b><small>Real matches · live odds and scores</small></div></button>';
  if(S.games&&S.games.satta)h+='<h3 class="sec">Satta King</h3><button class="tile t-sk wide-tile" data-act="satta"><span class="badge">DAILY</span><div class="art"><div class="a-sk"><span>👑</span><b>4</b><b>7</b></div></div><div class="tl"><b>👑 Satta King</b><small>Daily markets · Jodi, Andar, Bahar</small></div></button>';
- if(S.games&&S.games.jqk){jqEnsureDefs();h+=`<h3 class="sec">Card draw</h3><button class="tile t-jq wide-tile" data-act="jqk"><span class="badge livebadge">● EVERY MINUTE</span><div class="art"><div class="a-jq">${jqCard("J","S","")}${jqCard("Q","H","")}${jqCard("K","D","")}</div></div><div class="tl"><b>🃏 JQK Cards</b><small>Jack · Queen · King · new card every 60 seconds</small></div></button>`}
+ if(S.games&&S.games.jqk){jqEnsureDefs();h+=`<h3 class="sec">Card draw</h3><button class="tile t-jq wide-tile" data-act="jqk"><span class="badge livebadge">● HOURLY</span><div class="art"><div class="a-jq">${jqCard("J","S","")}${jqCard("Q","H","")}${jqCard("K","D","")}</div></div><div class="tl"><b>🃏 JQK Cards</b><small>Jack · Queen · King · result every hour at :59</small></div></button>`}
  h+='<h3 class="sec">Games</h3>';
  if(!gs.length)h+='<div class="card">No games are available right now. Please check back soon.</div>';
  h+='<div class="tiles">'+gs.map((g,i)=>`<button class="tile t-${g[0]}" data-g="${g[0]}" style="animation-delay:${i*70}ms"><span class="badge">${g[4]}</span><div class="art">${art(g[0])}</div><div class="tl"><b>${g[1]} ${g[2]}</b><small>${g[3]}</small></div></button>`).join("")+'</div>';
@@ -1913,6 +1937,19 @@ const jqNow=()=>Date.now()+JQ.off,jqSum=o=>Object.values(o).reduce((a,b)=>a+b,0)
 const jqT=s=>Date.parse(String(s).replace(/(\.\d{3})\d+/,"$1"));
 const jqCol=v=>{let c=JQCC[10];JQCH.forEach(x=>{if(v>=x)c=JQCC[x]});return c};
 const jqShort=v=>v>=1000?(v/1000).toFixed(v%1000?1:0)+"K":String(v);
+const jqTm=ms=>new Date(ms).toLocaleTimeString("en-US",{timeZone:"Asia/Kolkata",hour:"numeric",minute:"2-digit",hour12:true});
+const jqDay=ms=>new Date(ms).toLocaleDateString("en-CA",{timeZone:"Asia/Kolkata"});
+const jqRT=r=>((+r+1)*JQ.cfg.round-(JQ.cfg.offset||0))*1000;
+function jqLive(){const nt=$("jqnt");if(!nt||!JQ.cfg)return;nt.textContent=jqTm(JQ.drawAt);const st=$("jqst"),wt=$("jqwt"),lv=$("jqlive");
+ lv.className="jq-live "+(JQ.rev?"rv":JQ.phase);wt.textContent=JQ.rev?"RESULT":"WAIT";
+ st.textContent=JQ.rev?"declaring now":JQ.phase==="open"?"bets close "+jqTm(JQ.closeAt):"bets closed"}
+function jqResHtml(){if(!JQ.cfg||!JQ.hist.length)return"";const by={};JQ.hist.forEach(x=>{by[x.r]=x.c});
+ const today=jqDay(jqNow()),cur=JQ.round,base=cur-((()=>{let k=0;while(k<24&&jqDay(jqRT(cur-k-1))===today)k++;return k})());
+ // today's slots start at round "base" (first draw of the day) and run 24 rounds
+ let h="";for(let i=0;i<24;i++){const r=base+i,ms=jqRT(r),y=by[r-24],t=by[r],nx=r===cur;
+  const c=x=>x?`<b class="${jqRed(x[1])?"red":""}">${x[0]}<i>${JQSY[x[1]]}</i></b>`:"<b class=\"e\">--</b>";
+  h+=`<div class="jq-rb${nx?" nx":""}${t?" done":""}"><span>${jqTm(ms)}</span><div>{ ${c(y)} } <em>➜</em> [ ${t?c(t):nx?"<u>WAIT</u>":c(null)} ]</div></div>`}
+ return `<div class="jq-rh">JQK RESULTS · TODAY</div><div class="jq-rg">${h}</div>`}
 function jqEnsureDefs(){if(!$("jqdefs"))document.body.insertAdjacentHTML("afterbegin",jqDefs())}
 function jqMult(k){const c=JQ.cfg||{color:1.95,suit:3.8,rank:2.85,card:11};return +(k==="red"||k==="black"?c.color:k[0]==="s"?c.suit:k[0]==="r"?c.rank:c.card)}
 function jqWins(k,card){const r=card[0],s=card[1];return k==="red"?(s==="H"||s==="D"):k==="black"?(s==="S"||s==="C"):k[0]==="s"?s===k[1]:k[0]==="r"?r===k[1]:k===card}
@@ -1922,7 +1959,7 @@ function jqBoardHtml(){
  <div class="jq-grid"><div class="jq-corner">TAP<br>TO BET</div>${JQS.map(s=>`<button class="jq-z su${jqRed(s)?" rs":""}" data-jq="s${s}" aria-label="${JQSN[s]}"><span>${JQSY[s]}</span><b>${JQSN[s]}</b><small>${jqX(jqMult("s"+s))}</small></button>`).join("")}
  ${JQR.map(r=>`<button class="jq-z rk" data-jq="r${r}" aria-label="Any ${JQRN[r]}"><i>${r}</i><b>${JQRN[r]}</b><small>${jqX(jqMult("r"+r))}</small></button>`+JQS.map(s=>`<button class="jq-card" data-jq="${r}${s}">${jqCard(r,s)}<small>${jqX(jqMult(r+s))}</small></button>`).join("")).join("")}</div>`}
 function jqHistHtml(){const h=JQ.hist.slice(0,30);if(!h.length)return '<em>Results appear here</em>';
- return h.map(x=>`<b class="jq-h${jqRed(x.c[1])?" red":""}${x.r===JQ.newest?" nw":""}" title="Round ${x.r}">${x.c[0]}<i>${JQSY[x.c[1]]}</i></b>`).join("")}
+ return h.map(x=>`<div class="jq-hi"><b class="jq-h${jqRed(x.c[1])?" red":""}${x.r===JQ.newest?" nw":""}">${x.c[0]}<i>${JQSY[x.c[1]]}</i></b><small>${JQ.cfg?jqTm(jqRT(x.r)).replace(" ",""):""}</small></div>`).join("")}
 function jqStatHtml(){const h=JQ.hist.slice(0,40);if(!h.length)return"";const n=k=>h.filter(x=>jqWins(k,x.c)).length;
  return `<span>LAST ${h.length}</span><span class="r">RED ${n("red")}</span><span class="k">BLACK ${n("black")}</span><span>J ${n("rJ")}</span><span>Q ${n("rQ")}</span><span>K ${n("rK")}</span>`}
 async function jqLoad(pr){const r=await sb.rpc("jqk_state",pr!=null?{p_round:pr}:{});if(r.error)throw r.error;const d=r.data;
@@ -1936,18 +1973,19 @@ ${S.maint?'<div class="card warn" style="margin:8px">Games are paused for mainte
  <div class="jq-round" id="jqround">CONNECTING…</div>
  <div class="jq-shoe" aria-hidden="true">${jqBack()}${jqBack()}${jqBack()}<i></i></div>
  <div class="jq-slot" id="jqslot"><div class="jq-flip" id="jqflip"><div class="jq-f jq-back">${jqBack()}</div><div class="jq-f jq-front" id="jqfront"></div></div></div>
- <div class="rtimer" id="jqtimer" aria-label="Seconds to the result"><svg viewBox="0 0 60 60"><circle class="bg" cx="30" cy="30" r="26"/><circle class="fg" cx="30" cy="30" r="26"/></svg><b>--</b><small>BET TIME</small></div>
+ <div class="jq-live" id="jqlive"><small>NEXT RESULT</small><b id="jqnt">--</b><i id="jqwt">WAIT</i><em id="jqst">…</em></div>
  <div class="jq-name" id="jqname"></div><div class="ann" id="ann"></div></div>
 <div class="jq-hist" id="jqhist"></div><div class="jq-stat" id="jqstat"></div>
 <div class="jq-board" id="jqboard">${jqBoardHtml()}</div>
 <div class="jq-act"><button class="cb" data-jqa="rebet" aria-label="Repeat last round's bets">↻</button><button class="cb tx" data-jqa="x2" aria-label="Double my chips">2X</button><button class="jq-go" id="jqgo" data-jqa="confirm">PLACE BET<small id="jqgos">pick chips first</small></button><button class="cb" data-jqa="undo" aria-label="Undo last chip">↶</button><button class="cb" data-jqa="clear" aria-label="Clear chips not yet placed">✕</button></div>
 <div class="jq-chips">${JQCH.map(v=>`<button class="cp${v===JQ.chip?" sel":""}" data-jqc="${v}" style="--cc:${JQCC[v]}" aria-label="Chip ${v}">${jqShort(v)}</button>`).join("")}</div>
-<p class="rl-note">Play money only · coins have no cash value · the server draws one card at random every minute</p></div>
+<div class="jq-res" id="jqres"></div>
+<p class="rl-note">Play money only · coins have no cash value · the server draws one card at random every hour</p></div>
 <div class="rl-bar"><div><small>BALANCE</small><b id="rbal">${fmt(shown)}</b></div><div><small>BET</small><b id="rbet">0</b></div><div><small>WIN</small><b id="rwin">0</b></div></div>`;
  JQ.pend={};JQ.undo=[];JQ.phase="wait";JQ.rev=false;jqStop();JQ.iv=setInterval(jqTick,200);
  try{const d=await jqLoad();JQ.hist=d.hist||[];JQ.mine=d.mine||{};if(d.balance!=null){me.coins=+d.balance;setBal(me.coins)}
   const l=JQ.hist[0];if(l&&$("jqfront")){$("jqfront").innerHTML=jqCard(l.c[0],l.c[1]);$("jqflip").classList.add("open")}
-  JQ.phase=jqPhaseNow();announce(JQ.phase==="open"?"PLACE YOUR BETS":"NO MORE BETS",true,JQ.phase==="open"?"":"red")}
+  JQ.phase=jqPhaseNow();announce(JQ.phase==="open"?"PLACE YOUR BETS":"BETS CLOSED · RESULT AT "+jqTm(JQ.drawAt),true,JQ.phase==="open"?"":"red");SND.chime()}
  catch(e){JQ.err=String(e.message||e);const b=$("jqboard");if(b)b.insertAdjacentHTML("beforebegin",`<div class="jq-err">JQK isn't set up yet.<br><small>Ask your admin to run the JQK database update.</small></div>`);console.error(e)}
  jqPaint()}
 function jqStop(){clearInterval(JQ.iv);JQ.iv=null}
@@ -1956,20 +1994,15 @@ function jqChips(){document.querySelectorAll("#jqboard .jq-tc").forEach(e=>e.rem
  keys.forEach(k=>{const el=document.querySelector(`#jqboard [data-jq="${k}"]`);if(!el)return;const v=(JQ.mine[k]||0)+(JQ.pend[k]||0);
   el.insertAdjacentHTML("beforeend",`<span class="cp jq-tc${JQ.pend[k]?" pend":""}" style="--cc:${jqCol(v)}">${jqShort(v)}</span>`)})}
 function jqTotals(){const p=jqSum(JQ.pend),m=jqSum(JQ.mine);if($("rbet"))$("rbet").textContent=fmt(p+m);
- const g=$("jqgo"),gs=$("jqgos");if(g){g.disabled=!p||JQ.phase!=="open"||JQ.sub||JQ.rev;const sl=JQ.drawAt&&JQ.cfg?Math.max(0,Math.floor((JQ.drawAt-jqNow()-JQ.cfg.close*1000)/1000)):0,cs=JQ.phase==="open"&&!JQ.rev?" · closes in "+sl+"s":"";gs.textContent=JQ.sub?"sending…":p?fmt(p)+" coins"+cs:m?fmt(m)+" placed"+cs:JQ.phase==="open"&&!JQ.rev?"closes in "+sl+"s":"wait for next round"}}
-function jqPaint(){if(view!=="jqk")return;const rd=$("jqround");if(rd&&JQ.round)rd.textContent="ROUND "+String(JQ.round).slice(-6)+" · "+new Date(JQ.drawAt).toLocaleTimeString("en-IN",{timeZone:"Asia/Kolkata",hour:"2-digit",minute:"2-digit",hour12:true}).toUpperCase();
+ const g=$("jqgo"),gs=$("jqgos");if(g){g.disabled=!p||JQ.phase!=="open"||JQ.sub||JQ.rev;const op=JQ.phase==="open"&&!JQ.rev&&JQ.closeAt,cs=op?" · till "+jqTm(JQ.closeAt):"";gs.textContent=JQ.sub?"sending…":p?fmt(p)+" coins"+cs:m?fmt(m)+" placed"+cs:op?"open till "+jqTm(JQ.closeAt):"bets closed · result "+(JQ.drawAt?jqTm(JQ.drawAt):"")}}
+function jqPaint(){if(view!=="jqk")return;const rd=$("jqround");if(rd&&JQ.round)rd.textContent="JQK LIVE · RESULT EVERY HOUR AT :59";jqLive();if($("jqres"))$("jqres").innerHTML=jqResHtml();
  if($("jqhist"))$("jqhist").innerHTML=jqHistHtml();if($("jqstat"))$("jqstat").innerHTML=jqStatHtml();
  const b=$("jqboard");if(b)b.classList.toggle("lock",JQ.phase!=="open"||JQ.rev);jqChips();jqTotals()}
-function jqFlash(t){announce(t,false,"red");tone(200,.12,"square",.05);clearTimeout(JQ.fl);JQ.fl=setTimeout(()=>{if(view==="jqk"&&!JQ.rev)announce(JQ.phase==="open"?"PLACE YOUR BETS":"NO MORE BETS",true,JQ.phase==="open"?"":"red")},2400)}
-function jqTick(){if(view!=="jqk"||!$("jqtimer")){jqStop();return}if(!JQ.cfg||!JQ.drawAt)return;
- const now=jqNow(),left=JQ.drawAt-now,cl=JQ.cfg.close*1000,tot=JQ.cfg.round*1000,el=$("jqtimer");
- if(!JQ.rev){const sec=Math.max(0,Math.min(59,Math.floor(left/1000)));el.querySelector("b").textContent=sec;
-  el.querySelector(".fg").style.strokeDashoffset=(163.4*(1-Math.max(0,left)/tot)).toFixed(1);
-  el.className="rtimer"+(left<=cl?" warn":left<=cl+10000?" mid":"");el.querySelector("small").textContent=left<=cl?"NO BETS":"BET TIME"}
+function jqFlash(t){announce(t,false,"red");tone(200,.12,"square",.05);clearTimeout(JQ.fl);JQ.fl=setTimeout(()=>{if(view==="jqk"&&!JQ.rev)announce(JQ.phase==="open"?"PLACE YOUR BETS":"BETS CLOSED",true,JQ.phase==="open"?"":"red")},2400)}
+function jqTick(){if(view!=="jqk"||!$("jqlive")){jqStop();return}if(!JQ.cfg||!JQ.drawAt)return;
+ const now=jqNow(),left=JQ.drawAt-now,cl=JQ.cfg.close*1000;
  if(JQ.phase==="open"&&!JQ.rev&&left<=cl+1500&&jqSum(JQ.pend)>0&&!JQ.sub)jqConfirm(true);
- if((JQ.tk=(JQ.tk||0)+1)%5===0)jqTotals();
- if(JQ.phase==="open"&&!JQ.rev&&left<=cl){JQ.phase="closed";announce("NO MORE BETS",true,"red");SND.nomore();jqPaint()}
- if(JQ.phase==="closed"){const s=Math.ceil(left/1000);if(s!==JQ.ls){JQ.ls=s;if(s<=5&&s>0)tone(s<=3?1180:880,.07,"square",.035)}}
+ if(JQ.phase==="open"&&!JQ.rev&&left<=cl){JQ.phase="closed";announce("BETS CLOSED · RESULT AT "+jqTm(JQ.drawAt),true,"red");SND.nomore();jqPaint()}
  if(!JQ.rev&&JQ.phase!=="wait"&&left<=0)jqReveal(JQ.round)}
 function jqPlace(k,el){if(JQ.err)return jqFlash("JQK isn't set up yet");if(S.maint)return jqFlash("Paused for maintenance");
  if(JQ.rev||JQ.phase!=="open")return jqFlash(JQ.rev?"Wait for the next round":"No more bets · next round soon");
@@ -1998,7 +2031,6 @@ async function jqConfirm(auto){if(JQ.sub)return;const b=Object.assign({},JQ.pend
  announce(auto?"CHIPS PLACED FOR YOU · GOOD LUCK":"BET PLACED · GOOD LUCK!",false,"gold");jqPaint()}
 function jqFanfare(){[784,988,1175,1568,1976].forEach((f,i)=>tone(f,.38,"triangle",.11,i*.075));tone(2637,1.3,"sine",.05,.42);tone(1319,1.3,"sine",.05,.42);noise(.9,2000,1,.05,.35,"highpass",5000)}
 async function jqReveal(r){JQ.rev=true;busy=true;const had=jqSum(JQ.mine);if(had)JQ.prev=Object.assign({},JQ.mine);JQ.pend={};JQ.undo=[];
- const el=$("jqtimer");if(el){el.className="rtimer off";el.querySelector("b").textContent="—";el.querySelector("small").textContent="DRAWING"}
  announce("DRAWING THE CARD…",true,"gold");jqPaint();scrollTo({top:0,behavior:RM?"auto":"smooth"});
  let d=null;for(let i=0;i<25&&view==="jqk";i++){try{d=await jqLoad(r)}catch(e){}if(d&&d.last)break;await jqZz(i<4?700:1500)}
  try{if(d&&d.last&&view==="jqk")await jqShow(d.last,d)}catch(e){console.error(e)}
@@ -2006,7 +2038,7 @@ async function jqReveal(r){JQ.rev=true;busy=true;const had=jqSum(JQ.mine);if(had
  if(d){JQ.hist=d.hist||JQ.hist;JQ.mine=d.mine||{};if(d.balance!=null){me.coins=+d.balance;tweenBal(me.coins,500)}}
  document.querySelectorAll("#jqboard .win,#jqboard .hit,#jqboard .spot").forEach(e=>e.classList.remove("win","hit","spot"));
  if($("jqname"))$("jqname").innerHTML="";if($("jqslot"))$("jqslot").classList.remove("glow");if($("jqflip"))$("jqflip").classList.remove("won");
- JQ.phase=jqPhaseNow();JQ.ls=-1;announce(JQ.phase==="open"?"PLACE YOUR BETS":"NO MORE BETS",true,JQ.phase==="open"?"":"red");jqPaint()}
+ JQ.phase=jqPhaseNow();JQ.ls=-1;announce(JQ.phase==="open"?"PLACE YOUR BETS":"BETS CLOSED",true,JQ.phase==="open"?"":"red");if(JQ.phase==="open")SND.chime();jqPaint()}
 async function jqShow(L,d){const card=L.card,cr=card[0],cs=card[1],slot=$("jqslot"),flip=$("jqflip"),front=$("jqfront");
  // a fresh card comes out of the shoe, face down
  flip.classList.remove("open","won");slot.classList.remove("glow");$("jqname").innerHTML="";await jqZz(250);
@@ -2014,19 +2046,19 @@ async function jqShow(L,d){const card=L.card,cr=card[0],cs=card[1],slot=$("jqslo
  await anim(slot,[{transform:"translate(-118px,8px) rotate(-30deg) scale(.45)",opacity:.4},{transform:"translate(-40px,-14px) rotate(-8deg) scale(.85)",opacity:1,offset:.6},{transform:"none",opacity:1}],620,"cubic-bezier(.2,.8,.3,1)");
  // spotlight runs over the 12 cards on the table and stops on the drawn card
  const cards=[...document.querySelectorAll("#jqboard .jq-card")],ti=cards.findIndex(c=>c.dataset.jq===card),hops=14+rnd(4);let idx=rnd(12);
- SND.drum(10);
+ SND.drumroll(2.6);
  for(let i=0;i<hops&&view==="jqk";i++){idx=i===hops-1?ti:(idx+1+rnd(4))%12;if(i===hops-2&&idx===ti)idx=(ti+5)%12;
   cards.forEach(c=>c.classList.remove("spot"));if(cards[idx])cards[idx].classList.add("spot");sfx("fret",.13,1+i*.025);await jqZz((40+i*i*1.1)*Math.max(K,.3))}
  if(view!=="jqk")return;
  // flip the big card
  SND.flip();SND.whoosh();flip.classList.add("open");await jqZz(420);
- jqFanfare();flip.classList.add("won");slot.classList.add("glow");
+ SND.fanfare();flip.classList.add("won");slot.classList.add("glow");
  const sr=slot.getBoundingClientRect();burst(40,false,sr.left+sr.width/2,sr.top+sr.height/2);
  $("jqname").innerHTML=`<b>${JQRN[cr]} OF ${JQSN[cs]}</b>`;
  announce((jqRed(cs)?"RED":"BLACK")+" · "+JQSY[cs]+" "+JQSN[cs]+" · "+JQRN[cr],true,"gold");
  cards.forEach(c=>c.classList.remove("spot"));if(cards[ti])cards[ti].classList.add("hit");
  document.querySelectorAll("#jqboard [data-jq]").forEach(z=>{if(z.classList.contains("jq-z"))z.classList.toggle("win",jqWins(z.dataset.jq,card))});
- JQ.newest=L.round;JQ.hist=d.hist||JQ.hist;if($("jqhist"))$("jqhist").innerHTML=jqHistHtml();if($("jqstat"))$("jqstat").innerHTML=jqStatHtml();
+ JQ.newest=L.round;JQ.hist=d.hist||JQ.hist;if($("jqhist"))$("jqhist").innerHTML=jqHistHtml();if($("jqstat"))$("jqstat").innerHTML=jqStatHtml();if($("jqres"))$("jqres").innerHTML=jqResHtml();
  await jqZz(900);
  const st=+L.stake,pay=+L.payout;
  if(st>0){const bets=L.bets||{};let i=0;
@@ -2044,7 +2076,7 @@ async function jqShow(L,d){const card=L.card,cr=card[0],cs=card[1],slot=$("jqslo
   await jqZz(1600)}
  else await jqZz(2200)}
 function jqRulesHtml(){const c=JQ.cfg||{color:1.95,suit:3.8,rank:2.85,card:11,close:15,round:60,max:20000};
- return `<h3>🃏 How to play JQK Cards</h3><p>A new round starts every minute for everyone. Pick a chip, tap the boxes or cards you want to back, then tap <b>PLACE BET</b>. Chips still on the table are placed for you just before betting closes. Betting closes ${c.close} seconds before the result.</p><p>When the timer reaches 0, the server draws one of the 12 cards (Jack, Queen or King in any of the 4 suits) at random and it's turned over on the table. Winnings are added to your balance straight away.</p>
+ return `<h3>🃏 How to play JQK Cards</h3><p>One result every hour at minute 59 India time (12:59, 1:59, 2:59 …), like a Satta King market. Pick a chip, tap the boxes or cards you want to back, then tap <b>PLACE BET</b>. Chips still on the table are placed for you just before betting closes. Betting closes ${Math.round(c.close/60)} minutes before each result and opens again right after it.</p><p>At the result time the server draws one of the 12 cards (Jack, Queen or King in any of the 4 suits) at random and it's turned over on the table. Winnings are added to your balance straight away.</p>
  <ul class="pays"><li><span>Colour · Red (♥ ♦) or Black (♠ ♣)</span><b>${jqX(c.color)}</b></li><li><span>Suit · ♠ ♥ ♦ or ♣</span><b>${jqX(c.suit)}</b></li><li><span>Rank · any Jack, Queen or King</span><b>${jqX(c.rank)}</b></li><li><span>One exact card, e.g. King of Hearts</span><b>${jqX(c.card)}</b></li></ul>
  <p class="meta">Up to ${fmt(c.max)} coins per round. Placed bets can't be taken back. Play money only: coins have no cash value.</p>`}
 
@@ -2088,13 +2120,14 @@ function skHome(){if(SK.err&&!SK.st)return `<div class="lempty">Satta King isn't
  const full=order.map((m,i)=>i%5===0);if(order.length&&!full[order.length-1]){let c=0;for(let i=order.length-1;i>=0&&!full[i];i--)c++;if(c%2)full[order.length-1]=true}
  return `<div class="skc-ban">SATTA KING</div>
  <div class="skc-live"><div class="skc-dt" id="skdt">${skDT()}</div><div class="skc-sub">Satta King Live Result Today</div>
- ${nx?`<div class="skc-nm">${esc(nx.name.toUpperCase())}</div><div class="skc-wt">WAIT</div><small class="skc-in">result in <b data-cd="${Date.parse(nx.draw_at)}">${skCd(Date.parse(nx.draw_at)-skNow())}</b></small>`:""}
+ ${nx?`<div class="skc-nm">${esc(nx.name.toUpperCase())}</div><div class="skc-wt">WAIT</div><small class="skc-in">result at <b>${skT(nx.time)}</b></small>`:""}
  ${lm?`<div class="skc-nm">${esc(lm.name.toUpperCase())}</div><div class="skc-rn">${sk2(lastR.num)}</div>`:""}</div>
  <div class="skc-grid">${order.map((m,i)=>{const y=skResOf(m.id,yd),t=skResOf(m.id,td),st=skStatus(m),c=Date.parse(m.close_at),d=Date.parse(m.draw_at);
-  const pl=st==="open"?`▶ PLAY · closes in <u data-cd="${c}">${skCd(c-skNow())}</u>`:st==="closed"?`🔒 CLOSED · result in <u data-cd="${d}">${skCd(d-skNow())}</u>`:st==="drawing"?"⏳ RESULT COMING…":"PAUSED";
+  const pl=st==="open"?`▶ PLAY · closes ${skTT(c)}`:st==="closed"?`🔒 CLOSED · result ${skT(m.time)}`:st==="drawing"?"⏳ RESULT COMING…":"PAUSED";
   return `<button class="skc-b${full[i]?" f":""}" data-sk="m:${m.id}"><b>${esc(m.name.toUpperCase())}</b><span class="skt">( ${skT(m.time)} )</span><div class="skr">{ ${y?(y.void?"✕":sk2(y.num)):"--"} } <em>➜</em> [ <i>${t?(t.void?"✕":sk2(t.num)):"&nbsp;&nbsp;"}</i> ]</div><span class="skp ${st}">${pl}</span></button>`}).join("")}</div>
  <p class="skc-hint">Tap any market to play · betting closes <b>${SK.st.cfg.close} min</b> before each result<br>Jodi ${SK.st.cfg.jodi}× · Andar/Bahar ${SK.st.cfg.andar}×</p>
  <button class="skc-ref" data-sk="refresh">⟳ Refresh</button>`}
+const skTT=ms=>new Date(ms).toLocaleTimeString("en-US",{timeZone:"Asia/Kolkata",hour:"numeric",minute:"2-digit",hour12:true});
 function skDT(){const d=new Date(skNow()),o={timeZone:"Asia/Kolkata"};return d.toLocaleDateString("en-GB",Object.assign({day:"2-digit",month:"long",year:"numeric"},o))+" "+d.toLocaleTimeString("en-US",Object.assign({hour:"2-digit",minute:"2-digit",hour12:true},o))}
 function skCross(){const out=[],a=SK.cA.slice().sort(),b=SK.cB.slice().sort();a.forEach(x=>b.forEach(y=>{if(SK.cut&&x===y)return;out.push(""+x+y)}));return out}
 function skSlipStats(){const c=SK.st.cfg,ks=Object.keys(SK.slip),tot=ks.reduce((a,k)=>a+SK.slip[k],0);let best=0;
@@ -2104,7 +2137,7 @@ function skLabel(k){return k[0]==="j"?"Jodi "+k.slice(1):k[0]==="a"?"Andar "+k.s
 function skMarket(){const m=skMkt(SK.mk);if(!m){SK.page="home";return skHome()}
  const st=skStatus(m),c=Date.parse(m.close_at),d=Date.parse(m.draw_at),cfg=SK.st.cfg,open=st==="open";
  const last=SK.res.filter(r=>r.market_id===m.id).slice(0,10);
- const cd=open?`<span>closes in</span><b data-cd="${c}">${skCd(c-skNow())}</b>`:st==="closed"?`<span>result in</span><b class="r" data-cd="${d}">${skCd(d-skNow())}</b>`:`<span>result</span><b class="r">soon</b>`;
+ const cd=open?`<span>closes at</span><b>${skTT(c)}</b>`:st==="closed"?`<span>result at</span><b class="r">${skT(m.time)}</b>`:`<span>result</span><b class="r">soon</b>`;
  const tabs=[["jodi","Jodi","00–99"],["andar","Andar","1st digit"],["bahar","Bahar","2nd digit"],["cross","Crossing","combos"]];
  let board="";
  if(SK.tab==="jodi"){board=`<div class="sk-abh"><span>Pick exact numbers</span><b>pays ${cfg.jodi}×</b></div><div class="sk-grid">`;for(let n=0;n<100;n++){const k="j"+sk2(n),v=SK.slip[k];board+=`<button class="skn${v?" on":""}" data-sk="n:${k}"><b>${sk2(n)}</b>${v?`<i>${short(v)}</i>`:""}</button>`}board+="</div>"}
@@ -2161,12 +2194,12 @@ async function skReveal(r){if(r.void||r.num==null)return;const m=skMkt(r.market_
  const myb=SK.bets.filter(b=>b.market_id===r.market_id&&b.draw_date===r.draw_date),won=myb.reduce((a,b)=>a+(b.status==="won"?+b.payout:0),0);
  const ov=document.createElement("div");ov.className="sk-rv";ov.innerHTML=`<div class="sk-rvb"><small>👑 RESULT DECLARED</small><h3>${esc(name)}</h3><div class="sk-rvd"><span><i id="rv1">0</i></span><span><i id="rv2">0</i></span></div><p id="rvp">Drawing…</p><button class="sk-btn" id="rvok">OK</button></div>`;
  document.body.appendChild(ov);let done=false;const close=()=>{if(done)return;done=true;ov.remove()};ov.querySelector("#rvok").onclick=close;ac();
- const dg=[Math.floor(r.num/10),r.num%10];
+ const dg=[Math.floor(r.num/10),r.num%10];SND.drumroll(2.4);
  for(let k=0;k<2;k++){const el=ov.querySelector("#rv"+(k+1));if(!el)break;const t0=performance.now(),dur=(1300+k*600)*spd();let lt=0;
   await new Promise(res=>{const step=t=>{if(done)return res();const p=(t-t0)/dur;if(p>=1){el.textContent=dg[k];el.parentNode.classList.add("lock");tone(k?988:784,.18,"triangle",.14);sfx("thunk",.3,1.1);return res()}
    if(t-lt>60+p*120){lt=t;el.textContent=Math.floor(Math.random()*10);SND.tick()}requestAnimationFrame(step)};requestAnimationFrame(step)})}
  const p=ov.querySelector("#rvp");
- if(p){if(won>0){p.className="w";p.textContent="🏆 You won +"+fmt(won)+"!";SND.win();const rc=ov.querySelector(".sk-rvd").getBoundingClientRect();fireworks(rc.left+rc.width/2,rc.top);setTimeout(()=>fireworks(rc.left+20,rc.top+30),300);flyCoins&&flyCoins(ov.querySelector(".sk-rvd"),14)}
+ if(p){SND.fanfare();if(won>0){p.className="w";p.textContent="🏆 You won +"+fmt(won)+"!";setTimeout(()=>SND.big(),500);const rc=ov.querySelector(".sk-rvd").getBoundingClientRect();fireworks(rc.left+rc.width/2,rc.top);setTimeout(()=>fireworks(rc.left+20,rc.top+30),300);flyCoins&&flyCoins(ov.querySelector(".sk-rvd"),14)}
   else if(myb.length){p.textContent="No win this time · better luck next draw";SND.lose()}else p.textContent=name+" result: "+sk2(r.num)}
  if(myb.length){const pr=await sb.from("profiles").select("coins").eq("id",me.id).single();if(pr.data){me.coins=pr.data.coins;tweenBal(me.coins,900)}}
  await wait(4500);close()}
