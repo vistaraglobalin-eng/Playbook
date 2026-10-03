@@ -1,0 +1,540 @@
+-- Playbook LIVE CRICKET EXCHANGE (play-money only). Paste all of this into the Supabase SQL Editor and tap Run.
+-- Safe to run more than once, and safe to run over the earlier Live Cricket version.
+-- Odds: The Odds API (the-odds-api.com). Scores: CricketData.org (api.cricapi.com).
+-- Back and Lay bets, extra markets made by the admin, ball-by-ball events from the live score.
+
+create extension if not exists pg_net with schema extensions;
+create extension if not exists pg_cron with schema pg_catalog;
+
+-- ---------- tables ----------
+create table if not exists public.lc_config (
+  id int primary key check (id = 1),
+  enabled boolean not null default true,
+  odds_key text, score_key text,
+  odds_every int not null default 7200,
+  score_every int not null default 900,
+  regions text not null default 'uk',
+  leagues text not null default '',
+  margin numeric not null default 0,
+  inplay boolean not null default true,
+  auto_settle boolean not null default true,
+  sports_active text not null default '',
+  last_sports timestamptz, last_odds timestamptz, last_score timestamptz,
+  last_error text, last_ok text,
+  pend jsonb not null default '[]'::jsonb
+);
+insert into public.lc_config (id) values (1) on conflict (id) do nothing;
+alter table public.lc_config enable row level security;
+
+create table if not exists public.lc_matches (
+  id text primary key,
+  sport_key text, league text,
+  team_a text not null, team_b text not null,
+  start_at timestamptz,
+  odds_a numeric, odds_b numeric, odds_lock boolean not null default false, odds_at timestamptz,
+  status text not null default 'open' check (status in ('open','suspended','closed','settled','void')),
+  live boolean not null default false,
+  winner text,
+  score jsonb, score_text text, score_status text, cric_id text, score_at timestamptz,
+  hidden boolean not null default false,
+  manual boolean not null default false,
+  updated_at timestamptz not null default now()
+);
+alter table public.lc_matches add column if not exists lay_a numeric;
+alter table public.lc_matches add column if not exists lay_b numeric;
+alter table public.lc_matches add column if not exists matched numeric not null default 0;
+alter table public.lc_matches add column if not exists balls jsonb not null default '[]'::jsonb;
+alter table public.lc_matches add column if not exists last_ball text;
+alter table public.lc_matches add column if not exists cur_score text;
+alter table public.lc_matches enable row level security;
+drop policy if exists lc_matches_read on public.lc_matches;
+create policy lc_matches_read on public.lc_matches for select to authenticated using (true);
+
+create table if not exists public.lc_markets (
+  id bigserial primary key,
+  match_id text not null references public.lc_matches(id) on delete cascade,
+  kind text not null check (kind in ('odds','line')),
+  name text not null,
+  runners jsonb not null,               -- [{"k":"a","n":"India","b":1.9,"l":1.92}]
+  line numeric, innings int, overs numeric,
+  status text not null default 'open' check (status in ('open','suspended','closed','settled','void')),
+  result text,
+  matched numeric not null default 0,
+  sort int not null default 0,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+create index if not exists lc_markets_match_idx on public.lc_markets(match_id);
+alter table public.lc_markets enable row level security;
+drop policy if exists lc_markets_read on public.lc_markets;
+create policy lc_markets_read on public.lc_markets for select to authenticated using (true);
+
+create table if not exists public.lc_bets (
+  id bigserial primary key,
+  user_id uuid not null references public.profiles(id) on delete cascade,
+  match_id text not null references public.lc_matches(id) on delete cascade,
+  side text not null,
+  stake numeric not null, odds numeric not null,
+  status text not null default 'open' check (status in ('open','won','lost','void')),
+  payout numeric not null default 0,
+  created_at timestamptz not null default now(), settled_at timestamptz
+);
+alter table public.lc_bets drop constraint if exists lc_bets_side_check;
+alter table public.lc_bets add column if not exists market_id bigint references public.lc_markets(id) on delete cascade;
+alter table public.lc_bets add column if not exists btype text not null default 'back';
+alter table public.lc_bets add column if not exists risk numeric;
+update public.lc_bets set risk = stake where risk is null;
+do $$ begin
+  alter table public.lc_bets add constraint lc_bets_btype_check check (btype in ('back','lay'));
+exception when others then null; end $$;
+create index if not exists lc_bets_match_idx on public.lc_bets(match_id);
+create index if not exists lc_bets_user_idx on public.lc_bets(user_id);
+alter table public.lc_bets enable row level security;
+drop policy if exists lc_bets_read on public.lc_bets;
+create policy lc_bets_read on public.lc_bets for select to authenticated
+  using (user_id = auth.uid() or exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'admin'));
+
+do $$ begin
+  begin alter publication supabase_realtime add table public.lc_matches; exception when others then null; end;
+  begin alter publication supabase_realtime add table public.lc_bets; exception when others then null; end;
+  begin alter publication supabase_realtime add table public.lc_markets; exception when others then null; end;
+end $$;
+
+-- ---------- helpers ----------
+create or replace function public.lc_n5(t text) returns text language sql immutable as
+$$ select left(lower(regexp_replace(coalesce(t,''), '[^a-zA-Z]', '', 'g')), 5) $$;
+
+create or replace function public.lc_is_admin() returns boolean language sql stable security definer set search_path = public as
+$$ select exists (select 1 from profiles where id = auth.uid() and role = 'admin' and active) $$;
+
+-- one price step up on the betting ladder (lay price = back price + 1 step)
+create or replace function public.lc_tick_up(o numeric) returns numeric language sql immutable as $$
+  select case when o is null then null else round(o + case when o < 2 then .01 when o < 3 then .02 when o < 4 then .05 when o < 6 then .1
+    when o < 10 then .2 when o < 20 then .5 when o < 30 then 1 when o < 50 then 2 when o < 100 then 5 else 10 end, 2) end $$;
+
+create or replace function public.lc_balls(o numeric) returns int language sql immutable as
+$$ select (floor(coalesce(o,0)) * 6 + round((coalesce(o,0) - floor(coalesce(o,0))) * 10))::int $$;
+
+-- settle bets: p_market null = Match Odds; p_result = selection key, or 'void'
+drop function if exists public.lc_settle_internal(text, text);
+create or replace function public.lc_settle_internal(p_match text, p_result text, p_market bigint default null)
+returns int language plpgsql security definer set search_path = public as $$
+declare b record; n int := 0; won boolean; pay numeric;
+begin
+  for b in select * from lc_bets where match_id = p_match and market_id is not distinct from p_market and status = 'open' for update loop
+    if p_result = 'void' then
+      update lc_bets set status = 'void', payout = coalesce(b.risk, b.stake), settled_at = now() where id = b.id;
+      update profiles set coins = coins + coalesce(b.risk, b.stake) where id = b.user_id;
+    else
+      won := (b.btype = 'back' and b.side = p_result) or (b.btype = 'lay' and b.side <> p_result);
+      if won then
+        pay := case when b.btype = 'back' then round(b.stake * b.odds, 2) else coalesce(b.risk, 0) + b.stake end;
+        update lc_bets set status = 'won', payout = pay, settled_at = now() where id = b.id;
+        update profiles set coins = coins + pay where id = b.user_id;
+      else
+        update lc_bets set status = 'lost', payout = 0, settled_at = now() where id = b.id;
+      end if;
+    end if;
+    n := n + 1;
+  end loop;
+  if p_market is null then
+    update lc_matches set status = case when p_result = 'void' then 'void' else 'settled' end,
+      winner = case when p_result = 'void' then null else p_result end, updated_at = now() where id = p_match;
+  else
+    update lc_markets set status = case when p_result = 'void' then 'void' else 'settled' end,
+      result = case when p_result = 'void' then null else p_result end, updated_at = now() where id = p_market;
+  end if;
+  return n;
+end $$;
+revoke all on function public.lc_settle_internal(text, text, bigint) from public, anon, authenticated;
+
+-- ---------- players: back or lay ----------
+drop function if exists public.lc_place_bet(text, text, numeric, numeric);
+create or replace function public.lc_bet(p_match text, p_market bigint, p_sel text, p_type text, p_stake numeric, p_odds numeric)
+returns jsonb language plpgsql security definer set search_path = public as $$
+declare me profiles; s jsonb; c lc_config; m lc_matches; mk lc_markets; r jsonb; bp numeric; lp numeric; price numeric; risk numeric; bal numeric; bid bigint;
+begin
+  select * into me from profiles where id = auth.uid() for update;
+  if me.id is null or me.role <> 'customer' or not me.active then raise exception 'not allowed'; end if;
+  select data into s from settings where id = 1;
+  if (s->>'maint')::boolean then raise exception 'maintenance mode'; end if;
+  select * into c from lc_config where id = 1;
+  if not c.enabled then raise exception 'live cricket is off'; end if;
+  select * into m from lc_matches where id = p_match;
+  if m.id is null or m.hidden then raise exception 'match not found'; end if;
+  if (m.live or m.start_at <= now()) and not c.inplay then raise exception 'betting closed'; end if;
+  if p_type not in ('back','lay') then raise exception 'bad pick'; end if;
+  if p_market is null then
+    if m.status <> 'open' then raise exception 'betting suspended'; end if;
+    if p_sel = 'a' then bp := m.odds_a; lp := m.lay_a; elsif p_sel = 'b' then bp := m.odds_b; lp := m.lay_b; else raise exception 'bad pick'; end if;
+  else
+    select * into mk from lc_markets where id = p_market and match_id = p_match;
+    if mk.id is null then raise exception 'market not found'; end if;
+    if mk.status <> 'open' then raise exception 'betting suspended'; end if;
+    select x into r from jsonb_array_elements(mk.runners) x where x->>'k' = p_sel;
+    if r is null then raise exception 'bad pick'; end if;
+    bp := (r->>'b')::numeric; lp := (r->>'l')::numeric;
+    if mk.kind = 'line' and p_type = 'lay' then raise exception 'lay not offered'; end if;
+  end if;
+  if p_type = 'back' then
+    price := bp; if price is null or price <= 1 then raise exception 'betting suspended'; end if;
+    if p_odds is null or p_odds > price + 0.001 then raise exception 'not matched:%', price; end if;
+  else
+    price := lp; if price is null or price <= 1 then raise exception 'lay not offered'; end if;
+    if p_odds is null or p_odds < price - 0.001 then raise exception 'not matched:%', price; end if;
+  end if;
+  if p_stake is null or p_stake < 1 or p_stake <> floor(p_stake) then raise exception 'bad stake'; end if;
+  risk := case when p_type = 'back' then p_stake else round(p_stake * (price - 1), 2) end;
+  if risk > (s->>'maxStake')::numeric or risk > me.coins then raise exception 'bad stake'; end if;
+  update profiles set coins = coins - risk where id = me.id returning coins into bal;
+  insert into lc_bets (user_id, match_id, market_id, side, btype, stake, odds, risk)
+    values (me.id, m.id, p_market, p_sel, p_type, p_stake, price, risk) returning id into bid;
+  if p_market is null then update lc_matches set matched = matched + p_stake where id = m.id;
+  else update lc_markets set matched = matched + p_stake where id = p_market; end if;
+  return jsonb_build_object('balance', bal, 'bet', bid, 'odds', price, 'risk', risk);
+end $$;
+revoke all on function public.lc_bet(text, bigint, text, text, numeric, numeric) from public, anon;
+grant execute on function public.lc_bet(text, bigint, text, text, numeric, numeric) to authenticated;
+
+-- ---------- admin ----------
+create or replace function public.lc_admin_get() returns jsonb language plpgsql security definer set search_path = public as $$
+declare c lc_config;
+begin
+  if not lc_is_admin() then raise exception 'not allowed'; end if;
+  select * into c from lc_config where id = 1;
+  return jsonb_build_object('enabled', c.enabled, 'has_odds_key', coalesce(c.odds_key,'') <> '',
+    'has_score_key', coalesce(c.score_key,'') <> '', 'odds_every', c.odds_every, 'score_every', c.score_every,
+    'regions', c.regions, 'leagues', c.leagues, 'margin', c.margin, 'inplay', c.inplay, 'auto_settle', c.auto_settle,
+    'sports_active', c.sports_active, 'last_odds', c.last_odds, 'last_score', c.last_score, 'last_sports', c.last_sports,
+    'last_error', c.last_error, 'last_ok', c.last_ok);
+end $$;
+
+create or replace function public.lc_admin_set(p jsonb) returns void language plpgsql security definer set search_path = public as $$
+begin
+  if not lc_is_admin() then raise exception 'not allowed'; end if;
+  update lc_config set
+    enabled = coalesce((p->>'enabled')::boolean, enabled),
+    odds_key = case when coalesce((p->>'clear_odds_key')::boolean, false) then null when coalesce(p->>'odds_key','') <> '' then trim(p->>'odds_key') else odds_key end,
+    score_key = case when coalesce((p->>'clear_score_key')::boolean, false) then null when coalesce(p->>'score_key','') <> '' then trim(p->>'score_key') else score_key end,
+    odds_every = greatest(1, coalesce((p->>'odds_every')::int, odds_every)),
+    score_every = greatest(1, coalesce((p->>'score_every')::int, score_every)),
+    regions = coalesce(nullif(p->>'regions',''), regions),
+    leagues = coalesce(p->>'leagues', leagues),
+    margin = least(0.5, greatest(0, coalesce((p->>'margin')::numeric, margin))),
+    inplay = coalesce((p->>'inplay')::boolean, inplay),
+    auto_settle = coalesce((p->>'auto_settle')::boolean, auto_settle),
+    last_sports = case when coalesce(p->>'odds_key','') <> '' or coalesce(p->>'leagues','') <> leagues then null else last_sports end,
+    last_odds = case when coalesce(p->>'odds_key','') <> '' or coalesce((p->>'odds_every')::int, odds_every) <> odds_every then null else last_odds end,
+    last_score = case when coalesce(p->>'score_key','') <> '' or coalesce((p->>'score_every')::int, score_every) <> score_every then null else last_score end,
+    last_error = null
+  where id = 1;
+  insert into activity (actor, message) values ('ADMIN', 'Updated live cricket settings');
+end $$;
+
+create or replace function public.lc_admin_list() returns jsonb language plpgsql security definer set search_path = public as $$
+begin
+  if not lc_is_admin() then raise exception 'not allowed'; end if;
+  return coalesce((select jsonb_agg(x order by x.sort1, x.start_at) from (
+    select m.*, case when m.status in ('settled','void') then 2 when m.live then 0 else 1 end sort1,
+      (select count(*) from lc_bets b where b.match_id = m.id) bets,
+      (select coalesce(sum(coalesce(risk, stake)),0) from lc_bets b where b.match_id = m.id and b.status = 'open') open_stake,
+      (select coalesce(jsonb_agg(to_jsonb(k) || jsonb_build_object('bets', (select count(*) from lc_bets b where b.market_id = k.id)) order by k.sort, k.id), '[]'::jsonb)
+         from lc_markets k where k.match_id = m.id) markets
+    from lc_matches m
+    where not (m.status in ('settled','void') and m.updated_at < now() - interval '3 days')
+  ) x), '[]'::jsonb);
+end $$;
+
+create or replace function public.lc_admin_add(p_league text, p_a text, p_b text, p_start timestamptz, p_oa numeric, p_ob numeric)
+returns text language plpgsql security definer set search_path = public as $$
+declare nid text := 'man_' || replace(gen_random_uuid()::text, '-', '');
+begin
+  if not lc_is_admin() then raise exception 'not allowed'; end if;
+  if coalesce(trim(p_a),'') = '' or coalesce(trim(p_b),'') = '' then raise exception 'enter both teams'; end if;
+  if p_oa is null or p_ob is null or p_oa <= 1 or p_ob <= 1 then raise exception 'odds must be above 1'; end if;
+  insert into lc_matches (id, league, team_a, team_b, start_at, odds_a, odds_b, lay_a, lay_b, odds_lock, odds_at, manual)
+  values (nid, coalesce(nullif(trim(p_league),''),'Cricket'), trim(p_a), trim(p_b), coalesce(p_start, now()),
+          round(p_oa,2), round(p_ob,2), lc_tick_up(round(p_oa,2)), lc_tick_up(round(p_ob,2)), true, now(), true);
+  insert into activity (actor, message) values ('ADMIN', 'Added live match ' || trim(p_a) || ' v ' || trim(p_b));
+  return nid;
+end $$;
+
+create or replace function public.lc_admin_match(p_match text, p_action text, p_oa numeric default null, p_ob numeric default null)
+returns jsonb language plpgsql security definer set search_path = public as $$
+declare m lc_matches; n int := 0;
+begin
+  if not lc_is_admin() then raise exception 'not allowed'; end if;
+  select * into m from lc_matches where id = p_match for update;
+  if m.id is null then raise exception 'match not found'; end if;
+  if p_action in ('suspend','open','close') then
+    if m.status in ('settled','void') then raise exception 'match already settled'; end if;
+    update lc_matches set status = case p_action when 'suspend' then 'suspended' when 'open' then 'open' else 'closed' end, updated_at = now() where id = p_match;
+  elsif p_action = 'odds' then
+    if p_oa is null or p_ob is null or p_oa <= 1 or p_ob <= 1 then raise exception 'odds must be above 1'; end if;
+    update lc_matches set odds_a = round(p_oa, 2), odds_b = round(p_ob, 2), lay_a = lc_tick_up(round(p_oa, 2)), lay_b = lc_tick_up(round(p_ob, 2)),
+      odds_lock = true, odds_at = now(), updated_at = now() where id = p_match;
+  elsif p_action = 'auto_odds' then update lc_matches set odds_lock = false, updated_at = now() where id = p_match;
+  elsif p_action = 'live' then update lc_matches set live = true, updated_at = now() where id = p_match;
+  elsif p_action = 'not_live' then update lc_matches set live = false, updated_at = now() where id = p_match;
+  elsif p_action = 'hide' then update lc_matches set hidden = true, updated_at = now() where id = p_match;
+  elsif p_action = 'unhide' then update lc_matches set hidden = false, updated_at = now() where id = p_match;
+  elsif p_action in ('settle_a','settle_b','void') then
+    if m.status in ('settled','void') then raise exception 'match already settled'; end if;
+    n := lc_settle_internal(p_match, case p_action when 'settle_a' then 'a' when 'settle_b' then 'b' else 'void' end, null);
+  elsif p_action = 'delete' then
+    if exists (select 1 from lc_bets where match_id = p_match and status = 'open') then raise exception 'settle or void the open bets first'; end if;
+    delete from lc_matches where id = p_match;
+  else raise exception 'unknown action'; end if;
+  insert into activity (actor, message) values ('ADMIN', 'Live match ' || m.team_a || ' v ' || m.team_b || ': ' || p_action);
+  return jsonb_build_object('bets', n);
+end $$;
+
+-- extra markets. p: {action, match, market, tpl, name, oa, ob, line, innings, overs, odds:[..], result}
+create or replace function public.lc_admin_market(p jsonb) returns jsonb language plpgsql security definer set search_path = public as $$
+declare a text := p->>'action'; m lc_matches; k lc_markets; rs jsonb; oa numeric; ob numeric; o numeric; ln numeric; nid bigint; n int := 0; i int; arr jsonb;
+begin
+  if not lc_is_admin() then raise exception 'not allowed'; end if;
+  if a = 'add' then
+    select * into m from lc_matches where id = p->>'match';
+    if m.id is null then raise exception 'match not found'; end if;
+    oa := coalesce((p->>'oa')::numeric, 1.95); ob := coalesce((p->>'ob')::numeric, 1.95);
+    if oa <= 1 or ob <= 1 then raise exception 'odds must be above 1'; end if;
+    if p->>'tpl' = 'line' then
+      ln := (p->>'line')::numeric; o := coalesce((p->>'oa')::numeric, 2.0);
+      if ln is null or (p->>'overs') is null then raise exception 'enter the line and the overs'; end if;
+      insert into lc_markets (match_id, kind, name, runners, line, innings, overs, sort)
+      values (m.id, 'line', 'Innings ' || coalesce(p->>'innings','1') || ' · ' || (p->>'overs') || ' over line',
+              jsonb_build_array(jsonb_build_object('k','under','n','Under ' || ln,'b',o), jsonb_build_object('k','over','n','Over ' || ln,'b',o)),
+              ln, coalesce((p->>'innings')::int, 1), (p->>'overs')::numeric, 50) returning id into nid;
+    else
+      rs := case p->>'tpl'
+        when 'toss' then jsonb_build_array(jsonb_build_object('k','a','n',m.team_a,'b',round(oa,2),'l',lc_tick_up(round(oa,2))), jsonb_build_object('k','b','n',m.team_b,'b',round(ob,2),'l',lc_tick_up(round(ob,2))))
+        else jsonb_build_array(jsonb_build_object('k','yes','n','Yes','b',round(oa,2),'l',lc_tick_up(round(oa,2))), jsonb_build_object('k','no','n','No','b',round(ob,2),'l',lc_tick_up(round(ob,2)))) end;
+      insert into lc_markets (match_id, kind, name, runners, sort)
+      values (m.id, 'odds', case p->>'tpl' when 'toss' then 'Toss Winner' when 'tie' then 'Tie Market' when 'completed' then 'Completed Match'
+                                 else coalesce(nullif(trim(p->>'name'),''), 'Special') end, rs,
+              case p->>'tpl' when 'toss' then 10 when 'tie' then 20 when 'completed' then 30 else 60 end) returning id into nid;
+    end if;
+    insert into activity (actor, message) values ('ADMIN', 'Added market to ' || m.team_a || ' v ' || m.team_b);
+    return jsonb_build_object('market', nid);
+  end if;
+  select * into k from lc_markets where id = (p->>'market')::bigint for update;
+  if k.id is null then raise exception 'market not found'; end if;
+  if a in ('suspend','open','close') then
+    if k.status in ('settled','void') then raise exception 'market already settled'; end if;
+    update lc_markets set status = case a when 'suspend' then 'suspended' when 'open' then 'open' else 'closed' end, updated_at = now() where id = k.id;
+  elsif a = 'odds' then
+    arr := p->'odds';
+    if k.kind = 'line' then
+      ln := coalesce((p->>'line')::numeric, k.line); o := coalesce((arr->>0)::numeric, (k.runners->0->>'b')::numeric);
+      if o <= 1 then raise exception 'odds must be above 1'; end if;
+      update lc_markets set line = ln, runners = jsonb_build_array(jsonb_build_object('k','under','n','Under ' || ln,'b',o), jsonb_build_object('k','over','n','Over ' || ln,'b',o)), updated_at = now() where id = k.id;
+    else
+      rs := '[]'::jsonb;
+      for i in 0 .. jsonb_array_length(k.runners) - 1 loop
+        o := coalesce((arr->>i)::numeric, (k.runners->i->>'b')::numeric);
+        if o <= 1 then raise exception 'odds must be above 1'; end if;
+        rs := rs || jsonb_build_array((k.runners->i) || jsonb_build_object('b', round(o,2), 'l', lc_tick_up(round(o,2))));
+      end loop;
+      update lc_markets set runners = rs, updated_at = now() where id = k.id;
+    end if;
+  elsif a = 'settle' then
+    if k.status in ('settled','void') then raise exception 'market already settled'; end if;
+    if not exists (select 1 from jsonb_array_elements(k.runners) x where x->>'k' = p->>'result') then raise exception 'pick the result'; end if;
+    n := lc_settle_internal(k.match_id, p->>'result', k.id);
+  elsif a = 'void' then
+    if k.status in ('settled','void') then raise exception 'market already settled'; end if;
+    n := lc_settle_internal(k.match_id, 'void', k.id);
+  elsif a = 'delete' then
+    if exists (select 1 from lc_bets where market_id = k.id and status = 'open') then raise exception 'settle or void the open bets first'; end if;
+    delete from lc_markets where id = k.id;
+  else raise exception 'unknown action'; end if;
+  return jsonb_build_object('bets', n);
+end $$;
+
+revoke all on function public.lc_admin_get(), public.lc_admin_set(jsonb), public.lc_admin_list(),
+  public.lc_admin_add(text, text, text, timestamptz, numeric, numeric), public.lc_admin_match(text, text, numeric, numeric),
+  public.lc_admin_market(jsonb) from public, anon;
+grant execute on function public.lc_admin_get(), public.lc_admin_set(jsonb), public.lc_admin_list(),
+  public.lc_admin_add(text, text, text, timestamptz, numeric, numeric), public.lc_admin_match(text, text, numeric, numeric),
+  public.lc_admin_market(jsonb) to authenticated;
+
+-- ---------- reading provider data ----------
+create or replace function public.lc_ingest_sports(j jsonb) returns void language plpgsql security definer set search_path = public as $$
+declare c lc_config; keys text;
+begin
+  select * into c from lc_config where id = 1;
+  select string_agg(e->>'key', ',') into keys from jsonb_array_elements(j) e
+   where e->>'group' ilike 'cricket' and coalesce((e->>'active')::boolean, true)
+     and (c.leagues = '' or position(e->>'key' in c.leagues) > 0);
+  update lc_config set sports_active = coalesce(keys, ''), last_sports = now() where id = 1;
+end $$;
+
+create or replace function public.lc_ingest_odds(j jsonb) returns int language plpgsql security definer set search_path = public as $$
+declare c lc_config; e jsonb; pa numeric; pb numeric; n int := 0; mg numeric;
+begin
+  select * into c from lc_config where id = 1; mg := coalesce(c.margin, 0);
+  for e in select * from jsonb_array_elements(j) loop
+    select avg((oc->>'price')::numeric) filter (where oc->>'name' = e->>'home_team'),
+           avg((oc->>'price')::numeric) filter (where oc->>'name' = e->>'away_team')
+      into pa, pb
+      from jsonb_array_elements(coalesce(e->'bookmakers','[]')) bk,
+           jsonb_array_elements(coalesce(bk->'markets','[]')) mk,
+           jsonb_array_elements(coalesce(mk->'outcomes','[]')) oc
+     where mk->>'key' = 'h2h';
+    if pa is null or pb is null then continue; end if;
+    pa := round(1 + (pa - 1) * (1 - mg), 2); pb := round(1 + (pb - 1) * (1 - mg), 2);
+    insert into lc_matches as m (id, sport_key, league, team_a, team_b, start_at, odds_a, odds_b, lay_a, lay_b, odds_at, live, updated_at)
+    values (e->>'id', e->>'sport_key', e->>'sport_title', e->>'home_team', e->>'away_team', (e->>'commence_time')::timestamptz,
+            pa, pb, lc_tick_up(pa), lc_tick_up(pb), now(), (e->>'commence_time')::timestamptz <= now(), now())
+    on conflict (id) do update set
+      league = excluded.league, start_at = excluded.start_at,
+      odds_a = case when m.odds_lock then m.odds_a else excluded.odds_a end,
+      odds_b = case when m.odds_lock then m.odds_b else excluded.odds_b end,
+      lay_a = case when m.odds_lock then m.lay_a else excluded.lay_a end,
+      lay_b = case when m.odds_lock then m.lay_b else excluded.lay_b end,
+      odds_at = case when m.odds_lock then m.odds_at else now() end,
+      live = m.live or excluded.live,
+      updated_at = case when m.odds_lock and m.live = (m.live or excluded.live) then m.updated_at else now() end;
+    n := n + 1;
+  end loop;
+  return n;
+end $$;
+
+create or replace function public.lc_ingest_scores(j jsonb) returns int language plpgsql security definer set search_path = public as $$
+declare c lc_config; e jsonb; t1 text; t2 text; m lc_matches; st timestamptz; txt text; s text; pre text; ia int; ib int; res text; n int := 0;
+  cur jsonb; old jsonb; bn int; bo int; dr int; dw int; ev text; lab text; bl jsonb; k lc_markets; inn jsonb;
+begin
+  select * into c from lc_config where id = 1;
+  for e in select * from jsonb_array_elements(coalesce(j->'data', j)) loop
+    t1 := e->'teams'->>0; t2 := e->'teams'->>1;
+    if t1 is null or t2 is null then continue; end if;
+    begin st := ((e->>'dateTimeGMT') || case when e->>'dateTimeGMT' ~ '(Z|[+-]\d\d:?\d\d)$' then '' else 'Z' end)::timestamptz;
+    exception when others then st := null; end;
+    m := null; cur := null; old := null;
+    select * into m from lc_matches x
+     where ((lc_n5(x.team_a) = lc_n5(t1) and lc_n5(x.team_b) = lc_n5(t2)) or (lc_n5(x.team_a) = lc_n5(t2) and lc_n5(x.team_b) = lc_n5(t1)))
+       and (st is null or x.start_at is null or x.start_at between st - interval '30 hours' and st + interval '30 hours')
+       and (x.cric_id is null or x.cric_id = e->>'id')
+     order by abs(extract(epoch from (coalesce(x.start_at, now()) - coalesce(st, now())))) limit 1;
+    if m.id is null then continue; end if;
+    select string_agg(trim(regexp_replace(regexp_replace(coalesce(sc->>'inning',''), '\s*Inning\s*1\s*$', ''), '\s*Inning\s*', ' inn ')) || ' ' || coalesce(sc->>'r','0') || '/' || coalesce(sc->>'w','0') || ' (' || coalesce(sc->>'o','0') || ')', '  ·  ')
+      into txt from jsonb_array_elements(coalesce(e->'score','[]')) sc;
+    -- ball-by-ball from the change in score
+    ev := null; lab := null; bl := coalesce(m.balls, '[]'::jsonb);
+    if jsonb_array_length(coalesce(e->'score','[]')) > 0 then
+      cur := e->'score'->(jsonb_array_length(e->'score') - 1);
+      select x into old from jsonb_array_elements(coalesce(m.score,'[]')) x where x->>'inning' = cur->>'inning' limit 1;
+      if old is not null then
+        bn := lc_balls((cur->>'o')::numeric); bo := lc_balls((old->>'o')::numeric);
+        dr := coalesce((cur->>'r')::int,0) - coalesce((old->>'r')::int,0); dw := coalesce((cur->>'w')::int,0) - coalesce((old->>'w')::int,0);
+        if bn = bo + 1 then ev := case when dw > 0 then 'W' else dr::text end;
+        elsif bn > bo + 1 then ev := case when dw > 0 then 'W' else '+' || dr end;
+        elsif bn = bo and (dr > 0 or dw > 0) then ev := case when dw > 0 then 'W' else 'E' || dr end;
+        end if;
+        if ev is not null then
+          lab := 'Ball ' || (cur->>'o') || ' · ' || case when ev = 'W' then 'WICKET' when ev = '4' then 'FOUR' when ev = '6' then 'SIX'
+                 when ev = '0' then 'dot ball' when ev like 'E%' then 'extras +' || substr(ev,2) when ev like '+%' then ev || ' runs'
+                 else ev || case when ev = '1' then ' run' else ' runs' end end;
+          bl := bl || jsonb_build_array(jsonb_build_object('o', cur->>'o', 'e', ev, 't', now()));
+          if jsonb_array_length(bl) > 12 then bl := (select jsonb_agg(x) from (select x from jsonb_array_elements(bl) with ordinality t(x, i) order by i offset jsonb_array_length(bl) - 12) q); end if;
+        end if;
+      end if;
+    end if;
+    update lc_matches set score = e->'score', score_text = txt, score_status = e->>'status', cric_id = e->>'id', score_at = now(),
+      cur_score = case when cur is null then cur_score else trim(regexp_replace(coalesce(cur->>'inning',''), '\s*Inning.*$', '')) || ' ' || coalesce(cur->>'r','0') || '/' || coalesce(cur->>'w','0') || ' (' || coalesce(cur->>'o','0') || ')' end,
+      balls = bl, last_ball = coalesce(lab, last_ball),
+      live = live or coalesce((e->>'matchStarted')::boolean, false), updated_at = now() where id = m.id;
+    n := n + 1;
+    -- over-line markets: settle when the exact over is reached
+    for k in select * from lc_markets where match_id = m.id and kind = 'line' and status in ('open','suspended','closed') loop
+      inn := e->'score'->(coalesce(k.innings,1) - 1);
+      if inn is null then continue; end if;
+      if (inn->>'o')::numeric = k.overs and c.auto_settle then
+        perform lc_settle_internal(m.id, case when (inn->>'r')::numeric > k.line then 'over' else 'under' end, k.id);
+      elsif (inn->>'o')::numeric > k.overs or coalesce((e->>'matchEnded')::boolean, false) then
+        update lc_markets set status = 'closed', updated_at = now() where id = k.id and status = 'open';
+      elsif (inn->>'o')::numeric >= k.overs - 0.1 then
+        update lc_markets set status = 'suspended', updated_at = now() where id = k.id and status = 'open';
+      end if;
+    end loop;
+    -- automatic match result
+    if coalesce((e->>'matchEnded')::boolean, false) and m.status in ('open','suspended','closed') then
+      s := lower(coalesce(e->>'status', '')); res := null;
+      if s ~ '(no result|abandon|drawn|match drawn|cancel)' then res := 'void';
+      elsif position(' won' in s) > 0 then
+        pre := left(s, position(' won' in s));
+        ia := position(lower(split_part(m.team_a, ' ', 1)) in pre); ib := position(lower(split_part(m.team_b, ' ', 1)) in pre);
+        if ia > ib then res := 'a'; elsif ib > ia then res := 'b'; end if;
+      elsif s ~ 'tied' then res := 'void';
+      end if;
+      if res is not null and c.auto_settle then perform lc_settle_internal(m.id, res, null);
+      else update lc_matches set status = 'closed', updated_at = now() where id = m.id and status = 'open'; end if;
+    end if;
+  end loop;
+  return n;
+end $$;
+revoke all on function public.lc_ingest_sports(jsonb), public.lc_ingest_odds(jsonb), public.lc_ingest_scores(jsonb) from public, anon, authenticated;
+
+-- ---------- the timer: runs every second, only calls a provider when it is due ----------
+create or replace function public.lc_tick() returns void language plpgsql security definer set search_path = public, extensions as $$
+declare c lc_config; p jsonb; keep jsonb := '[]'::jsonb; r record; k text; rid bigint; busy boolean;
+begin
+  select * into c from lc_config where id = 1 for update skip locked;
+  if not found or not c.enabled then return; end if;
+  for p in select * from jsonb_array_elements(c.pend) loop
+    select * into r from net._http_response where id = (p->>'id')::bigint;
+    if not found then
+      if (p->>'at')::timestamptz > now() - interval '60 seconds' then keep := keep || jsonb_build_array(p); end if;
+      continue;
+    end if;
+    begin
+      if r.status_code = 200 then
+        if p->>'kind' = 'sports' then perform lc_ingest_sports(r.content::jsonb);
+        elsif p->>'kind' = 'odds' then perform lc_ingest_odds(r.content::jsonb);
+        else perform lc_ingest_scores(r.content::jsonb); end if;
+        update lc_config set last_ok = (p->>'kind') || ' ' || to_char(now(), 'HH24:MI:SS') where id = 1;
+      else
+        update lc_config set last_error = (p->>'kind') || ': HTTP ' || coalesce(r.status_code::text, 'timeout') || ' ' || left(coalesce(r.error_msg, r.content, ''), 200) where id = 1;
+      end if;
+    exception when others then
+      update lc_config set last_error = (p->>'kind') || ': ' || left(sqlerrm, 200) where id = 1;
+    end;
+  end loop;
+  select * into c from lc_config where id = 1;
+  select exists (select 1 from lc_matches where not hidden and status in ('open','suspended','closed')
+                 and coalesce(start_at, now()) between now() - interval '12 hours' and now() + interval '20 minutes') into busy;
+  if coalesce(c.odds_key,'') <> '' then
+    if c.last_sports is null or c.last_sports < now() - interval '30 minutes' then
+      rid := net.http_get('https://api.the-odds-api.com/v4/sports/?apiKey=' || c.odds_key);
+      keep := keep || jsonb_build_array(jsonb_build_object('id', rid, 'kind', 'sports', 'at', now()));
+      update lc_config set last_sports = now() where id = 1;
+    end if;
+    if c.sports_active <> '' and (c.last_odds is null or c.last_odds <= now() - make_interval(secs => c.odds_every)) then
+      foreach k in array string_to_array(c.sports_active, ',') loop
+        rid := net.http_get('https://api.the-odds-api.com/v4/sports/' || k || '/odds/?apiKey=' || c.odds_key ||
+                            '&regions=' || c.regions || '&markets=h2h&oddsFormat=decimal');
+        keep := keep || jsonb_build_array(jsonb_build_object('id', rid, 'kind', 'odds', 'at', now()));
+      end loop;
+      update lc_config set last_odds = now() where id = 1;
+    end if;
+  end if;
+  if coalesce(c.score_key,'') <> '' and busy and (c.last_score is null or c.last_score <= now() - make_interval(secs => c.score_every)) then
+    rid := net.http_get('https://api.cricapi.com/v1/currentMatches?apikey=' || c.score_key || '&offset=0');
+    keep := keep || jsonb_build_array(jsonb_build_object('id', rid, 'kind', 'score', 'at', now()));
+    update lc_config set last_score = now() where id = 1;
+  end if;
+  update lc_config set pend = keep where id = 1;
+  update lc_matches set live = true, updated_at = now() where not live and start_at <= now() and status in ('open','suspended');
+end $$;
+revoke all on function public.lc_tick() from public, anon, authenticated;
+
+-- fill lay prices for matches created by the earlier version
+update public.lc_matches set lay_a = lc_tick_up(odds_a), lay_b = lc_tick_up(odds_b) where lay_a is null and odds_a is not null;
+
+do $$ begin
+  begin perform cron.unschedule('lc-tick'); exception when others then null; end;
+  begin perform cron.unschedule('lc-clean'); exception when others then null; end;
+end $$;
+select cron.schedule('lc-tick', '1 seconds', 'select public.lc_tick()');
+select cron.schedule('lc-clean', '17 3 * * *', $$delete from cron.job_run_details where end_time < now() - interval '1 day'$$);

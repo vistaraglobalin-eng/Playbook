@@ -18,7 +18,7 @@ button{font:inherit;cursor:pointer}
 .card{background:var(--c);border:1px solid var(--ln);border-radius:14px;padding:14px;margin-bottom:10px}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
 label{display:block;font-size:13px;color:var(--mu);margin-bottom:3px}
-input[type=text],input[type=password],input[type=number]{width:100%;padding:10px;border:1.5px solid var(--ln);border-radius:9px;background:var(--bg);color:var(--ink);font:inherit}
+input[type=text],input[type=password],input[type=number],input[type=datetime-local]{width:100%;padding:10px;border:1.5px solid var(--ln);border-radius:9px;background:var(--bg);color:var(--ink);font:inherit}
 .btn{padding:10px 14px;border:0;border-radius:10px;background:var(--y);color:var(--yi);font-weight:800}
 .sm{padding:7px 10px;border:1.5px solid var(--ln);border-radius:9px;background:none;color:var(--ink);font-weight:700;font-size:13px}
 .sm.bad{color:var(--no)}
@@ -32,6 +32,8 @@ input[type=text],input[type=password],input[type=number]{width:100%;padding:10px
 .chk{display:flex;gap:8px;align-items:center;margin:6px 0}.chk input{width:18px;height:18px}
 .empty{color:var(--mu);text-align:center;padding:18px}.log{font-size:13.5px;padding:7px 0;border-top:1px solid var(--ln)}
 .narrow{max-width:420px;margin:24px auto}
+.mkt{border-top:1px solid var(--ln);margin-top:10px}.mkc{background:var(--bg);border-radius:10px;padding:8px 10px;margin:6px 0}
+select{padding:9px;border:1.5px solid var(--ln);border-radius:9px;background:var(--bg);color:var(--ink);font:inherit}
 </style>
 </head>
 <body>
@@ -40,9 +42,10 @@ input[type=text],input[type=password],input[type=number]{width:100%;padding:10px
 <main id="app"></main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script>
+// 1) Paste your Supabase project values here (Project settings > API). The anon key is safe to ship.
 var CFG={url:"https://jmvvuitwjixgsmhrdapg.supabase.co",anon:"sb_publishable_VZRaBdHeQk0YAWzJammc1w_9NL6owyx"};
 var GAMES=[["cricket","Cricket"],["casino","Casino"],["roulette","Roulette"],["lucky7","Lucky 7"],["kingjack","King Jack"],["num","1–9"]];
-var sb=null,me=null,S=null,MS=[],CS=[],LG=[],tab="",reveal=null,msg="";
+var sb=null,me=null,S=null,MS=[],CS=[],LG=[],tab="",reveal=null,msg="",LCC=null,LCL=[],LCE=null;
 function $(i){return document.getElementById(i)}
 function v(i){return $(i)?$(i).value.trim():""}
 function esc(s){return String(s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
@@ -51,7 +54,7 @@ function nn(i){var n=Math.floor(+v(i));return isFinite(n)?n:NaN}
 function emailFor(c){return c.toLowerCase()+"@id.playbook.example"}
 function app(h){$("app").innerHTML=h}
 function err(t){msg=t;render()}
-function tabs(){return me.role==="admin"?[["masters","Master IDs"],["customers","Customer IDs"],["control","Control panel"],["activity","Activity"],["account","Account"]]:[["customers","My customers"],["activity","Activity"],["account","Account"]]}
+function tabs(){return me.role==="admin"?[["masters","Master IDs"],["customers","Customer IDs"],["control","Control panel"],["live","Live cricket"],["activity","Activity"],["account","Account"]]:[["customers","My customers"],["activity","Activity"],["account","Account"]]}
 async function callFn(b){
   var m={create:["admin_create",{p_name:b.name,p_coins:b.coins,p_max:b.max_customers==null?null:b.max_customers}],
     reset_password:["admin_reset",{p_code:b.code}],
@@ -66,7 +69,8 @@ async function load(){
   MS=rows.filter(function(r){return r.role==="master"});CS=rows.filter(function(r){return r.role==="customer"});
   if(me.role==="master")me=rows.filter(function(r){return r.id===me.id})[0]||me;
   var s=await sb.from("settings").select("data").eq("id",1).single();S=s.data?s.data.data:null;
-  var l=await sb.from("activity").select("*").order("at",{ascending:false}).limit(50);LG=l.data||[]}
+  var l=await sb.from("activity").select("*").order("at",{ascending:false}).limit(50);LG=l.data||[];
+  if(me.role==="admin"){var g=await sb.rpc("lc_admin_get");if(g.error){LCE=g.error.message;LCC=null;LCL=[]}else{LCE=null;LCC=g.data;var li=await sb.rpc("lc_admin_list");LCL=li.data||[]}}}
 async function enter(){
   var u=(await sb.auth.getUser()).data.user,p=u?await sb.from("profiles").select("*").eq("id",u.id).single():{};
   var bad=null;
@@ -76,6 +80,7 @@ async function enter(){
   if(bad){await sb.auth.signOut();me=null;return err(bad)}
   me=p.data;msg="";await load();render()}
 async function boot(){
+  if(CFG.url.indexOf("YOUR_")===0){app('<div class="card narrow"><h2>Connect your backend</h2><p class="meta">Open this file, set <b>CFG.url</b> and <b>CFG.anon</b> at the top of the script, then reload. See backend README for the setup steps.</p></div>');return}
   sb=supabase.createClient(CFG.url,CFG.anon);
   app('<div class="empty">Loading…</div>');
   var s=await sb.auth.getSession();if(s.data.session)await enter();else render()}
@@ -87,7 +92,7 @@ function render(){
   var h='<div class="tabs" role="tablist">'+tabs().map(function(t){return '<button role="tab" data-act="tab" data-t="'+t[0]+'" aria-selected="'+(t[0]===tab)+'">'+t[1]+'</button>'}).join("")+'</div>';
   if(msg)h+='<p class="msg" role="alert">'+esc(msg)+'</p>';
   if(reveal)h+='<div class="card reveal"><h2>'+esc(reveal.what)+'</h2><div class="meta">ID</div><div class="cred">'+esc(reveal.id)+'</div><div class="meta">Temporary password</div><div class="cred">'+esc(reveal.pw)+'</div><p class="meta">Shown once and not stored. Share it securely and ask the holder to change it.</p><button class="sm" data-act="dismiss">I have saved it</button></div>';
-  h+={masters:vMasters,customers:vCustomers,control:vControl,activity:vActivity,account:vAccount}[tab]();app(h)}
+  h+={masters:vMasters,customers:vCustomers,control:vControl,live:vLive,activity:vActivity,account:vAccount}[tab]();app(h)}
 function login(){return '<div class="card narrow"><h2>Sign in</h2><label for="li">Admin or Master ID</label><input id="li" type="text" autocapitalize="characters" autocomplete="username"><label for="lp" style="margin-top:8px">Password</label><input id="lp" type="password" autocomplete="current-password">'+(msg?'<p class="msg" role="alert">'+esc(msg)+'</p>':'')+'<div class="row"><button class="btn" data-act="login">Sign in</button></div><p class="meta">Customer IDs sign in to the games app, not this panel.</p></div>'}
 function btn(a,c,l,cls){return '<button class="sm '+(cls||"")+'" data-act="'+a+'" data-id="'+c.code+'" data-on="'+(c.active?1:0)+'">'+l+'</button>'}
 function vMasters(){
@@ -102,12 +107,73 @@ function vCustomers(){var h="",mine=me.role==="master";
     return '<div class="card"><div class="top"><div><div class="id">'+c.code+'</div><div>'+esc(c.name)+'</div></div><span class="pill '+(c.active?"on":"off")+'">'+(c.active?"Active":"Suspended")+'</span></div><div class="meta">'+fmt(c.coins)+' coins'+(pm?' · Master '+pm.code:'')+'</div><div class="row">'+(mine?'<input type="number" min="1" id="in-'+c.code+'" placeholder="Coins" aria-label="Coins to add"><button class="sm" data-act="coins" data-id="'+c.code+'">Add coins</button>':'')+btn("toggle",c,c.active?"Suspend":"Activate")+btn("reset",c,"Reset password")+btn("del",c,"Delete","bad")+'</div></div>'}).join("")}
 function vControl(){var s=S;if(!s)return '<div class="empty">Settings could not be loaded.</div>';
   return '<div class="card"><h2>Game settings</h2><p class="meta">Enforced by the server for every customer: the games app reads them at sign-in, and the database checks every round.</p><div class="grid"><div><label for="s1">Default starting coins</label><input id="s1" type="number" min="0" value="'+s.start+'"></div><div><label for="s2">Daily bonus coins</label><input id="s2" type="number" min="0" value="'+s.bonus+'"></div><div><label for="s3">Max stake per round</label><input id="s3" type="number" min="1" value="'+s.maxStake+'"></div></div><h3 style="margin:14px 0 4px;font-size:15px">Games available</h3>'+GAMES.map(function(g){return '<label class="chk"><input type="checkbox" id="g-'+g[0]+'"'+(s.games[g[0]]?" checked":"")+'>'+g[1]+'</label>'}).join("")+'<label class="chk"><input type="checkbox" id="s4"'+(s.maint?" checked":"")+'>Maintenance mode (pause all games)</label><div class="row"><button class="btn" data-act="saveSet">Save settings</button></div></div>'}
+function ago(t){if(!t)return"never";var s=Math.round((Date.now()-new Date(t).getTime())/1000);return s<60?s+"s ago":s<3600?Math.round(s/60)+" min ago":Math.round(s/3600)+" h ago"}
+function vLive(){
+  if(LCE||!LCC)return '<div class="card"><h2>Live cricket</h2><p class="msg">Live cricket isn\'t installed yet.</p><p class="meta">Run the Live Cricket SQL in the Supabase SQL Editor, then tap Refresh.</p><div class="row"><button class="sm" data-act="lcRefresh">Refresh</button></div></div>';
+  var c=LCC,h='<div class="card"><h2>Live cricket · connection</h2>'+
+  '<p class="meta">Odds: '+(c.has_odds_key?'<b class="on">key saved</b>':'<b class="off">no key</b>')+' · last checked '+ago(c.last_odds)+' &nbsp;|&nbsp; Scores: '+(c.has_score_key?'<b class="on">key saved</b>':'<b class="off">no key</b>')+' · last checked '+ago(c.last_score)+'</p>'+
+  (c.sports_active?'<p class="meta">Leagues found: '+esc(c.sports_active)+'</p>':'')+(c.last_ok?'<p class="meta">Last success: '+esc(c.last_ok)+'</p>':'')+(c.last_error?'<p class="msg">Last error: '+esc(c.last_error)+'</p>':'')+
+  '<div class="grid"><div><label for="lk1">The Odds API key</label><input id="lk1" type="password" placeholder="'+(c.has_odds_key?"saved – type to replace":"paste key")+'" autocomplete="off"></div><div><label for="lk2">CricketData.org key</label><input id="lk2" type="password" placeholder="'+(c.has_score_key?"saved – type to replace":"paste key")+'" autocomplete="off"></div></div>'+
+  '<div class="grid" style="margin-top:8px"><div><label for="lk3">Check odds every (seconds)</label><input id="lk3" type="number" min="1" value="'+c.odds_every+'"></div><div><label for="lk4">Check scores every (seconds)</label><input id="lk4" type="number" min="1" value="'+c.score_every+'"></div><div><label for="lk6">Odds margin %</label><input id="lk6" type="number" min="0" max="50" value="'+Math.round(c.margin*100)+'"></div></div>'+
+  '<div class="row"><button class="sm" data-act="lcSpeed" data-o="7200" data-s="900">Free plans (slow)</button><button class="sm" data-act="lcSpeed" data-o="60" data-s="60">Every minute</button><button class="sm" data-act="lcSpeed" data-o="1" data-s="1">Every second (paid plans)</button></div>'+
+  '<label for="lk5" style="margin-top:8px">Leagues to follow (blank = all cricket). Example: cricket_ipl,cricket_odi</label><input id="lk5" type="text" value="'+esc(c.leagues)+'">'+
+  '<label class="chk"><input type="checkbox" id="lc1"'+(c.enabled?" checked":"")+'>Live cricket on</label><label class="chk"><input type="checkbox" id="lc2"'+(c.inplay?" checked":"")+'>Allow bets after a match starts (in-play)</label><label class="chk"><input type="checkbox" id="lc3"'+(c.auto_settle?" checked":"")+'>Pay results automatically when a match ends</label>'+
+  '<div class="row"><button class="btn" data-act="lcSave">Save live cricket settings</button><button class="sm" data-act="lcRefresh">Refresh</button></div><p class="meta">Free plans: about 500 odds checks a month and 100 score checks a day. Faster speeds need paid plans.</p></div>';
+  h+='<div class="card"><h2>Add a match by hand</h2><p class="meta">Use this if a match isn\'t in the feed, or before you have API keys. You set the odds and the result.</p><div class="grid"><div><label for="la0">League</label><input id="la0" type="text" placeholder="e.g. IPL"></div><div><label for="la1">Team A</label><input id="la1" type="text"></div><div><label for="la2">Team B</label><input id="la2" type="text"></div><div><label for="la3">Start time</label><input id="la3" type="datetime-local"></div><div><label for="la4">Odds A</label><input id="la4" type="number" step="0.01" min="1.01" value="1.90"></div><div><label for="la5">Odds B</label><input id="la5" type="number" step="0.01" min="1.01" value="1.90"></div></div><div class="row"><button class="btn" data-act="lcAdd">Add match</button></div></div>';
+  if(!LCL.length)return h+'<div class="empty">No matches yet. They appear here when the odds feed finds them, or when you add one.</div>';
+  return h+LCL.map(function(m){var done=m.status==="settled"||m.status==="void",id=esc(m.id);
+    return '<div class="card"><div class="top"><div><div class="meta">'+esc(m.league||"Cricket")+(m.manual?" · added by hand":"")+'</div><div class="id" style="font-size:16px">'+esc(m.team_a)+' v '+esc(m.team_b)+'</div><div class="meta">'+(m.start_at?esc(new Date(m.start_at).toLocaleString()):"")+(m.live?' · <b class="off">LIVE</b>':"")+'</div></div><span class="pill '+(m.status==="open"?"on":"off")+'" style="white-space:nowrap;align-self:flex-start">'+esc(m.status.toUpperCase())+'</span></div>'+(m.status==="settled"?'<div class="meta"><b>Result: '+esc(m.winner==="a"?m.team_a:m.team_b)+' won</b></div>':'')+
+    (m.score_text?'<div class="meta" style="margin-top:4px"><b>'+esc(m.score_text)+'</b></div>':'')+(m.score_status?'<div class="meta">'+esc(m.score_status)+'</div>':'')+
+    '<div class="meta">Bets: '+m.bets+' · open stake '+fmt(m.open_stake)+' coins · odds '+(m.odds_lock?"set by you":"from feed")+'</div>'+
+    (done?'':'<div class="row"><input type="number" step="0.01" min="1.01" id="oa-'+id+'" value="'+(m.odds_a||"")+'" aria-label="Odds '+esc(m.team_a)+'"><input type="number" step="0.01" min="1.01" id="ob-'+id+'" value="'+(m.odds_b||"")+'" aria-label="Odds '+esc(m.team_b)+'"><button class="sm" data-act="lcOdds" data-id="'+id+'">Set odds</button>'+(m.odds_lock&&!m.manual?'<button class="sm" data-act="lcM" data-x="auto_odds" data-id="'+id+'">Use feed odds</button>':'')+'</div>'+
+    '<div class="row">'+(m.status==="open"?'<button class="sm" data-act="lcM" data-x="suspend" data-id="'+id+'">Suspend</button><button class="sm" data-act="lcM" data-x="close" data-id="'+id+'">Close betting</button>':'<button class="sm" data-act="lcM" data-x="open" data-id="'+id+'">Open betting</button>')+(m.live?'':'<button class="sm" data-act="lcM" data-x="live" data-id="'+id+'">Mark live</button>')+'</div>'+
+    '<div class="row"><button class="sm" data-act="lcM" data-x="settle_a" data-id="'+id+'" data-c="'+esc(m.team_a)+' won">'+esc(m.team_a)+' won</button><button class="sm" data-act="lcM" data-x="settle_b" data-id="'+id+'" data-c="'+esc(m.team_b)+' won">'+esc(m.team_b)+' won</button><button class="sm bad" data-act="lcM" data-x="void" data-id="'+id+'" data-c="void the match and return all stakes">Void</button></div>')+
+    vMarkets(m)+
+    '<div class="row"><button class="sm" data-act="lcM" data-x="hide" data-id="'+id+'">Hide from players</button>'+(m.bets==0||done?'<button class="sm bad" data-act="lcM" data-x="delete" data-id="'+id+'" data-c="delete this match">Delete</button>':'')+'</div></div>'}).join("")}
+function vMarkets(m){var id=esc(m.id),mk=m.markets||[],h='<div class="mkt"><h3 style="font-size:14px;margin:12px 0 4px">Extra markets</h3>';
+  h+=mk.map(function(k){var done=k.status==="settled"||k.status==="void",kid=k.id;
+    return '<div class="mkc"><div class="top"><b>'+esc(k.name)+(k.kind==="line"?' · line '+k.line:'')+'</b><span class="pill '+(k.status==="open"?"on":"off")+'" style="white-space:nowrap">'+esc(k.status.toUpperCase())+'</span></div>'+
+    '<div class="meta">Matched '+fmt(k.matched||0)+' · bets '+(k.bets||0)+(k.status==="settled"?' · <b>Result: '+esc((k.runners.filter(function(r){return r.k===k.result})[0]||{}).n||k.result)+'</b>':'')+'</div>'+
+    (done?'':'<div class="row">'+(k.kind==="line"?'<input type="number" step="0.5" id="kl-'+kid+'" value="'+k.line+'" aria-label="Line"><input type="number" step="0.01" id="ko-'+kid+'-0" value="'+k.runners[0].b+'" aria-label="Odds">':k.runners.map(function(r,i){return '<input type="number" step="0.01" id="ko-'+kid+'-'+i+'" value="'+r.b+'" aria-label="'+esc(r.n)+' odds" title="'+esc(r.n)+'">'}).join(""))+'<button class="sm" data-act="mkOdds" data-k="'+kid+'" data-n="'+k.runners.length+'" data-line="'+(k.kind==="line"?1:0)+'">Set</button></div>'+
+    '<div class="row">'+(k.status==="open"?'<button class="sm" data-act="mkA" data-x="suspend" data-k="'+kid+'">Suspend</button>':'<button class="sm" data-act="mkA" data-x="open" data-k="'+kid+'">Open</button>')+
+    k.runners.map(function(r){return '<button class="sm" data-act="mkA" data-x="settle" data-r="'+esc(r.k)+'" data-k="'+kid+'" data-c="settle as '+esc(r.n)+'">'+esc(r.n)+' wins</button>'}).join("")+'<button class="sm bad" data-act="mkA" data-x="void" data-k="'+kid+'" data-c="void this market">Void</button></div>')+
+    ((k.bets||0)==0||done?'<div class="row"><button class="sm bad" data-act="mkA" data-x="delete" data-k="'+kid+'" data-c="delete this market">Delete market</button></div>':'')+'</div>'}).join("");
+  if(m.status==="settled"||m.status==="void")return h+'</div>';
+  return h+'<div class="row"><select id="mt-'+id+'" aria-label="Market type"><option value="toss">Toss Winner</option><option value="tie">Tie (Yes/No)</option><option value="completed">Completed Match (Yes/No)</option><option value="line">Over line (Under/Over runs)</option><option value="custom">Custom Yes/No</option></select></div>'+
+  '<div class="row"><input type="text" id="mn-'+id+'" placeholder="Name (custom only)" style="width:160px"><input type="number" step="0.01" id="m1-'+id+'" placeholder="Odds 1 / Yes" value="1.95"><input type="number" step="0.01" id="m2-'+id+'" placeholder="Odds 2 / No" value="1.95"></div>'+
+  '<div class="row"><input type="number" id="mi-'+id+'" placeholder="Innings" value="1" aria-label="Innings (line)"><input type="number" step="0.1" id="mo-'+id+'" placeholder="Overs e.g. 10" aria-label="Overs (line)"><input type="number" step="0.5" id="ml-'+id+'" placeholder="Line e.g. 54.5" aria-label="Runs line"></div>'+
+  '<div class="row"><button class="btn" data-act="mkAdd" data-id="'+id+'">Add market</button></div><p class="meta">Over line: players bet Under or Over the runs line after that many overs (odds field 1 is used for both). It settles itself when the live score reaches that over exactly; otherwise settle it here.</p></div>'}
 function vActivity(){return '<div class="card"><h2>Recent activity</h2>'+(LG.length?LG.map(function(e){return '<div class="log"><b>'+esc(e.actor)+'</b> · '+esc(e.message)+'<div class="meta">'+esc(new Date(e.at).toLocaleString())+'</div></div>'}).join(""):'<div class="empty">Nothing yet.</div>')+'</div>'}
 function vAccount(){return '<div class="card"><h2>Change password</h2><label for="a0">Current password</label><input id="a0" type="password" autocomplete="current-password"><label for="a1" style="margin-top:8px">New password (8+ characters)</label><input id="a1" type="password" autocomplete="new-password"><label for="a2" style="margin-top:8px">Repeat new password</label><input id="a2" type="password" autocomplete="new-password"><div class="row"><button class="btn" data-act="chpw">Update password</button></div></div>'}
 
 async function run(b,what){var d=await callFn(b);if(what)reveal={what:what,id:d.code,pw:d.password};msg="";await load();render()}
 var A={
 tab:function(t){tab=t.dataset.t;msg="";render()},
+mkAdd:async function(t){var id=t.dataset.id,tpl=$("mt-"+id).value,p={action:"add",match:id,tpl:tpl,oa:+$("m1-"+id).value,ob:+$("m2-"+id).value};
+  if(tpl==="custom")p.name=v("mn-"+id);
+  if(tpl==="line"){p.innings=nn("mi-"+id)||1;p.overs=+$("mo-"+id).value;p.line=+$("ml-"+id).value;if(!(p.overs>0)||!(p.line>0))throw new Error("Enter the overs and the runs line.")}
+  if(!(p.oa>1)||(tpl!=="line"&&!(p.ob>1)))throw new Error("Odds must be above 1.");
+  var r=await sb.rpc("lc_admin_market",{p:p});if(r.error)throw new Error(r.error.message);msg="";await load();render()},
+mkOdds:async function(t){var k=t.dataset.k,n=+t.dataset.n,p={action:"odds",market:+k,odds:[]};
+  if(t.dataset.line==="1"){p.line=+$("kl-"+k).value;p.odds=[+$("ko-"+k+"-0").value]}else for(var i=0;i<n;i++)p.odds.push(+$("ko-"+k+"-"+i).value);
+  var r=await sb.rpc("lc_admin_market",{p:p});if(r.error)throw new Error(r.error.message);msg="";await load();render()},
+mkA:async function(t){if(t.dataset.c&&!confirm("Are you sure: "+t.dataset.c+"?"))return;var p={action:t.dataset.x,market:+t.dataset.k};if(t.dataset.r)p.result=t.dataset.r;
+  var r=await sb.rpc("lc_admin_market",{p:p});if(r.error)throw new Error(r.error.message);msg=r.data&&r.data.bets?("Settled "+r.data.bets+" bet(s)."):"";await load();render()},
+lcRefresh:async function(){msg="";await load();render()},
+lcSpeed:function(t){$("lk3").value=t.dataset.o;$("lk4").value=t.dataset.s},
+lcSave:async function(){var o=nn("lk3"),sc=nn("lk4"),mg=+v("lk6");if(!(o>=1&&sc>=1))throw new Error("Speeds must be at least 1 second.");if(!(mg>=0&&mg<=50))throw new Error("Margin must be 0–50%.");
+  var p={odds_every:o,score_every:sc,margin:mg/100,leagues:v("lk5").replace(/\s+/g,""),enabled:$("lc1").checked,inplay:$("lc2").checked,auto_settle:$("lc3").checked};
+  if(v("lk1"))p.odds_key=v("lk1");if(v("lk2"))p.score_key=v("lk2");
+  var r=await sb.rpc("lc_admin_set",{p:p});if(r.error)throw new Error(r.error.message);msg="";await load();render()},
+lcAdd:async function(){var st=v("la3")?new Date(v("la3")).toISOString():new Date().toISOString(),oa=+v("la4"),ob=+v("la5");
+  if(!v("la1")||!v("la2"))throw new Error("Enter both teams.");if(!(oa>1&&ob>1))throw new Error("Odds must be above 1.");
+  var r=await sb.rpc("lc_admin_add",{p_league:v("la0"),p_a:v("la1"),p_b:v("la2"),p_start:st,p_oa:oa,p_ob:ob});if(r.error)throw new Error(r.error.message);msg="";await load();render()},
+lcOdds:async function(t){var id=t.dataset.id,oa=+$("oa-"+id).value,ob=+$("ob-"+id).value;if(!(oa>1&&ob>1))throw new Error("Odds must be above 1.");
+  var r=await sb.rpc("lc_admin_match",{p_match:id,p_action:"odds",p_oa:oa,p_ob:ob});if(r.error)throw new Error(r.error.message);msg="";await load();render()},
+lcM:async function(t){if(t.dataset.c&&!confirm("Are you sure: "+t.dataset.c+"?"))return;
+  var r=await sb.rpc("lc_admin_match",{p_match:t.dataset.id,p_action:t.dataset.x});if(r.error)throw new Error(r.error.message);
+  msg=r.data&&r.data.bets?("Settled "+r.data.bets+" bet(s)."):"";await load();render()},
+
 dismiss:function(){reveal=null;render()},
 login:async function(){var id=v("li").toUpperCase();msg="";
   var r=await sb.auth.signInWithPassword({email:emailFor(id),password:$("lp").value});

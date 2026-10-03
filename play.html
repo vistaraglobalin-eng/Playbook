@@ -336,6 +336,62 @@ body.ingame #dock{display:block}
 @keyframes pulse{50%{transform:scale(1.35)}}
 @keyframes dropIn{from{transform:translateY(-50px) scale(.5);opacity:0}}
 @keyframes sevenGlow{50%{box-shadow:0 0 0 4px #ffd35c,0 0 40px #ffd35c}}
+/* shared table games */
+.tg-lucky7.rl{background:radial-gradient(130% 55% at 50% 18%,#237a4d 0%,#124a30 45%,#071d13 100%)}
+.tg-kingjack.rl{background:radial-gradient(130% 55% at 50% 18%,#2747a8 0%,#152c6b 45%,#070f2a 100%)}
+.tg-num.rl{background:radial-gradient(130% 55% at 50% 18%,#6b3399 0%,#3b1a5e 45%,#12061f 100%)}
+.tg-casino.rl{background:radial-gradient(130% 55% at 50% 18%,#8c1f3a 0%,#4d0f22 45%,#17040b 100%)}
+.tg-cricket.rl{background:radial-gradient(130% 55% at 50% 10%,#2b5f9e 0%,#14325a 45%,#050d1a 100%)}
+.tg-scene{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:6px 8px 32px;min-height:290px}
+.tg-scene .ann{top:auto;bottom:2px}
+.tboard{display:flex;flex-direction:column;gap:6px;min-width:0}
+.tboard.lock{pointer-events:none}
+.g2,.g3,.g4,.g7{display:grid;gap:6px}.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}.g7{grid-template-columns:repeat(7,1fr);gap:4px}
+.lbl{font-size:10.5px;letter-spacing:1.5px;font-weight:800;color:#ffd35c;text-align:center;margin-top:2px}
+.bs{position:relative;border:1.5px solid rgba(214,232,240,.5);border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,.1),rgba(255,255,255,.03));color:#fff;padding:7px 3px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;min-height:54px;transition:filter .12s,transform .12s;box-shadow:inset 0 1px 0 #ffffff22}
+.bs:active{filter:brightness(1.5);transform:scale(.96)}
+.bs b{font-size:13.5px;letter-spacing:.5px}.bs em{font-style:normal;font-size:10px;opacity:.8;font-weight:600;white-space:nowrap}.bs small{color:#ffd35c;font-weight:900;font-size:12px}
+.bs.gold{background:linear-gradient(160deg,#ffd35c55,#8a5a0055);border-color:#ffd35c}
+.bs.redb{background:linear-gradient(180deg,#b3141c88,#6e0b1088)}.bs.blkb{background:linear-gradient(180deg,#222c,#000c)}
+.rs{color:#ff4a4a}
+.bs.rk{min-height:44px;padding:4px 0;background:#fff;color:#111;border-color:#fff;border-radius:6px;box-shadow:0 2px 0 #0006}
+.bs.rk b{font-size:15px}
+.bs.rk .tcp{width:22px;height:22px;margin:-11px 0 0 -11px;font-size:8px}
+.bs.big{min-height:74px}.bs.big b{font-size:17px;white-space:nowrap}
+.g3 .bs.big b{font-size:14.5px;letter-spacing:0}
+.bs.suit b{font-size:24px;line-height:1}
+.bs.nb{min-height:62px}.bs.nb .nbb{width:38px;height:38px}
+.bs.team{flex-direction:row;justify-content:flex-start;gap:7px;text-align:left;padding:8px 6px;min-height:52px}
+.bs.betspot{min-height:84px;border-radius:50px;border:2px dashed #ffd35c;background:radial-gradient(#ffd35c22,transparent 70%)}
+.bs.betspot b{font-size:18px;color:#ffd35c}
+.bs.win{animation:twin .5s 7;z-index:1}
+.hcol b.h-lo{background:#15803d;border:0}.hcol b.h-hi{background:#1d4ed8;border:0}.hcol b.h-s7{background:linear-gradient(#ffe27a,#d99a1e);color:#3a2600;border:0}
+.hcol b.h-K{background:#7c3aed;border:0}.hcol b.h-J{background:#b91c1c;border:0}.hcol b.h-w{background:#15803d;border:0;font-size:11px}.hcol b.h-l{background:#5b1a1a;border:0;font-size:11px}
+.hcol b.h-ball{border-radius:50%;width:26px;height:26px;border:2px solid #fff8}
+.l7scene .dealer{justify-content:center}
+.l7scene{position:relative;width:100%;max-width:400px;display:flex;flex-direction:column;align-items:center;gap:8px;padding:18px 10px 14px;border-radius:90px 90px 22px 22px;background:radial-gradient(ellipse at 50% 30%,#2e9a64,#0f4a30 75%);border:6px solid #6b3f17;box-shadow:inset 0 0 0 2px #d4ae55,inset 0 0 40px #0009,0 12px 24px #000a;overflow:hidden}
+.wm{position:absolute;top:44%;left:0;right:0;text-align:center;font:italic 900 54px Georgia,serif;color:#ffffff0f;pointer-events:none;letter-spacing:4px}
+.cslot.big,.cslot.big .pcw{width:92px;height:130px}.cslot.big .cs{font-size:52px}.cslot.big .cr{font-size:18px}
+.disc{position:relative;width:46px;height:66px}.disc b{position:absolute;inset:0;border-radius:6px;background:repeating-linear-gradient(45deg,#7f1d1d 0 5px,#b91c1c 5px 10px);border:2px solid #fff;transform:rotate(12deg)}
+.disc b:nth-child(2n){transform:rotate(-6deg) translate(2px,2px)}
+.kjscene{display:grid;grid-template-columns:58px 1fr 58px;gap:6px;width:100%;max-width:440px;align-items:center}
+.kjm{display:flex;flex-direction:column;align-items:center;gap:8px;min-width:0}
+.kjz{height:150px;border-radius:14px;border:2px dashed #ffd35c88;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:900;font-size:11px;letter-spacing:1px;background:#0004;transition:.3s}
+.kjz span{font-size:28px}
+.kjz.hot{border-style:solid;border-color:#ffd35c;background:#ffd35c33;animation:wglow .6s 5}
+.tg-kingjack .lane{min-height:96px;width:100%}
+.lotto{position:relative;display:flex;flex-direction:column;align-items:center;padding:10px 14px 4px;border-radius:26px;background:linear-gradient(#2a1240,#12061e);border:3px solid #d4ae55;box-shadow:0 10px 24px #000a,inset 0 0 20px #0008}
+.lsign{font-weight:900;letter-spacing:3px;color:#ffd35c;text-shadow:0 0 10px #ffb800;font-size:13px;animation:blink 1.2s steps(2) infinite}
+.stadium{display:flex;flex-direction:column;align-items:center;gap:8px;width:100%;position:relative}
+.stadium::before,.stadium::after{content:"";position:absolute;top:-20px;width:120px;height:120px;border-radius:50%;background:radial-gradient(#fff6,transparent 65%);pointer-events:none}
+.stadium::before{left:0}.stadium::after{right:0}
+.rl{overflow:hidden;overflow:clip}
+.tg-cricket .field{box-shadow:0 0 0 9px #26354f,0 0 0 11px #ffffff33,inset 0 0 30px #0006;margin:10px 0}
+.tg .match{background:#0003;border-radius:12px;padding:6px}
+.tg .mt{grid-template-columns:minmax(0,1fr) auto minmax(0,1fr)}
+.bs.team .tn{min-width:0;overflow-wrap:anywhere;font-size:12.5px}
+.rl{max-width:100vw}
+body.rlt{overflow-x:hidden}
 /* roulette full table */
 body.rlt header,body.rlt .banner,body.rlt #dock{display:none!important}
 body.rlt{background:#0c2430}
@@ -350,7 +406,7 @@ body.rlt main{max-width:520px;padding:0;padding-bottom:calc(66px + env(safe-area
 .rl-res{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;z-index:4}
 .rl-res b{width:86px;height:86px;border-radius:50%;display:grid;place-items:center;font-size:42px;font-weight:900;border:4px solid #fff;box-shadow:0 0 34px #fffa,0 8px 20px #000a;animation:resIn .7s cubic-bezier(.2,1.6,.4,1) both}
 .rl-wz .ann{top:auto;bottom:0}
-.rl-mid{display:grid;grid-template-columns:40px 1fr 60px;gap:7px;padding:6px 8px 4px;align-items:start}
+.rl-mid{display:grid;grid-template-columns:40px minmax(0,1fr) 60px;gap:7px;padding:6px 8px 4px;align-items:start}
 .hcol{display:flex;flex-direction:column;gap:3px;align-items:center}
 .hcol .hi{font-size:15px;margin:4px 0 1px}
 .hcol b{width:36px;height:25px;border-radius:5px;display:grid;place-items:center;font-size:14px;font-weight:900;background:#0a1216;border:1px solid #ffffff22;font-variant-numeric:tabular-nums}
@@ -393,7 +449,145 @@ body.rlt main{max-width:520px;padding:0;padding-bottom:calc(66px + env(safe-area
 .rl-bar div{text-align:center;min-width:90px}.rl-bar small{display:block;font-size:10px;letter-spacing:1.5px;color:#ffd35c;font-weight:800}.rl-bar b{font-size:19px;font-variant-numeric:tabular-nums}
 @keyframes chipIn{from{transform:translateY(-14px) scale(1.7);opacity:0}}
 @keyframes resIn{from{transform:scale(.2) rotate(-90deg);opacity:0}}
-@media(max-width:360px){.rl-mid{grid-template-columns:36px 1fr 54px;gap:5px}.cb{width:42px;height:42px}.cb.spin{width:54px;height:54px}.rtab{grid-template-columns:24px 24px repeat(3,1fr)}}
+@media(max-width:360px){.rl-mid{grid-template-columns:36px minmax(0,1fr) 54px;gap:5px}.cb{width:42px;height:42px}.cb.spin{width:54px;height:54px}.rtab{grid-template-columns:24px 24px repeat(3,1fr)}}
+/* red carpet tables (all games) */
+.rl,.tg-lucky7.rl,.tg-kingjack.rl,.tg-num.rl,.tg-casino.rl,.tg-cricket.rl{background:
+ radial-gradient(120% 50% at 50% 16%,rgba(255,120,120,.22),transparent 60%),
+ repeating-linear-gradient(45deg,rgba(0,0,0,.05) 0 2px,transparent 2px 5px),
+ radial-gradient(140% 70% at 50% 25%,#b5142c 0%,#7d0a1d 48%,#2b030b 100%)}
+body.rlt{background:#2b030b}
+.rl-mid .rtab,.rl-mid .tboard{background:rgba(20,0,4,.42);padding:6px;border-radius:12px;box-shadow:inset 0 0 0 1.5px rgba(212,174,85,.55),0 6px 14px rgba(0,0,0,.35)}
+.rl-top{border-bottom:1px solid rgba(212,174,85,.35);padding-bottom:6px}
+.hcol b{background:#1a0206}
+/* dice table */
+.dtable{position:relative;width:100%;max-width:400px;height:220px;border-radius:26px;border:6px solid #5a2a0c;box-shadow:inset 0 0 0 2px #d4ae55,inset 0 0 50px rgba(0,0,0,.6),0 12px 24px rgba(0,0,0,.6);
+ background:repeating-linear-gradient(45deg,rgba(0,0,0,.06) 0 2px,transparent 2px 5px),radial-gradient(ellipse at 50% 40%,#c8182f,#7a0a1a 80%);overflow:hidden;perspective:900px}
+.dwm{position:absolute;inset:0;display:grid;place-items:center;font:italic 900 58px Georgia,serif;color:rgba(255,215,120,.09);letter-spacing:4px;pointer-events:none}
+.dzone{position:absolute;left:50%;top:50%;width:0;height:0}
+.dwrap{position:absolute;left:-25px;top:-25px;width:50px;height:50px;perspective:600px}
+.dsh{position:absolute;left:4px;top:10px;width:46px;height:44px;border-radius:12px;background:rgba(0,0,0,.45);filter:blur(4px)}
+.die{position:relative;width:50px;height:50px;transform-style:preserve-3d}
+.die .f{position:absolute;inset:0;display:grid;grid-template:repeat(3,1fr)/repeat(3,1fr);padding:7px;border-radius:10px;background:radial-gradient(circle at 30% 25%,#ffffff,#f1f1f1 55%,#d6d6d6);box-shadow:inset 0 0 0 1px rgba(0,0,0,.12),inset -3px -4px 8px rgba(0,0,0,.18);backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.die .f i{display:block}
+.die .f i.pp{width:9px;height:9px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#555,#0a0a0a);align-self:center;justify-self:center}
+.die .f i.pp.r{width:13px;height:13px;background:radial-gradient(circle at 35% 30%,#ff6b6b,#b00000)}
+.die .f1{transform:translateZ(25px)}.die .f6{transform:rotateY(180deg) translateZ(25px)}.die .f2{transform:rotateY(90deg) translateZ(25px)}.die .f5{transform:rotateY(-90deg) translateZ(25px)}.die .f3{transform:rotateX(90deg) translateZ(25px)}.die .f4{transform:rotateX(-90deg) translateZ(25px)}
+.dwrap.lit .die .f1,.dwrap.lit .die .f{box-shadow:inset 0 0 0 1px rgba(0,0,0,.12),0 0 18px #ffd35c}
+.dcup{position:absolute;right:14px;bottom:18px;width:58px;height:70px;transform-origin:50% 90%}
+.dcup i{position:absolute;inset:0;clip-path:polygon(12% 0,88% 0,100% 100%,0 100%);border-radius:6px;background:linear-gradient(90deg,#3a1a08,#8a4a1e 35%,#c47a3a 50%,#7a3e16 70%,#2e1405);box-shadow:inset 0 0 0 3px #d4ae55}
+.dcup::before{content:"";position:absolute;left:-4px;right:-4px;bottom:-4px;height:10px;border-radius:5px;background:linear-gradient(#e8c25a,#8a6216)}
+.dcup::after{content:"";position:absolute;left:8%;right:8%;top:-3px;height:8px;border-radius:4px;background:linear-gradient(#e8c25a,#8a6216)}
+.dsum{position:absolute;left:12px;top:12px;min-width:74px;padding:6px 10px;border-radius:14px;text-align:center;opacity:0;transform:scale(.4);transition:opacity .3s,transform .4s cubic-bezier(.2,1.6,.4,1);background:rgba(0,0,0,.55);border:2px solid #d4ae55}
+.dsum.on{opacity:1;transform:scale(1)}
+.dsum b{display:block;font-size:36px;line-height:1;font-weight:900;color:#fff}
+.dsum small{font-size:10.5px;font-weight:900;letter-spacing:1px;color:#ffd35c}
+.dsum.s7{background:linear-gradient(#ffe27a,#d99a1e);border-color:#fff}.dsum.s7 b,.dsum.s7 small{color:#3a2600}
+.druler{max-width:400px;margin-top:2px}
+.a-dice{display:flex;gap:10px}
+.a-dice .ad{width:42px;height:42px;animation:hop 1.1s ease-in-out infinite}
+.a-dice .ad:nth-child(2){animation-delay:.25s}
+.a-dice .f{position:relative;inset:auto;width:42px;height:42px;display:grid;grid-template:repeat(3,1fr)/repeat(3,1fr);padding:6px;border-radius:9px;background:radial-gradient(circle at 30% 25%,#fff,#ddd);box-shadow:0 4px 8px #0007}
+.a-dice .f i.pp{width:7px;height:7px;border-radius:50%;background:#111;align-self:center;justify-self:center}
+.t-lucky7{background:linear-gradient(160deg,#d3243a,#5c0614)}
+/* live cricket exchange */
+.t-live{background:linear-gradient(120deg,#1f2a36,#3b2f12 50%,#f2a900);grid-column:1/-1}
+.wide-tile{min-height:120px;flex-direction:row;align-items:center;width:100%}
+.wide-tile .art{height:110px;width:42%}.wide-tile .tl{background:none;margin:0}
+.livebadge{background:#dc2626!important;animation:blink 1.2s steps(2) infinite}
+.a-live{position:relative;width:90px;height:90px;display:grid;place-items:center}
+.a-live span{font-size:42px;position:relative;z-index:1}
+.a-live i{position:absolute;inset:0;border-radius:50%;border:3px solid #ffd35c;animation:ping 2.2s ease-out infinite;opacity:0}
+.a-live i:nth-child(3){animation-delay:.7s}.a-live i:nth-child(4){animation-delay:1.4s}
+@keyframes ping{0%{transform:scale(.3);opacity:.9}100%{transform:scale(1.15);opacity:0}}
+body.rlt .xv~*{}
+.xv{min-height:100vh;background:#e4e6e9;color:#1b1d21;padding-bottom:calc(70px + env(safe-area-inset-bottom));font-size:14px}
+.xh{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:6px;padding:8px 8px;padding-top:max(8px,env(safe-area-inset-top));background:linear-gradient(#ffc93c,#f2a900);color:#1b1d21;box-shadow:0 2px 6px #0004}
+.xhb{border:0;background:none;font-size:30px;line-height:1;padding:0 6px;color:#1b1d21}
+.xlogo{flex:1;line-height:1}.xlogo b{display:block;font:900 italic 22px/1 system-ui;letter-spacing:.5px}.xlogo small{font-size:10px;letter-spacing:3px;font-weight:800}
+.xhi{border:0;background:#2a2c31;color:#fff;border-radius:4px;padding:4px 8px;min-width:56px;display:flex;flex-direction:column;align-items:center;font-size:16px;line-height:1.1}
+.xhi small{font-size:10.5px;font-weight:800}.xhi.bal small{color:#ffd35c;font-variant-numeric:tabular-nums}
+.xsec{display:flex;justify-content:space-between;align-items:center;background:#2a2c31;color:#fff;padding:9px 12px;font-weight:800;font-size:14px;margin-top:8px}
+.xsec em{font-style:normal;color:#ff5a5a;font-size:12px;animation:blink 1.2s steps(2) infinite}
+.xlh{display:grid;grid-template-columns:1fr 106px 106px;background:#fff;font-size:11px;font-weight:800;color:#666;text-align:center;padding:4px 6px 2px}
+.xl{position:relative;display:grid;grid-template-columns:1fr 212px;background:#fff;border-bottom:1px solid #d6d9dd;padding:6px}
+.xl-i{border:0;background:none;text-align:left;padding:0 4px 0 2px;color:inherit;display:flex;flex-direction:column;gap:1px;min-width:0}
+.xl-i b{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.xl-t{font-size:11px;color:#666}.xl-t em{font-style:normal;font-weight:800}
+.ldot{color:#e11d48;animation:blink 1.2s steps(2) infinite}.lwhen{color:#9a6b00}
+.xl-sc{font-size:12px;font-weight:800;color:#0a8a3a}.xl-m{font-size:11px;color:#2f6ea8;font-weight:700}
+.xl-o{display:grid;grid-template-columns:1fr 1fr;gap:6px;align-items:center}.xl-o>div{display:flex;gap:3px}
+.xl-ov{position:absolute;inset:0;left:auto;width:218px;display:grid;place-items:center;background:#ffffffd9;font-weight:900;font-size:12px;letter-spacing:1px;color:#444}
+.xb{flex:1;min-width:0;height:48px;border:0;border-radius:3px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#1b1d21;padding:0;transition:transform .08s}
+.xb b{font-size:16px;font-variant-numeric:tabular-nums}.xb small{font-size:9.5px;color:#4b5563;font-weight:600}
+.xb.sm{height:42px}.xb.sm b{font-size:14px}
+.xb.back{background:#a6d8ff}.xb.lay{background:#fac9d1}
+.xb:active{transform:scale(.93)}.xb:disabled{background:#e5e7eb;color:#9ca3af}
+.xb.chg{animation:pchg 1.2s}
+@keyframes pchg{0%,50%{box-shadow:inset 0 0 0 3px #f2a900;background:#fff3b0}}
+.xmh{position:relative;display:flex;align-items:center;gap:8px;background:#3a3c42;color:#fff;padding:8px 10px;overflow:hidden}
+.xback{border:0;background:none;color:#fff;font-size:28px;padding:0 4px;line-height:1}
+.xmh-l{flex:1;display:flex;align-items:center;gap:8px;min-width:0}
+.xlive{font-size:9px;font-weight:900;text-align:center;line-height:1.1;background:#fff;color:#3a3c42;border-radius:3px;padding:2px 4px}
+.xmh-t{display:flex;flex-direction:column;min-width:0}.xmh-t b{font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.xmh-s{text-align:right;line-height:1.15}.xmh-s .xcs{display:block;color:#8ee000;font-size:20px;font-variant-numeric:tabular-nums}.xmh-s small{font-size:12px;opacity:.9}
+.xref{font-size:20px;opacity:.85}.xref.spin{animation:spin .8s ease-out}
+.xev{position:absolute;inset:0;pointer-events:none;display:grid;place-items:center}
+.xev b{font-size:34px;font-weight:900;letter-spacing:2px;padding:2px 18px;border-radius:8px;animation:evIn 2.2s forwards}
+.xev b.f{background:#1d4ed8;color:#fff}.xev b.s{background:linear-gradient(#a855f7,#6d28d9);color:#fff}.xev b.w{background:#dc2626;color:#fff}.xev b.d{background:#6b7280;color:#fff;font-size:22px}.xev b.r,.xev b.x{background:#0f766e;color:#fff;font-size:24px}
+@keyframes evIn{0%{transform:scale(3);opacity:0}15%{transform:scale(1);opacity:1}80%{opacity:1}100%{transform:scale(1.1);opacity:0}}
+.xball{display:flex;align-items:center;gap:8px;background:#1b1d21;color:#fff;padding:7px 10px;font-weight:700;font-size:13px}
+.xball>span{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.xbs{display:flex;gap:4px}.xbs i{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:11px;font-weight:900;background:#fff;color:#111}.xbs i.nw{animation:popIn .5s}
+.xbs i.f{background:#2563eb;color:#fff}.xbs i.s{background:#7c3aed;color:#fff}.xbs i.w{background:#dc2626;color:#fff}.xbs i.d{background:#4b5563;color:#fff}.xbs i.x{background:#0f766e;color:#fff}
+.xstat{background:#2a2c31;color:#ffd35c;font-size:12px;font-weight:700;padding:5px 10px}
+.xtabs{display:flex;background:#fff;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid #d6d9dd}
+.xtabs::-webkit-scrollbar{display:none}
+.xtabs button{flex:none;border:0;background:none;padding:11px 14px;font-weight:700;color:#6b7280;border-bottom:3px solid transparent;font-size:14px}
+.xtabs button.on{color:#1b1d21;border-bottom-color:#1b1d21;background:#f3f4f6}
+.xinfo{display:flex;justify-content:space-between;align-items:center;background:#fff;padding:7px 10px;font-size:12px;color:#6b7280}
+.xinfo button{border:0;background:#e5e7eb;border-radius:4px;padding:6px 10px;font-weight:700;color:#1b1d21}
+.xmk{position:relative;margin-top:8px;background:#fff}
+.xmk-h{display:flex;justify-content:space-between;align-items:center;background:#3a3c42;color:#fff;padding:9px 12px;font-weight:800}
+.xmk-h em{font-style:normal;font-size:12px;color:#ffd35c}
+.xmk-c{display:grid;grid-template-columns:1fr 74px 74px;gap:4px;padding:6px 8px 4px 12px;font-size:12px;color:#4b5563;font-weight:700}.xmk-c .xcol{text-align:center}
+.xr{display:grid;grid-template-columns:1fr 74px 74px;gap:4px;align-items:center;padding:4px 8px 4px 12px;border-top:1px solid #eceef1}
+.xr.on.back{background:#e8f4fd}.xr.on.lay{background:#fdeef1}
+.xn{min-width:0}.xn b{display:block;font-size:14.5px;overflow-wrap:anywhere}
+.xn small{font-weight:800;font-size:12px}.xn small.pos{color:#0a8a3a}.xn small.neg{color:#d11a2a}
+.xov{position:absolute;left:0;right:0;top:38px;bottom:0;display:grid;place-items:center;background:#ffffffd6;font-weight:900;letter-spacing:2px;color:#374151}
+.xslip{padding:8px 10px 10px;border-top:1px solid #d6d9dd}.xslip.fresh{animation:slipIn .25s ease-out}
+.xslip.back{background:#d7ecfb}.xslip.lay{background:#fbe3e8}
+@keyframes slipIn{from{opacity:0;transform:translateY(-8px)}}
+.xs-t{font-size:13px;color:#374151;margin-bottom:8px}
+.xs-st{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.xst{display:grid;grid-template-columns:40px 1fr 40px;height:44px;border-radius:4px;overflow:hidden;background:#fff;box-shadow:0 0 0 1px #c7cbd1}
+.xst.act{box-shadow:0 0 0 2px #f2a900}
+.xst button{border:0;background:#e5e7eb;font-size:22px;font-weight:700;color:#1b1d21}
+.xst span{display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:17px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1}.xst span small{font-size:9px;color:#6b7280;font-weight:600;margin-top:2px}
+.xs-a{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.xs-c{border:0;border-radius:4px;background:#d1d5db;height:46px;font-weight:800}
+.xs-p{border:0;border-radius:4px;background:linear-gradient(#ffc93c,#f2a900);height:46px;font-weight:800;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.15}
+.xs-p small{font-size:11px;font-weight:600}.xs-p:disabled{opacity:.5}
+.xs-msg{min-height:16px;margin:6px 0 4px;color:#b91c1c;font-weight:700;font-size:12.5px}
+.xs-q{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:#c7cbd1;border-radius:4px;overflow:hidden}
+.xs-q button{border:0;background:#eef0f2;height:40px;font-weight:700}
+.xs-pad{display:grid;grid-template-columns:repeat(6,1fr) 1.2fr;gap:4px;margin-top:6px}
+.xs-pad button{border:0;background:#fff;border-radius:3px;height:42px;font-size:17px;box-shadow:0 1px 0 #0002}
+.xs-pad .bk{grid-row:span 2;height:auto;font-size:20px;grid-column:7;grid-row-start:1}
+.xs-pad button:active,.xs-q button:active,.xst button:active{background:#ffe08a}
+.xbet{display:flex;justify-content:space-between;gap:8px;background:#fff;padding:9px 10px;border-bottom:1px solid #e5e7eb;border-left:5px solid #72bbef}
+.xbet.lay{border-left-color:#f494aa}.xbet small{display:block;color:#6b7280;font-size:11.5px}
+.xbt{font-size:10px;font-weight:900;padding:1px 6px;border-radius:3px;background:#a6d8ff}.xbet.lay .xbt{background:#fac9d1}
+.lst{font-style:normal;font-size:11px;font-weight:900;padding:2px 8px;border-radius:99px;color:#fff;align-self:flex-start;white-space:nowrap}
+.lst.o{background:#1d4ed8}.lst.w{background:#15803d}.lst.l{background:#7f1d1d}.lst.v{background:#555}
+.lempty{text-align:center;padding:40px 10px;opacity:.85}.lempty small{opacity:.8}.lempty.dk{color:#374151;background:#fff;margin-top:8px}
+.xnote{text-align:center;font-size:11px;color:#6b7280;margin:10px}
+.xnav{position:fixed;left:0;right:0;bottom:0;z-index:40;display:grid;grid-template-columns:repeat(5,1fr);background:#2a2c31;padding-bottom:env(safe-area-inset-bottom)}
+.xnav button{position:relative;border:0;background:none;color:#d1d5db;font-size:11px;font-weight:700;padding:7px 0 6px;display:flex;flex-direction:column;align-items:center;gap:1px}
+.xnav button span{font-size:19px;filter:grayscale(.6)}
+.xnav button.on{color:#ffc93c}.xnav button.on span{filter:none}
+.xnav i{position:absolute;top:3px;right:18%;min-width:16px;height:16px;border-radius:8px;background:#f2a900;color:#111;font-style:normal;font-size:10px;font-weight:900;display:grid;place-items:center}
+.xnav i:empty{display:none}
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01s!important;animation-iteration-count:1!important}}
 </style>
 </head>
@@ -410,13 +604,13 @@ body.rlt main{max-width:520px;padding:0;padding-bottom:calc(66px + env(safe-area
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script>
 const CFG={url:"https://jmvvuitwjixgsmhrdapg.supabase.co",anon:"sb_publishable_VZRaBdHeQk0YAWzJammc1w_9NL6owyx"};
-const G=[["cricket","🏏","Cricket","Virtual one-day match","MATCH"],["casino","🎰","Casino","3-reel slot machine","JACKPOT"],["roulette","🎡","Roulette","European wheel","HOT"],["lucky7","7️⃣","Lucky 7","Above, below or seven","CARDS"],["kingjack","👑","King Jack","King or Jack first?","CARDS"],["num","🔢","1–9","Lottery drum","DRAW"]];
-const RULE={cricket:["Back a team to win a one-day match. Winning pays your stake × the team's odds.",[["Team odds","1.75× – 2.10×"]]],
- casino:["Add chips, then press SPIN or pull the lever. Three reels spin and stop.",[["7️⃣ 7️⃣ 7️⃣","25×"],["Any three the same","10×"],["Any two the same","1.5×"]]],
+const G=[["cricket","🏏","Cricket","Virtual one-day match","MATCH"],["casino","🎰","Casino","3-reel slot machine","JACKPOT"],["roulette","🎡","Roulette","European wheel","HOT"],["lucky7","🎲","Lucky 7","Two dice · below, above or 7","DICE"],["kingjack","👑","King Jack","King or Jack first?","CARDS"],["num","🔢","1–9","Lottery drum","DRAW"]];
+const RULE={cricket:["Put chips on the team you back (one team per match round), then press PLAY. Winning pays your stake × the team's odds.",[["Team odds","1.75× – 2.10×"]]],
+ casino:["Put chips on SPIN BET, then press SPIN or pull the lever. Three reels spin and stop.",[["7️⃣ 7️⃣ 7️⃣","25×"],["Any three the same","10×"],["Any two the same","1.5×"]]],
  roulette:["Pick a chip, then tap the table to place it. You can bet on as many spots as you like in one spin. Press SPIN to throw the ball. Undo removes your last chip, ✕ clears the table, 2X doubles every bet and ↻ repeats your last bets (tap again to spin).",[["Single number (0–36)","36×"],["Dozen (1st / 2nd / 3rd 12)","3×"],["Column (2:1)","3×"],["Red / Black / Odd / Even / 1-18 / 19-36","2×"]]],
- lucky7:["The dealer draws one card. Bet below 7 (A–6), seven, or above 7 (8–K).",[["Below 7 or Above 7","1.95×"],["Lucky 7","12×"]]],
- kingjack:["Cards are dealt until a King or a Jack shows up. Bet which comes first.",[["King or Jack","1.95×"]]],
- num:["Pick a number. The drum mixes nine balls and draws one.",[["Matching number","8×"]]]};
+ lucky7:["Two dice are shaken in the cup and thrown on the table. Bet on the total of both dice: Below 7 (2–6), Lucky 7 (exactly 7) or Above 7 (8–12). You can put chips on more than one spot. A total of 7 loses Below and Above bets.",[["Below 7 (total 2–6)","2.2×"],["Lucky 7 (total 7)","5.5×"],["Above 7 (total 8–12)","2.2×"]]],
+ kingjack:["Cards are dealt until a King or a Jack shows up. Bet which comes first, and you can also bet on the suit of that King or Jack.",[["King first / Jack first","1.95×"],["Suit of the King or Jack","3.8×"]]],
+ num:["The drum mixes nine balls and draws one. Bet on numbers, odd or even, 1–4 or 6–9. A 5 loses 1–4 and 6–9 bets.",[["Matching number","8×"],["Odd (1 3 5 7 9)","1.7×"],["Even (2 4 6 8)","2.1×"],["1–4 / 6–9","2.1×"]]]};
 const MT=[["India","Australia",1.80,2.05,"#1E5BD8","#C99A06"],["England","South Africa",1.95,1.90,"#0B2A6B","#0F7B3F"],["Pakistan","New Zealand",2.10,1.75,"#0B6B2E","#222222"]];
 const AB={"India":"IND","Australia":"AUS","England":"ENG","South Africa":"RSA","Pakistan":"PAK","New Zealand":"NZ"};
 const RED=[1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36],SYM=["🏏","🎲","7️⃣","👑","🍒","🃏"];
@@ -564,26 +758,27 @@ function wheelBg(){const s=[],a=360/37;for(let i=0;i<37;i++){const n=WORD[i],c=n
 function art(g){
  if(g==="roulette")return `<div class="a-rw"><div class="a-wheel" style="background:${wheelBg()}"></div><div class="a-orb"><i></i></div></div>`;
  if(g==="casino")return `<div class="a-slot">${[0,1,2].map(i=>`<div class="a-reel"><div style="animation-delay:-${i*.27}s;animation-duration:${.7+i*.15}s">🍒<br>7️⃣<br>👑<br>🎲<br>🍒</div></div>`).join("")}</div>`;
- if(g==="lucky7")return `<div class="a-card">7</div>`;
+ if(g==="lucky7")return `<div class="a-dice"><div class="ad">${faceHtml(3)}</div><div class="ad">${faceHtml(4)}</div></div>`;
  if(g==="kingjack")return `<div class="a-fan"><div class="a-c k">K♠</div><div class="a-c j">J♥</div></div>`;
  if(g==="num")return `<div class="a-balls"><i style="--bc:#e11d48">3</i><i style="--bc:#16a34a">7</i><i style="--bc:#f59e0b">5</i></div>`;
  return `<div class="a-cr"><span class="bt">🏏</span><i class="bl"></i></div>`}
 const bonusDone=()=>{try{return localStorage.getItem("pbbonus")===today()}catch(e){return false}};
 function render(){
- W.alive=false;D.alive=false;
+ W.alive=false;D.alive=false;if(view!=="live")lcStop();
  document.body.classList.toggle("ingame",!!me&&view==="game");
  $("balp").hidden=!me;$("menu").hidden=!me;$("lv").innerHTML=me&&prof?lvHtml():"";if(me&&!busy)setBal(me.coins);
  if(!me){document.body.classList.remove("rlt");$("app").innerHTML=loginHtml();return}
  const gs=G.filter(g=>S.games&&S.games[g[0]]);
  if(view==="game"&&!gs.some(g=>g[0]===game))view="lobby";
- const rl=view==="game"&&game==="roulette";
+ const rl=view==="game"||view==="live";
  document.body.classList.toggle("ingame",view==="game"&&!rl);document.body.classList.toggle("rlt",rl);
- if(view==="lobby")lobby(gs);else if(rl)rouletteView();else gameView()}
+ if(view==="lobby")lobby(gs);else if(view==="live")liveView();else if(game==="roulette")rouletteView();else tableView()}
 function lobby(gs){
  const bon=S.bonus>0&&!bonusDone();
  let h=`<section class="hero"><div><small>Welcome back</small><h2>${esc(me.name)}</h2><div class="lv">${lvHtml()}</div></div>${bon?`<button class="gift" id="gift" data-act="bonus">🎁 +${fmt(S.bonus)}<small>Daily bonus</small></button>`:""}</section>`;
  if(S.maint)h+='<div class="card warn" style="margin-top:10px">Games are paused for maintenance. Please check back soon.</div>';
  if(msg)h+=`<div class="card" style="margin-top:10px">${esc(msg)}</div>`;
+ h+='<h3 class="sec">Sports</h3><button class="tile t-live wide-tile" data-act="live"><span class="badge livebadge">● LIVE</span><div class="art"><div class="a-live"><span>🏏</span><i></i><i></i><i></i></div></div><div class="tl"><b>📡 Live Cricket</b><small>Real matches · live odds and scores</small></div></button>';
  h+='<h3 class="sec">Games</h3>';
  if(!gs.length)h+='<div class="card">No games are available right now. Please check back soon.</div>';
  h+='<div class="tiles">'+gs.map((g,i)=>`<button class="tile t-${g[0]}" data-g="${g[0]}" style="animation-delay:${i*70}ms"><span class="badge">${g[4]}</span><div class="art">${art(g[0])}</div><div class="tl"><b>${g[1]} ${g[2]}</b><small>${g[3]}</small></div></button>`).join("")+'</div>';
@@ -603,7 +798,7 @@ function card(c,face,sm){const su=c.slice(-1),rk=c.slice(0,-1),rd=su==="♥"||su
  return `<div class="pcw${sm?" sm":""}"><div class="pci${face?" flip":""}"><div class="pf pb"></div><div class="pf pfr${rd?" rd":""}"><span class="cr">${rk}<br>${su}</span><span class="cs">${su}</span><span class="cr bt">${rk}<br>${su}</span></div></div></div>`}
 function stageHtml(){
   if(game==="casino"){let bl="";for(let i=0;i<13;i++)bl+="<i></i>";
-  return `<div class="mach" id="mach"><div class="marq">★ 7️⃣7️⃣7️⃣ PAYS 25× ★</div><div class="bulbs">${bl}</div><div class="mrow"><div class="reels3">${[0,1,2].map(i=>`<div class="rw" id="rw${i}"><div class="strip" id="sr${i}"></div></div>`).join("")}<i class="pl"></i><i class="wl" id="wl"></i></div><button class="lever" id="lever" data-act="play" aria-label="Pull the lever to spin"><i class="arm"><b></b></i></button></div><div class="leds"><div>BET<b id="betc">0</b></div><div>WIN<b id="winc">0</b></div></div><div class="bulbs">${bl}</div></div>`}
+  return `<div class="mach" id="mach"><div class="marq">★ 7️⃣7️⃣7️⃣ PAYS 25× ★</div><div class="bulbs">${bl}</div><div class="mrow"><div class="reels3">${[0,1,2].map(i=>`<div class="rw" id="rw${i}"><div class="strip" id="sr${i}"></div></div>`).join("")}<i class="pl"></i><i class="wl" id="wl"></i></div><button class="lever" id="lever" data-act="r-spin" aria-label="Pull the lever to spin"><i class="arm"><b></b></i></button></div><div class="leds"><div>BET<b id="betc">0</b></div><div>WIN<b id="winc">0</b></div></div><div class="bulbs">${bl}</div></div>`}
  const dealer='<div class="dealer"><div class="av">🤵</div><div class="bub" id="bub">Place your bets!</div></div>';
  if(game==="lucky7"){let r="";RK.forEach((k,i)=>{r+=`<i class="${i<6?"lo":i===6?"m":""}">${k}</i>`});
   return `${dealer}<div class="l7t"><div class="shoe"><b></b><b></b><b></b></div><div class="cslot" id="cs"></div></div><div class="ruler" id="rl">${r}</div>`}
@@ -661,7 +856,7 @@ function clearBet(){if(busy)return;const L=lastB[game];
 const W={alive:false,tok:0,ang:0,phi:null,sp:null,bg:null,rot:null,lt:null,sz:0};
 const RCH=[10,50,100,500,1000],CHC={10:"#1f5fd6",50:"#15913f",100:"#c81e1e",500:"#6d28d9",1000:"#d97706"};
 const chipCol=v=>v>=1000?CHC[1000]:v>=500?CHC[500]:v>=100?CHC[100]:v>=50?CHC[50]:CHC[10];
-let RB={},RBundo=[],RBlast=null,rchip=10,RH=null;
+let RB={},RBundo=[],RBlast=null,rchip=10,RH=null,lastB2={},GH={},NUMMARK=new Set();
 const rTotal=()=>Object.values(RB).reduce((x,y)=>x+y,0);
 const rCol=n=>n===0?"#0e8a3a":RED.includes(n)?"#c4161c":"#141414";
 function wBuild(S2){const R=S2/2,a=Math.PI*2/37;
@@ -745,7 +940,7 @@ ${S.maint?'<div class="card warn" style="margin:8px">Games are paused for mainte
  rouStart();rDraw();rUpd();announce("PLACE YOUR BETS",true)}
 function rDraw(){document.querySelectorAll("#rtab .tcp").forEach(e=>e.remove());
  Object.keys(RB).forEach(k=>{const el=document.querySelector(`#rtab [data-b="${k}"]`);if(el)el.insertAdjacentHTML("beforeend",`<span class="cp tcp" style="--cc:${chipCol(RB[k])}">${short(RB[k])}</span>`)})}
-function rUpd(){if($("rbet"))$("rbet").textContent=fmt(rTotal())}
+function rUpd(){if($("rbet"))$("rbet").textContent=fmt(rTotal());if($("betc"))$("betc").textContent=fmt(rTotal())}
 function rFlash(t){announce(t,false,"red");tone(200,.12,"square",.05);clearTimeout(rFlash.t);rFlash.t=setTimeout(()=>{if(!busy)announce("PLACE YOUR BETS",true)},2400)}
 function rSnap(){RBundo.push(JSON.stringify(RB));if(RBundo.length>60)RBundo.shift()}
 function rClearMarks(){if($("rres"))$("rres").innerHTML="";document.querySelectorAll("#rtab .win").forEach(e=>e.classList.remove("win"));document.querySelectorAll("#rtab .dolly").forEach(e=>e.remove())}
@@ -754,12 +949,14 @@ function cpFly(a,b,v,opt){if(!a||!b||RM)return;const r1=rectOf(a),r2=rectOf(b),c
  const dx=r2.left+r2.width/2-(r1.left+r1.width/2),dy=r2.top+r2.height/2-(r1.top+r1.height/2),fade=opt&&opt.fade;
  c.animate([{transform:"translate(0,0) scale(1)",opacity:1},{transform:`translate(${dx*.5}px,${dy*.5-50}px) scale(1.15)`,opacity:1,offset:.5},{transform:`translate(${dx}px,${dy}px) scale(${fade?.4:.85})`,opacity:fade?0:1}],{duration:(opt&&opt.ms)||380,delay:(opt&&opt.delay)||0,easing:"ease-in-out",fill:"both"}).onfinish=()=>c.remove()}
 function rPlace(key,el){if(busy)return;if(S.maint)return rFlash("Paused for maintenance");rClearMarks();
+ const d=TG[game];if(d&&d.single){const ks=Object.keys(RB);if(ks.length&&ks[0]!==key){rSnap();const t0=rTotal(),old=document.querySelector(`#rtab [data-b="${ks[0]}"] .tcp`);if(old)cpFly(old,el,t0);RB={};RB[key]=t0;setTimeout(rDraw,330*Math.max(K,.3))}}
+ if(game==="cricket"){pick=key;cboard()}
  const cap=Math.min(S.maxStake,me.coins),tot=rTotal();let v=rchip;if(tot+v>cap){v=Math.floor(cap-tot);if(v<1)return rFlash(cap<1?"Not enough coins":"Table limit "+fmt(cap))}
  rSnap();RB[key]=(RB[key]||0)+v;chipSound(1);cpFly(document.querySelector(".crack .sel"),el,v);setTimeout(rDraw,330*Math.max(K,.3));rUpd()}
 function rUndo(){if(busy||!RBundo.length)return;RB=JSON.parse(RBundo.pop());chipSound(1);rDraw();rUpd()}
 function rClear(){if(busy||!rTotal())return;rSnap();document.querySelectorAll("#rtab .tcp").forEach((t,i)=>{cpFly(t,document.querySelector(".crack .sel"),1,{fade:1,delay:i*30});t.remove()});RB={};chipSound(3);rUpd()}
 function rX2(){if(busy)return;const tot=rTotal();if(!tot)return rFlash("Place chips first");if(tot*2>Math.min(S.maxStake,me.coins))return rFlash("Not enough for double");rSnap();Object.keys(RB).forEach(k=>RB[k]*=2);chipSound(3);rDraw();rUpd()}
-function rRebet(){if(busy)return;if(!RBlast)return rFlash("No previous bet yet");const same=JSON.stringify(RB)===JSON.stringify(RBlast);if(same)return rSpin();
+function rRebet(){if(busy)return;if(!RBlast)return rFlash("No previous bet yet");const same=JSON.stringify(RB)===JSON.stringify(RBlast);if(same)return doSpin();
  const tot=Object.values(RBlast).reduce((x,y)=>x+y,0);if(tot>Math.min(S.maxStake,me.coins))return rFlash("Not enough coins to rebet");rClearMarks();rSnap();RB=Object.assign({},RBlast);
  Object.keys(RB).forEach((k,i)=>cpFly(document.querySelector(".crack .sel"),document.querySelector(`#rtab [data-b="${k}"]`),RB[k],{delay:i*45}));chipSound(3);setTimeout(rDraw,(330+Object.keys(RB).length*45)*Math.max(K,.3));rUpd()}
 function rLock(b){const t=$("rtab");if(t)t.classList.toggle("lock",b);document.querySelectorAll(".ccol button,[data-act=lobby]").forEach(x=>x.disabled=b||(x.id==="rgo"&&!!S.maint))}
@@ -773,7 +970,7 @@ async function rCall(bets){let r=await sb.rpc("play_roulette",{p_bets:bets});if(
  return r}
 async function rSpin(){if(busy)return;const tot=rTotal();
  if(S.maint)return rFlash("Paused for maintenance");if(tot<1)return rFlash("Tap the table to place chips");if(tot>me.coins)return rFlash("Not enough coins");if(tot>S.maxStake)return rFlash("Max total bet "+fmt(S.maxStake));
- busy=true;rLock(true);rClearMarks();const bets=Object.assign({},RB);RBlast=Object.assign({},RB);ac();buildSfx();
+ busy=true;rLock(true);rClearMarks();const bets=Object.assign({},RB);RBlast=Object.assign({},RB);lastB2[game]=RBlast;ac();buildSfx();
  announce("NO MORE BETS",false,"red");SND.nomore();tweenBal(me.coins-tot,400);$("rwin").textContent="0";scrollTo({top:0,behavior:RM?"auto":"smooth"});
  let r;try{r=await rCall(bets)}catch(e){r={error:{message:String(e)}}}
  if(r.error){busy=false;rLock(false);tweenBal(me.coins,300);const em=String(r.error.message);rFlash(em.indexOf("PB:")===0?em.slice(3):friendly(em));return}
@@ -784,17 +981,268 @@ async function rSpin(){if(busy)return;const tot=rTotal();
  rWinKeys(n).forEach(k=>{const e=document.querySelector(`#rtab [data-b="${k}"]`);if(e)e.classList.add("win")});
  const ne=document.querySelector(`#rtab [data-b="n${n}"]`);if(ne)ne.insertAdjacentHTML("beforeend",'<i class="dolly"></i>');
  announce(n+" "+(n===0?"GREEN":RED.includes(n)?"RED":"BLACK"),false,o.payout>0?"gold":"");await wait(700);
- const wc=$("wc");Object.keys(bets).forEach((k,i)=>{if(wins.includes(k))return;const el=document.querySelector(`#rtab [data-b="${k}"] .tcp`);if(el){cpFly(el,wc,bets[k],{fade:1,delay:i*40,ms:520});el.remove()}});
+ await tSettle(bets,o,wins,$("wc"),k=>k[0]==="n"?35:/^[dc]\d$/.test(k)?2:1)}
+async function tSettle(bets,o,wins,sink,pm){
+ Object.keys(bets).forEach((k,i)=>{if(wins.includes(k))return;const el=document.querySelector(`#rtab [data-b="${k}"] .tcp`);if(el){cpFly(el,sink,bets[k],{fade:1,delay:i*40,ms:520});el.remove()}});
  if(Object.keys(bets).some(k=>!wins.includes(k)))setTimeout(()=>chipSound(4),150);
  const mult=o.total?o.payout/o.total:0,won=o.payout>0;
- if(won){wins.forEach(k=>{const el=document.querySelector(`#rtab [data-b="${k}"]`);if(el){const pv=bets[k]*(k[0]==="n"?35:/^[dc]\d$/.test(k)?2:1);el.insertAdjacentHTML("beforeend",`<span class="cp tcp pay" style="--cc:${chipCol(pv)}">+${short(pv)}</span>`)}});chipSound(3);
+ if(won){wins.forEach(k=>{const el=document.querySelector(`#rtab [data-b="${k}"]`);if(el){const pv=Math.round(bets[k]*pm(k,o));el.insertAdjacentHTML("beforeend",`<span class="cp tcp pay" style="--cc:${chipCol(pv)}">+${short(pv)}</span>`)}});chipSound(3);
   await wait(500);tween(900,u=>{$("rwin").textContent=fmt(o.payout*u)});
-  const tier=mult>=25?"EPIC WIN":mult>=10?"MEGA WIN":mult>=5?"BIG WIN":"";let src=document.querySelector(`#rtab [data-b="${wins[0]}"]`)||wc;
-  if(tier){const rr=await bigWin(tier,o.payout);if(rr)src=rr}else{SND.win();popText("+"+fmt(o.payout));const rc=wc.getBoundingClientRect();burst(50,false,rc.left+rc.width/2,rc.top+rc.height/2);await wait(700)}
+  const tier=mult>=25?"EPIC WIN":mult>=10?"MEGA WIN":mult>=5?"BIG WIN":"";let src=document.querySelector(`#rtab [data-b="${wins[0]}"]`)||sink;
+  if(tier){const rr=await bigWin(tier,o.payout);if(rr)src=rr}else{SND.win();popText("+"+fmt(o.payout));const rc=sink.getBoundingClientRect();burst(50,false,rc.left+rc.width/2,rc.top+rc.height/2);await wait(700)}
   document.querySelectorAll("#rtab .tcp").forEach((t,i)=>{cpFly(t,$("rbal"),1,{fade:1,delay:i*50,ms:600});t.remove()});flyCoins(src,tier?18:10);await wait(600);tweenBal(o.balance,900)}
  else{SND.lose();tweenBal(o.balance,500);const sg=$("stage");sg.classList.remove("shake");void sg.offsetWidth;sg.classList.add("shake");await wait(600)}
  progress(o.total,won,mult,o.payout);RB={};RBundo=[];rDraw();rUpd();await wait(900);
  busy=false;rLock(false);announce(won?"WIN "+fmt(o.payout)+" · PLACE YOUR BETS":"PLACE YOUR BETS",true)}
+
+/* ---------------- shared table games ---------------- */
+const bs=(k,t,sub,odds,cls)=>`<button class="bs ${cls||""}" data-b="${k}"><b>${t}</b>${sub?`<em>${sub}</em>`:""}${odds?`<small>${odds}</small>`:""}</button>`;
+const SUK={"♠":"S","♥":"H","♦":"D","♣":"C"};
+async function mCall(g,bets,fb){let r=await sb.rpc("play_multi",{p_game:g,p_bets:bets});if(!r.error)return r;
+ const m=String(r.error.message||"")+String(r.error.code||"");
+ if(/play_multi|PGRST202|schema cache|does not exist/i.test(m)){const ks=Object.keys(bets);
+  if(ks.length===1&&fb[ks[0]]){const k=ks[0],q=await sb.rpc("play_round",{p_game:g,p_pick:fb[k],p_stake:bets[k]});if(q.error)return q;const d=q.data,cm=/after (\d+)/.exec(d.txt||"");
+   return{data:{balance:d.balance,total:bets[k],payout:bets[k]*d.mult,wins:d.mult>0?[k]:[],card:d.big,n:+d.big,cnt:cm?+cm[1]:1}}}
+  return{error:{message:g==="lucky7"?"PB:Dice Lucky 7 needs the database update (table_games_multi.sql)":"PB:More bet types need the table-games update (table_games_multi.sql)"}}}
+ return r}
+async function pCall(g,bets){const k=Object.keys(bets)[0],amt=bets[k],q=await sb.rpc("play_round",{p_game:g,p_pick:g==="casino"?"":k,p_stake:amt});if(q.error)return q;const d=q.data;
+ return{data:{balance:d.balance,total:amt,payout:amt*d.mult,wins:d.mult>0?[k]:[],parts:d.parts,mult:d.mult,txt:d.txt,big:d.big,key:k}}}
+const l7i=c=>RK.indexOf(c.slice(0,-1))+1;
+const TG={
+ lucky7:{t:"Lucky 7",s:"PLAYBOOK · DICE TABLE",go:"ROLL",
+  scene:()=>`<div class="dtable"><div class="dwm">LUCKY 7</div><div class="dzone" id="dz">${dieHtml(3,"d1")}${dieHtml(4,"d2")}</div><div class="dcup" id="dcup"><i></i></div><div class="dsum" id="dsum"></div></div><div class="ruler druler" id="rl">${[2,3,4,5,6,7,8,9,10,11,12].map(t=>`<i class="${t<7?"lo":t===7?"m":""}">${t}</i>`).join("")}</div>`,
+  init:()=>diceRest(),
+  board:()=>`<div class="g3">${bs("lo","BELOW 7","total 2 – 6","2.2×","big")}${bs("s7","LUCKY 7","total 7","5.5×","big gold")}${bs("hi","ABOVE 7","total 8 – 12","2.2×","big")}</div><p class="bh">Two dice are thrown. Bet on the total.</p>`,
+  call:b=>mCall("lucky7",b,{}),
+  anim:o=>diceThrow(o.d1,o.d2),
+  win:o=>{const t=o.d1+o.d2;return[t<7?"lo":t>7?"hi":"s7"]},
+  label:o=>{const t=o.d1+o.d2;return o.d1+" + "+o.d2+" = "+t+" · "+(t<7?"BELOW 7":t>7?"ABOVE 7":"LUCKY 7")},
+  hist:o=>{const t=o.d1+o.d2;return{l:t,c:t<7?"lo":t>7?"hi":"s7"}},
+  pm:k=>k==="s7"?4.5:1.2},
+ kingjack:{t:"King Jack",s:"PLAYBOOK · CARD TABLE",go:"DEAL",
+  scene:()=>`<div class="kjscene"><div class="kjz" id="zK"><span>👑</span>KING</div><div class="kjm"><div class="dealer"><div class="av">🤵</div><div class="bub" id="bub">Place your bets!</div></div><div class="lane" id="kj">${card("K♠",false,true)}</div><div class="kjc" id="kjc">Who comes first?</div></div><div class="kjz" id="zJ"><span>🃏</span>JACK</div></div>`,
+  board:()=>`<div class="g2">${bs("K","KING","👑 comes first","1.95×","big")}${bs("J","JACK","🃏 comes first","1.95×","big")}</div><div class="lbl">SUIT OF THE KING / JACK · 3.8×</div><div class="g4">${bs("sS","♠","","3.8×","suit")}${bs("sH",'<span class="rs">♥</span>',"","3.8×","suit")}${bs("sD",'<span class="rs">♦</span>',"","3.8×","suit")}${bs("sC","♣","","3.8×","suit")}</div>`,
+  call:b=>mCall("kingjack",b,{K:"K",J:"J"}),
+  anim:async o=>{["zK","zJ"].forEach(z=>$(z).classList.remove("hot"));await anKJ({txt:"after "+(o.cnt||1),big:o.card});const z=$(o.card[0]==="K"?"zK":"zJ");z.classList.add("hot");const r=z.getBoundingClientRect();burst(26,false,r.left+r.width/2,r.top+r.height/2)},
+  win:o=>[o.card[0],"s"+SUK[o.card.slice(-1)]],
+  label:o=>o.card+" · "+(o.card[0]==="K"?"KING FIRST":"JACK FIRST"),
+  hist:o=>({l:o.card[0],c:o.card[0]}),
+  pm:k=>k.length===1?.95:2.8},
+ num:{t:"Lucky Draw 1–9",s:"PLAYBOOK · LOTTERY DRUM",go:"DRAW",
+  scene:()=>`<div class="lotto"><div class="lsign">★ LUCKY DRAW ★</div><canvas id="dc" width="600" height="640"></canvas><div class="tray" id="tray"></div></div>`,
+  init:()=>drumInit(),
+  board:()=>{let h="";for(let i=1;i<=9;i++)h+=`<button class="bs nb" data-b="n${i}"><span class="nbb" style="--bc:hsl(${i*40},75%,45%)">${i}</span><small>8×</small></button>`;return `<div class="g3">${h}</div><div class="g4">${bs("odd","ODD","1 3 5 7 9","1.7×")}${bs("even","EVEN","2 4 6 8","2.1×")}${bs("lo","1–4","","2.1×")}${bs("hi","6–9","","2.1×")}</div>`},
+  call:b=>mCall("num",b,{n1:"1",n2:"2",n3:"3",n4:"4",n5:"5",n6:"6",n7:"7",n8:"8",n9:"9"}),
+  anim:async o=>{NUMMARK=new Set(Object.keys(RB).filter(k=>/^n\d$/.test(k)).map(k=>+k[1]));await anNum({big:o.n})},
+  win:o=>{const n=+o.n;return["n"+n,n%2?"odd":"even"].concat(n<=4?["lo"]:n>=6?["hi"]:[])},
+  label:o=>"NUMBER "+o.n,
+  hist:o=>({l:o.n,c:"ball",s:`background:hsl(${o.n*40},75%,45%)`}),
+  pm:k=>k[0]==="n"?7:k==="odd"?.7:1.1},
+ casino:{t:"Casino Slots",s:"PLAYBOOK · 3 REELS",go:"SPIN",single:1,
+  scene:()=>stageHtml(),init:()=>slotInit(),
+  board:()=>`${bs("spin","SPIN BET","tap here to add chips","","betspot")}<div class="pay"><div><span>7️⃣ 7️⃣ 7️⃣</span><b>25×</b></div><div><span>Any three the same</span><b>10×</b></div><div><span>Any two the same</span><b>1.5×</b></div></div>`,
+  call:b=>pCall("casino",b),
+  anim:async o=>{stake=o.total;await anSlot(o)},
+  win:o=>o.payout>0?["spin"]:[],
+  label:o=>o.parts.join(" ")+(o.mult>0?" · "+o.mult+"×":""),
+  hist:o=>({l:o.mult>0?o.mult+"×":"–",c:o.mult>0?"w":"l"}),
+  pm:(k,o)=>o.mult-1},
+ cricket:{t:"Cricket",s:"PLAYBOOK · ONE-DAY MATCH",go:"PLAY",single:1,
+  scene:()=>`<div class="stadium">${stageHtml()}</div>`,init:()=>{pick=Object.keys(RB)[0]||null;cboard()},
+  board:()=>MT.map((m,i)=>`<div class="match"><div class="mh">ONE-DAY · MATCH ${i+1}</div><div class="mt"><button class="bs team" data-b="${i}a">${teamH(m,0)}</button><span>VS</span><button class="bs team" data-b="${i}b">${teamH(m,1)}</button></div></div>`).join(""),
+  call:b=>pCall("cricket",b),
+  anim:async o=>{pick=o.key;await anCricket(o)},
+  win:o=>[o.payout>0?o.key:o.key[0]+(o.key[1]==="a"?"b":"a")],
+  label:o=>{const m=/^(.+?) \d/.exec(o.txt||"");return (m?m[1]:"MATCH")+" WIN"},
+  hist:o=>{const m=/^(.+?) \d/.exec(o.txt||"");return{l:m?AB[m[1]]||"?":"?",c:o.payout>0?"w":"l"}},
+  pm:k=>{const m=MT[+k[0]];return (k[1]==="a"?m[2]:m[3])-1}}};
+function hLoad(){if(GH[game])return;let a=null;try{a=JSON.parse(localStorage.getItem("pbh_"+game+"_"+me.code))}catch(e){}GH[game]=Array.isArray(a)?a:[]}
+function hHtml(){return '<span class="hi" title="Last results">🕘</span>'+GH[game].slice(0,12).map((h,i)=>`<b class="h-${h.c}${i===0?" new":""}"${h.s?` style="${h.s}"`:""}>${esc(h.l)}</b>`).join("")}
+function tableView(){const d=TG[game];hLoad();
+ $("app").innerHTML=`<div class="rl tg tg-${game}"><div class="rl-top"><button class="cb sm" data-act="lobby" aria-label="Back to games">‹</button><div class="rl-logo"><b>${d.t}</b><small>${d.s}</small></div><span class="streak" id="strk">${streakHtml()}</span><button class="cb sm" data-act="rules" aria-label="How to play">?</button><button class="cb sm" id="rmu" data-act="mute" aria-label="Sound on or off">${mute?"🔇":"🔊"}</button><button class="cb sm" data-act="menu" aria-label="Menu">☰</button></div>
+${S.maint?'<div class="card warn" style="margin:8px">Games are paused for maintenance.</div>':""}
+<div class="tg-scene" id="stage">${d.scene()}<div class="ann" id="ann"></div><button class="skip" id="skip" data-act="skip" hidden>⏩ Skip</button></div>
+<div class="rl-mid"><div class="hcol" id="hcol">${hHtml()}</div><div class="tboard" id="rtab">${d.board()}</div>
+<div class="ccol"><button class="cb" data-act="r-rebet" aria-label="Rebet">↻</button><button class="cb tx" data-act="r-x2" aria-label="Double all bets">2X</button><button class="cb spin" id="rgo" data-act="r-spin" aria-label="${d.go}"${S.maint?" disabled":""}>${d.go}</button><button class="cb" data-act="r-undo" aria-label="Undo last chip">↶</button><button class="cb" data-act="r-clear" aria-label="Clear all bets">✕</button>
+<div class="crack">${RCH.map(v=>`<button class="cp${v===rchip?" sel":""}" data-rc="${v}" style="--cc:${CHC[v]}" aria-label="Chip ${v}">${short(v)}</button>`).join("")}</div></div></div>
+<p class="rl-note">Play money only · coins have no cash value · max total bet ${fmt(S.maxStake)} per round</p></div>
+<div class="rl-bar"><div><small>BALANCE</small><b id="rbal">${fmt(shown)}</b></div><div><small>BET</small><b id="rbet">0</b></div><div><small>WIN</small><b id="rwin">0</b></div></div>`;
+ if(d.init)d.init();rDraw();rUpd();announce("PLACE YOUR BETS",true)}
+function doSpin(){return game==="roulette"?rSpin():tSpin()}
+async function tSpin(){if(busy)return;const d=TG[game],tot=rTotal();
+ if(S.maint)return rFlash("Paused for maintenance");if(tot<1)return rFlash("Tap the table to place chips");if(tot>me.coins)return rFlash("Not enough coins");if(tot>S.maxStake)return rFlash("Max total bet "+fmt(S.maxStake));
+ busy=true;rLock(true);rClearMarks();const bets=Object.assign({},RB);RBlast=Object.assign({},RB);lastB2[game]=RBlast;ac();buildSfx();
+ announce("NO MORE BETS",false,"red");SND.nomore();tweenBal(me.coins-tot,400);$("rwin").textContent="0";scrollTo({top:0,behavior:RM?"auto":"smooth"});
+ let r;try{r=await d.call(bets)}catch(e){r={error:{message:String(e)}}}
+ if(r.error){busy=false;rLock(false);tweenBal(me.coins,300);const em=String(r.error.message);rFlash(em.indexOf("PB:")===0?em.slice(3):friendly(em));return}
+ const o=r.data,wins=o.wins||[];$("skip").hidden=false;
+ try{await d.anim(o)}finally{if($("skip"))$("skip").hidden=true;ff=false}
+ me.coins=o.balance;sess+=o.payout-o.total;GH[game].unshift(d.hist(o));GH[game]=GH[game].slice(0,60);try{localStorage.setItem("pbh_"+game+"_"+me.code,JSON.stringify(GH[game]))}catch(e){}
+ $("hcol").innerHTML=hHtml();
+ d.win(o).forEach(k=>{const e=document.querySelector(`#rtab [data-b="${k}"]`);if(e)e.classList.add("win")});
+ announce(d.label(o),false,o.payout>0?"gold":"");await wait(700);
+ await tSettle(bets,o,wins,$("stage"),d.pm)}
+
+/* ---------------- dice (Lucky 7) ---------------- */
+const PIPS={1:[5],2:[3,7],3:[3,5,7],4:[1,3,7,9],5:[1,3,5,7,9],6:[1,3,4,6,7,9]};
+const DROT={1:[0,0],6:[0,180],2:[0,-90],5:[0,90],3:[-90,0],4:[90,0]};
+function faceHtml(v){let h="";for(let i=1;i<=9;i++)h+=`<i class="${PIPS[v].includes(i)?"pp"+(v===1?" r":""):""}"></i>`;return `<div class="f f${v}">${h}</div>`}
+function dieHtml(v,id){return `<div class="dwrap" id="${id}w"><i class="dsh"></i><div class="die" id="${id}" style="transform:${dieRot(v,0,0,0)}">${[1,2,3,4,5,6].map(faceHtml).join("")}</div></div>`}
+const dieRot=(v,sx,sy,rz)=>`rotateZ(${rz}deg) rotateX(${DROT[v][0]+360*sx}deg) rotateY(${DROT[v][1]+360*sy}deg)`;
+const DPOS=[[-38,4,-14],[36,-6,11]];
+function diceRest(){["d1","d2"].forEach((id,i)=>{const w=$(id+"w");if(w)w.style.transform=`translate(${DPOS[i][0]}px,${DPOS[i][1]}px)`})}
+async function diceThrow(v1,v2){const cup=$("dcup"),sum=$("dsum");sum.className="dsum";sum.innerHTML="";rulerOn2(0);
+ const ws=[$("d1w"),$("d2w")],ds=[$("d1"),$("d2")],zone=$("dz");
+ // scoop dice back into the cup
+ await Promise.all(ws.map((w,i)=>anim(w,[{transform:w.style.transform||"none",opacity:1},{transform:"translate(120px,40px) scale(.5)",opacity:0}],300,"ease-in")));
+ ws.forEach(w=>{w.style.opacity=0;w.style.transform="translate(130px,46px) scale(.5)";w.getAnimations().forEach(a=>a.cancel())});
+ // shake the cup
+ announce("SHAKING…",false,"gold");
+ const sh=anim(cup,[{transform:"rotate(0)"},{transform:"rotate(-14deg) translateY(-6px)"},{transform:"rotate(12deg) translateY(-2px)"},{transform:"rotate(-12deg) translateY(-6px)"},{transform:"rotate(10deg)"},{transform:"rotate(-8deg) translateY(-4px)"},{transform:"rotate(0)"}],900,"linear");
+ for(let i=0;i<9;i++)setTimeout(()=>{sfx("plastic",vr(.18,.5),vr(.75,.3));sfx("wood",.06,vr(1.3,.2))},i*95*spd());
+ await sh;
+ // tip the cup and throw
+ anim(cup,[{transform:"rotate(0)"},{transform:"rotate(-75deg) translate(-10px,-8px)",offset:.35},{transform:"rotate(-75deg) translate(-10px,-8px)",offset:.7},{transform:"rotate(0)"}],1100,"ease-out");
+ sfx("card",.25,.6);await wait(160);
+ const T=1500,res=[v1,v2];
+ const tasks=ws.map((w,i)=>{const p=DPOS[i],x0=130,y0=46,sx=2+rnd(2),sy=1+rnd(2),rz=p[2]+(Math.random()-.5)*20;
+  [.42,.66,.84].forEach((m,j)=>setTimeout(()=>{sfx("plastic",[.5,.32,.18][j],vr(1,.25));sfx("felt",[.35,.2,.1][j],vr(1.1))},(T*m+i*40)*spd()));
+  const pa=anim(w,[{transform:`translate(${x0}px,${y0}px) scale(1.5)`,opacity:0},{transform:`translate(${x0-20}px,${y0-20}px) scale(1.5)`,opacity:1,offset:.06},
+   {transform:`translate(${p[0]*1.6+40}px,${p[1]-30}px) scale(1.35)`,offset:.25},
+   {transform:`translate(${p[0]*1.3+20}px,${p[1]+10}px) scale(1)`,offset:.42},
+   {transform:`translate(${p[0]*1.1+8}px,${p[1]-12}px) scale(1.15)`,offset:.55},
+   {transform:`translate(${p[0]*1.05+3}px,${p[1]+2}px) scale(1)`,offset:.66},
+   {transform:`translate(${p[0]}px,${p[1]-3}px) scale(1.05)`,offset:.75},
+   {transform:`translate(${p[0]}px,${p[1]}px) scale(1)`,offset:.84},
+   {transform:`translate(${p[0]}px,${p[1]}px) scale(1)`,opacity:1}],T+i*40,"ease-out");
+  const ra=anim(ds[i],[{transform:`rotateZ(${rnd(360)}deg) rotateX(${rnd(360)}deg) rotateY(${rnd(360)}deg)`},{transform:dieRot(res[i],sx,sy,rz+40),offset:.66},{transform:dieRot(res[i],sx,sy,rz)}],T+i*40,"cubic-bezier(.15,.6,.3,1)");
+  return Promise.all([pa,ra]).then(()=>{w.style.opacity=1;w.style.transform=`translate(${p[0]}px,${p[1]}px)`;ds[i].style.transform=dieRot(res[i],sx,sy,rz)})});
+ await Promise.all(tasks);ws.forEach(w=>w.getAnimations().forEach(a=>a.cancel()));ds.forEach(d=>d.getAnimations().forEach(a=>a.cancel()));
+ const t=v1+v2;ws.forEach(w=>w.classList.add("lit"));sfx("wood",.3,1.2);
+ sum.innerHTML=`<b>${t}</b><small>${t<7?"BELOW 7":t>7?"ABOVE 7":"LUCKY 7!"}</small>`;sum.className="dsum on "+(t<7?"lo":t>7?"hi":"s7");rulerOn2(t);
+ if(t===7){const r=zone.getBoundingClientRect();fireworks(r.left+r.width/2,r.top+r.height/2);setTimeout(()=>fireworks(r.left+r.width*.2,r.top),250)}
+ await wait(700);ws.forEach(w=>w.classList.remove("lit"))}
+function rulerOn2(t){document.querySelectorAll("#rl i").forEach(x=>x.classList.toggle("on",+x.textContent===t))}
+
+/* ---------------- LIVE CRICKET EXCHANGE (real matches, play money) ---------------- */
+const LC={m:[],mk:[],b:[],page:"home",cur:null,mtab:"all",btab:"open",chan:null,poll:null,px:{},lb:{},slip:null,on:false,err:null,raf:0};
+const LADDER=[[2,.01],[3,.02],[4,.05],[6,.1],[10,.2],[20,.5],[30,1],[50,2],[100,5],[1000,10]];
+const tUp=o=>{for(const[l,st]of LADDER)if(o<l)return Math.min(1000,+(o+st).toFixed(2));return 1000};
+const tDn=o=>{for(const[l,st]of LADDER)if(o<=l)return Math.max(1.01,+(o-st).toFixed(2));return 990};
+function lcAbbr(t){const w=String(t||"").replace(/[^A-Za-z ]/g,"").trim().split(/\s+/).filter(Boolean);if(w.length===1)return w[0].slice(0,3).toUpperCase();return w.map(x=>x[0]).join("").slice(0,3).toUpperCase()}
+function lcWhen(d){if(!d)return"";const x=new Date(d),now=new Date(),same=x.toDateString()===now.toDateString();return (same?"Today ":x.toLocaleDateString([], {day:"numeric",month:"short"})+" ")+x.toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"})}
+const p2=v=>v==null||v===""?"–":(+v).toFixed(2);
+const kfmt=n=>n>=1e6?(n/1e6).toFixed(1)+"M":n>=1e4?(n/1e3).toFixed(1)+"k":fmt(n);
+function lcStop(){LC.on=false;if(LC.chan){try{sb.removeChannel(LC.chan)}catch(e){}LC.chan=null}if(LC.poll){clearInterval(LC.poll);LC.poll=null}}
+async function lcLoad(){const r=await sb.from("lc_matches").select("*").eq("hidden",false).order("start_at",{ascending:true});
+ if(!r.error){const old=Date.now()-36*3600e3;LC.m=(r.data||[]).filter(m=>!(["settled","void"].includes(m.status)&&new Date(m.updated_at).getTime()<old));LC.err=null}else LC.err=r.error.message;
+ const k=await sb.from("lc_markets").select("*");if(!k.error)LC.mk=k.data||[];
+ const b=await sb.from("lc_bets").select("*").order("created_at",{ascending:false}).limit(100);if(!b.error)LC.b=b.data||[]}
+function lcQueue(){if(LC.raf)return;LC.raf=requestAnimationFrame(()=>{LC.raf=0;xRender()})}
+function lcStart(){if(LC.on)return;LC.on=true;
+ try{LC.chan=sb.channel("lc-x").on("postgres_changes",{event:"*",schema:"public",table:"lc_matches"},p=>lcOnRow("m",p)).on("postgres_changes",{event:"*",schema:"public",table:"lc_markets"},p=>lcOnRow("mk",p)).on("postgres_changes",{event:"*",schema:"public",table:"lc_bets"},p=>lcOnBet(p)).subscribe()}catch(e){}
+ LC.poll=setInterval(async()=>{if(!LC.on)return;await lcLoad();lcQueue()},15000)}
+function lcOnRow(t,p){if(!LC.on)return;const arr=LC[t],n=p.new,o=p.old;
+ if(p.eventType==="DELETE"){LC[t]=arr.filter(x=>x.id!==(o&&o.id));return lcQueue()}
+ if(!n)return;if(t==="m"&&n.hidden){LC.m=arr.filter(x=>x.id!==n.id);return lcQueue()}
+ const i=arr.findIndex(x=>x.id===n.id);if(i>=0)arr[i]=n;else arr.push(n);lcQueue()}
+async function lcOnBet(p){if(!LC.on)return;const n=p.new;if(!n)return;const i=LC.b.findIndex(b=>b.id===n.id),old=i>=0?LC.b[i]:null;if(i>=0)LC.b[i]=n;else LC.b.unshift(n);
+ if(old&&old.status==="open"&&n.status!=="open"){const nm=xSelName(n);
+  if(n.status==="won"){toast("🏆","Bet won!","+"+fmt(n.payout)+" · "+nm);SND.win();burst(60,true)}else if(n.status==="void")toast("↩️","Bet void",fmt(n.risk||n.stake)+" returned");else toast("🏏","Bet lost",nm);
+  const pr=await sb.from("profiles").select("coins").eq("id",me.id).single();if(pr.data){me.coins=pr.data.coins;tweenBal(me.coins,800)}}
+ lcQueue()}
+function xMarkets(m){const mo={id:null,kind:"odds",name:"Match Odds",status:m.status,matched:m.matched||0,result:m.winner,runners:[{k:"a",n:m.team_a,b:m.odds_a,l:m.lay_a},{k:"b",n:m.team_b,b:m.odds_b,l:m.lay_b}]};
+ return [mo].concat(LC.mk.filter(x=>x.match_id===m.id).sort((x,y)=>(x.sort-y.sort)||(x.id-y.id)))}
+function xSelName(b){const m=LC.m.find(x=>x.id===b.match_id);if(!m)return b.side;if(!b.market_id)return b.side==="a"?m.team_a:m.team_b;const k=LC.mk.find(x=>x.id===b.market_id);const r=k&&k.runners.find(x=>x.k===b.side);return r?r.n:b.side}
+function xPL(mid,mkid,rs,extra){const bets=LC.b.filter(b=>b.status==="open"&&b.match_id===mid&&(b.market_id||null)===(mkid||null));if(extra)bets.push(extra);if(!bets.length)return null;
+ const pl={};rs.forEach(r=>pl[r.k]=0);bets.forEach(b=>rs.forEach(r=>{const on=b.side===r.k;if(b.btype==="back")pl[r.k]+=on?b.stake*(b.odds-1):-b.stake;else pl[r.k]+=on?-b.stake*(b.odds-1):+b.stake}));return pl}
+function xOddBtn(m,mk,r,type,list){if(mk.kind==="line"&&type==="lay")return '<span></span>';const v=type==="back"?r.b:r.l,key=[m.id,mk.id||0,r.k,type].join("|"),prev=LC.px[key],chg=prev!=null&&v!=null&&+prev!==+v;LC.px[key]=v;
+ const open=mk.status==="open"&&v!=null&&+v>1&&!(mk.kind==="line"&&type==="lay");
+ return `<button class="xb ${type}${chg?" chg":""}${list?" sm":""}" data-xo="${m.id}|${mk.id||""}|${r.k}|${type}"${open?"":" disabled"}><b>${mk.kind==="line"&&type==="lay"?"":p2(v)}</b>${list?"":`<small>${mk.kind==="line"?(type==="back"?"@ "+p2(v):""):(type==="back"?"back":"lay")}</small>`}</button>`}
+function xMarketHtml(m,mk){const pl=xPL(m.id,mk.id,mk.runners,LC.slip&&LC.slip.mid===m.id&&(LC.slip.mk||null)===(mk.id||null)?xSlipBet():null),line=mk.kind==="line";
+ let ov="";if(mk.status==="suspended")ov="SUSPENDED";else if(mk.status==="closed")ov="CLOSED";else if(mk.status==="void")ov="VOID · STAKES RETURNED";else if(mk.status==="settled"){const w=mk.runners.find(r=>r.k===mk.result);ov="RESULT: "+(w?w.n:"").toUpperCase()}
+ return `<div class="xmk"><div class="xmk-h"><span>★ ${esc(mk.name)}</span>${line?`<em>line ${p2(mk.line).replace(/\.00$/,"")}</em>`:""}</div>
+ <div class="xmk-c"><span>Matched: ${fmt(mk.matched||0)}</span><span class="xcol">${line?"Back":"Back"}</span><span class="xcol">${line?"":"Lay"}</span></div>
+ ${mk.runners.map(r=>{const v=pl&&pl[r.k],sl=LC.slip&&LC.slip.mid===m.id&&(LC.slip.mk||null)===(mk.id||null)&&LC.slip.sel===r.k;
+  return `<div class="xr${sl?" on "+LC.slip.type:""}"><div class="xn"><b>${esc(r.n)}</b>${v!=null?`<small class="${v>=0?"pos":"neg"}">» ${v>=0?"":"−"}${Math.abs(v).toFixed(2)}</small>`:""}</div>${xOddBtn(m,mk,r,"back")}${xOddBtn(m,mk,r,"lay")}</div>${sl?xSlipHtml():""}`}).join("")}
+ ${ov?`<div class="xov">${ov}</div>`:""}</div>`}
+const BCL=e=>e==="W"?"w":e==="4"?"f":e==="6"?"s":e==="0"?"d":/^E/.test(e)?"x":"r";
+function xHeader(m){const live=m.live&&!["settled","void"].includes(m.status),balls=(m.balls||[]).slice(-8);
+ return `<div class="xmh"><button class="xback" data-xnav="home" aria-label="Back to matches">‹</button><div class="xmh-l">${live?'<span class="xlive">▶<br>LIVE</span>':""}<div class="xmh-t"><b>${esc(m.team_a)}</b><b>${esc(m.team_b)}</b></div></div>
+ <div class="xmh-s">${m.cur_score?`<b class="xcs">${esc(m.cur_score.replace(/^.*?(\d+\/\d+)/,"$1"))}</b>`:""}${m.score_text?`<small>${esc(m.score_text.split("  ·  ").slice(0,1)[0]||"")}</small>`:`<small>${esc(lcWhen(m.start_at))}</small>`}</div><span class="xref" id="xref">⟳</span><div class="xev" id="xev"></div></div>
+ ${m.last_ball||balls.length?`<div class="xball"><span>${esc(m.last_ball||"")}</span><div class="xbs">${balls.map((b,i)=>`<i class="${BCL(b.e)}${i===balls.length-1&&LC.lb[m.id]!==undefined&&m.last_ball!==LC.lb[m.id]?" nw":""}">${esc(b.e==="0"?"•":b.e.replace(/^E/,"+"))}</i>`).join("")}</div></div>`:""}
+ ${m.score_status?`<div class="xstat">${esc(m.score_status)}</div>`:""}`}
+function xMatchPage(m){const mks=xMarkets(m),tabs=[["all","Popular"],["mo","Match Odds"],["line","Line Markets"],["sp","Specials"]];
+ const f=mks.filter(k=>LC.mtab==="all"||(LC.mtab==="mo"&&k.id===null)||(LC.mtab==="line"&&k.kind==="line")||(LC.mtab==="sp"&&k.id!==null&&k.kind==="odds"));
+ const ob=LC.b.filter(b=>b.status==="open"&&b.match_id===m.id).length;
+ return xHeader(m)+`<div class="xtabs">${tabs.map(t=>`<button data-xt="${t[0]}" class="${LC.mtab===t[0]?"on":""}">${t[1]}</button>`).join("")}</div>
+ <div class="xinfo"><span>ⓘ Prices update live</span><button data-xnav="bets">Open Bets (${ob}) ›</button></div>
+ ${f.length?f.map(k=>xMarketHtml(m,k)).join(""):'<div class="lempty dk">No markets in this section yet.</div>'}`}
+function xHomePage(){if(LC.err&&!LC.m.length)return `<div class="lempty dk">Live cricket isn't set up yet.<br><small>Ask your admin to run the Live Cricket update.</small></div>`;
+ const rank=m=>["settled","void"].includes(m.status)?2:m.live?0:1,ms=LC.m.slice().sort((x,y)=>rank(x)-rank(y)||new Date(x.start_at)-new Date(y.start_at));
+ if(!ms.length)return '<div class="lempty dk">No matches right now.<br><small>New matches appear here automatically.</small></div>';
+ let h="",last=-1;ms.forEach(m=>{const r=rank(m);if(r!==last){h+=`<div class="xsec"><span>${["Cricket · In-Play","Cricket · Upcoming","Cricket · Finished"][r]}</span>${r===0?'<em>● LIVE</em>':""}</div><div class="xlh"><span></span><span>1</span><span>2</span></div>`;last=r}
+  const mo=xMarkets(m)[0],ra=mo.runners[0],rb=mo.runners[1],live=r===0,nb=LC.mk.filter(k=>k.match_id===m.id).length;
+  h+=`<div class="xl"><button class="xl-i" data-xm="${m.id}"><span class="xl-t">${live?'<em class="ldot">● LIVE</em>':`<em class="lwhen">${esc(lcWhen(m.start_at))}</em>`} ${esc(m.league||"")}</span><b>${esc(m.team_a)}</b><b>${esc(m.team_b)}</b>${m.cur_score?`<span class="xl-sc">${esc(m.cur_score)}</span>`:""}<span class="xl-m">Matched ${kfmt(m.matched||0)}${nb?" · +"+nb+" markets":""} ›</span></button>
+  <div class="xl-o"><div>${xOddBtn(m,mo,ra,"back",1)}${xOddBtn(m,mo,ra,"lay",1)}</div><div>${xOddBtn(m,mo,rb,"back",1)}${xOddBtn(m,mo,rb,"lay",1)}</div></div>${mo.status!=="open"?`<div class="xl-ov">${mo.status==="settled"?"🏆 "+esc(m.winner==="a"?m.team_a:m.team_b)+" won":mo.status.toUpperCase()}</div>`:""}</div>`});
+ return h}
+function xBetsPage(){const open=LC.b.filter(b=>b.status==="open"),done=LC.b.filter(b=>b.status!=="open"),list=LC.btab==="open"?open:done;
+ return `<div class="xsec"><span>My Bets</span></div><div class="xtabs"><button data-xbt="open" class="${LC.btab==="open"?"on":""}">Open (${open.length})</button><button data-xbt="done" class="${LC.btab==="done"?"on":""}">Settled (${done.length})</button></div>`+
+ (list.length?list.map(b=>{const m=LC.m.find(x=>x.id===b.match_id),k=b.market_id?LC.mk.find(x=>x.id===b.market_id):null,lay=b.btype==="lay",risk=+(b.risk||b.stake);
+  const st={open:["OPEN","o"],won:["WON +"+fmt(b.payout),"w"],lost:["LOST","l"],void:["VOID","v"]}[b.status];
+  return `<div class="xbet ${b.btype}"><div><span class="xbt">${lay?"LAY":"BACK"}</span> <b>${esc(xSelName(b))}</b> @ ${p2(b.odds)}<small>${m?esc(m.team_a+" v "+m.team_b):""} · ${k?esc(k.name):"Match Odds"}</small><small>Stake ${fmt(b.stake)} · ${lay?"Liability "+risk.toFixed(2):"Profit "+(b.stake*(b.odds-1)).toFixed(2)} · ${new Date(b.created_at).toLocaleString([], {day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})}</small></div><em class="lst ${st[1]}">${st[0]}</em></div>`}).join(""):'<div class="lempty dk">No bets here yet.</div>')}
+function xSlipBet(){const s=LC.slip;if(!s)return null;const st=Math.floor(+s.stake||0),od=+s.odds||0;if(st<1||od<=1)return null;return{status:"open",match_id:s.mid,market_id:s.mk||null,side:s.sel,btype:s.type,stake:st,odds:od}}
+function xSlipHtml(){const s=LC.slip,st=Math.floor(+s.stake||0),od=+s.odds||0,lay=s.type==="lay",val=lay?st*(od-1):st*(od-1);
+ const pad=["1","2","3","4","5","6","⌫","7","8","9","0","00","."];
+ const fr=s.fresh;s.fresh=false;return `<div class="xslip ${s.type}${fr?" fresh":""}"><div class="xs-t">${lay?"Lay (Bet Against)":"Back (Bet For)"}: <b>${esc(s.name)}</b> – ${esc(s.mkName)}</div>
+ <div class="xs-st"><div class="xst${s.field==="odds"?" act":""}"><button data-xk="o-">−</button><span data-xk="fo">${esc(s.odds)}<small>odds</small></span><button data-xk="o+">+</button></div><div class="xst${s.field==="stake"?" act":""}"><button data-xk="s-">−</button><span data-xk="fs">${esc(s.stake||"0")}<small>stake</small></span><button data-xk="s+">+</button></div></div>
+ <div class="xs-a"><button class="xs-c" data-xk="cancel">Cancel</button><button class="xs-p" data-xk="place"${st<1?" disabled":""}>Place bet<small>${lay?"Liability ":"Profit "}${val.toFixed(2)}</small></button></div>
+ <p class="xs-msg" id="xsmsg">${esc(s.msg||"")}</p>
+ <div class="xs-q">${[10,20,50,100].map(v=>`<button data-xk="q${v}">+${v}</button>`).join("")}</div>
+ <div class="xs-pad">${pad.map(k=>`<button data-xk="k${k}"${k==="⌫"?' class="bk"':""}>${k}</button>`).join("")}</div></div>`}
+function xRender(){const body=$("xbody");if(!body)return;const sy=scrollY;
+ if(LC.page==="match"){const m=LC.m.find(x=>x.id===LC.cur);if(!m){LC.page="home";return xRender()}
+  const prevB=LC.lb[m.id];body.innerHTML=xMatchPage(m);if(prevB!==undefined&&m.last_ball&&m.last_ball!==prevB)xBallFx(m);LC.lb[m.id]=m.last_ball||""}
+ else if(LC.page==="bets")body.innerHTML=xBetsPage();else body.innerHTML=xHomePage();
+ document.querySelectorAll(".xnav button").forEach(b=>b.classList.toggle("on",b.dataset.xnav===LC.page));
+ const ob=LC.b.filter(b=>b.status==="open").length,nb=$("xnb");if(nb)nb.textContent=ob?ob:"";const r=$("xref");if(r){r.classList.remove("spin");void r.offsetWidth;r.classList.add("spin")}
+ if(Math.abs(scrollY-sy)>2)scrollTo(0,sy)}
+function xBallFx(m){const b=(m.balls||[]).slice(-1)[0];if(!b)return;const e=b.e,el=$("xev");if(!el)return;
+ const t=e==="W"?["WICKET!","w"]:e==="6"?["SIX!","s"]:e==="4"?["FOUR!","f"]:e==="0"?["DOT BALL","d"]:/^E/.test(e)?["EXTRAS +"+e.slice(1),"x"]:[e.replace(/^\+/,"+")+(e==="1"?" RUN":" RUNS"),"r"];
+ el.innerHTML=`<b class="${t[1]}">${t[0]}</b>`;
+ if(e==="6"){SND.bat();SND.cheer(1.2);const r=el.getBoundingClientRect();fireworks(r.left+r.width/2,r.top+40)}else if(e==="4"){SND.bat();SND.cheer(.8)}else if(e==="W")SND.ooh();else SND.tick()}
+async function liveView(){
+ $("app").innerHTML=`<div class="xv"><div class="xh"><button class="xhb" data-act="lobby" aria-label="Back to games">‹</button><div class="xlogo"><b>PLAYBOOK</b><small>EXCHANGE</small></div>
+<button class="xhi" data-xnav="bets" aria-label="My bets"><span>🧾</span><small>My Bets</small></button><div class="xhi bal"><span>👤</span><small id="rbal">${fmt(shown)}</small></div></div>
+<div id="xbody"><div class="lempty dk">Loading matches…</div></div><p class="xnote">Play money only · coins have no cash value · scores and prices can be delayed</p></div>
+<div class="xnav"><button data-xnav="home" class="on"><span>🏠</span>Home</button><button data-xnav="inplay"><span>📡</span>In-Play</button><button data-xnav="bets"><span>🧾</span>My Bets<i id="xnb"></i></button><button data-act="lobby"><span>🎰</span>Casino</button><button data-act="menu"><span>☰</span>Menu</button></div>`;
+ await lcLoad();LC.m.forEach(m=>{LC.lb[m.id]=m.last_ball||""});xRender();lcStart()}
+function xNav(to){if(to==="inplay"){LC.page="home";xRender();const s=document.querySelector(".xsec");if(s)s.scrollIntoView({behavior:"smooth"});return}LC.page=to;if(to!=="match")LC.slip=null;SND.click();xRender();scrollTo(0,0)}
+function xOpenMatch(id){LC.cur=id;LC.page="match";LC.mtab="all";LC.slip=null;SND.click();xRender();scrollTo(0,0)}
+function xOdds(spec){const[mid,mk,sel,type]=spec.split("|"),m=LC.m.find(x=>x.id===mid);if(!m)return;const mkid=mk?+mk:null,mko=xMarkets(m).find(k=>(k.id||null)===mkid);if(!mko)return;const r=mko.runners.find(x=>x.k===sel);
+ const price=type==="back"?r.b:r.l;LC.slip={mid,mk:mkid,sel,type,odds:p2(price),stake:String(LC.slip&&LC.slip.stake||Math.min(100,S.maxStake)),field:"stake",name:r.n,mkName:mko.name,msg:"",fresh:true};
+ if(LC.page!=="match"){LC.cur=mid;LC.page="match";LC.mtab="all";xRender();scrollTo(0,0)}else xRender();
+ chipSound(1);const el=document.querySelector(".xslip");if(el)el.scrollIntoView({block:"nearest",behavior:RM?"auto":"smooth"})}
+function xKey(k){const s=LC.slip;if(!s)return;
+ if(k==="cancel"){LC.slip=null;SND.click();return xRender()}
+ if(k==="place")return xPlace();
+ if(k==="fo"||k==="fs"){s.field=k==="fo"?"odds":"stake";return xRender()}
+ if(k==="o+"||k==="o-"){const o=+s.odds||1.01;s.odds=p2(k==="o+"?tUp(o):tDn(o));s.field="odds";SND.tick();return xRender()}
+ if(k==="s+"||k==="s-"){const v=Math.floor(+s.stake||0);s.stake=String(Math.max(0,v+(k==="s+"?10:-10)));s.field="stake";SND.tick();return xRender()}
+ if(/^q\d+$/.test(k)){s.stake=String(Math.floor(+s.stake||0)+ +k.slice(1));s.field="stake";chipSound(1);return xRender()}
+ if(k[0]==="k"){const c=k.slice(1),f=s.field;let v=String(s[f]||"");if(c==="⌫")v=v.slice(0,-1);else if(c==="."){if(f==="odds"&&!v.includes("."))v=(v||"1")+"."}else{if(f==="stake"&&v==="0")v="";v=(v+c).slice(0,f==="odds"?6:7)}s[f]=v;SND.tick();return xRender()}}
+async function xPlace(){const s=LC.slip;if(!s||busy)return;const st=Math.floor(+s.stake||0),od=+s.odds;
+ const risk=s.type==="lay"?st*(od-1):st;
+ if(st<1){s.msg="Enter a stake.";return xRender()}if(!(od>1)){s.msg="Enter valid odds.";return xRender()}
+ if(risk>S.maxStake){s.msg=(s.type==="lay"?"Liability":"Stake")+" is over the max of "+fmt(S.maxStake)+".";return xRender()}if(risk>me.coins){s.msg="Not enough coins.";return xRender()}
+ busy=true;ac();const r=await sb.rpc("lc_bet",{p_match:s.mid,p_market:s.mk,p_sel:s.sel,p_type:s.type,p_stake:st,p_odds:od});busy=false;
+ if(r.error){const em=String(r.error.message||""),nm=/not matched:([\d.]+)/.exec(em);
+  if(nm){s.odds=p2(nm[1]);s.msg="Not matched — best price is "+p2(nm[1])+". Tap Place bet to take it.";tone(300,.12,"square",.05)}
+  else s.msg=/lay not offered/.test(em)?"Lay isn't offered on this market.":/suspended/.test(em)?"This market is suspended right now.":/closed/.test(em)?"Betting has closed for this match.":/bad stake/.test(em)?"That amount isn't allowed (check max stake and balance).":/is off/.test(em)?"Live cricket is switched off by the admin.":/maintenance/.test(em)?"Paused for maintenance.":"Couldn't place the bet. Try again.";
+  return xRender()}
+ me.coins=r.data.balance;tweenBal(me.coins,500);chipSound(3);toast("✅","Bet matched",(s.type==="lay"?"Lay ":"Back ")+s.name+" · "+fmt(st)+" @ "+p2(r.data.odds));LC.slip=null;
+ const b=await sb.from("lc_bets").select("*").order("created_at",{ascending:false}).limit(100);if(!b.error)LC.b=b.data||[];xRender()}
+function lcRulesHtml(){return `<h3>📡 How the exchange works</h3><p>These are <b>real cricket matches</b>. Tap a price to bet.</p><ul class="pays"><li><span><b style="color:#2f86c9">BACK</b> (bet for)</span><b>win stake × (odds − 1)</b></li><li><span><b style="color:#d6577a">LAY</b> (bet against)</span><b>win your stake if it does NOT happen</b></li><li><span>Lay liability</span><b>stake × (odds − 1)</b></li><li><span>No result / abandoned / tie</span><b>money returned</b></li></ul><p class="meta">The » numbers under each name show what you win or lose on that market if that result happens. If the price moves while you bet, you'll see "Not matched" with the new best price. Line markets: Under or Over the runs line after the given overs. Coins are play money only.</p><button class="btn wide" data-act="close">GOT IT</button>`}
 
 /* ---------------- slots ---------------- */
 const SL={last:null};
@@ -855,7 +1303,7 @@ function drumStep(dt){const mix=D.mode==="mix";D.ang+=mix?.08:.008;const bs=D.ba
   if(u>=1){b.out=true;D.ex=null;e.done()}}}
 function ballDraw(c,x,y,n){const gg=c.createRadialGradient(x-5,y-6,2,x,y,BR);gg.addColorStop(0,"#fff");gg.addColorStop(.25,`hsl(${n*40},75%,58%)`);gg.addColorStop(1,`hsl(${n*40},75%,30%)`);
  c.fillStyle=gg;c.beginPath();c.arc(x,y,BR,0,7);c.fill();c.fillStyle="#fff";c.beginPath();c.arc(x,y,8.5,0,7);c.fill();c.fillStyle="#111";c.font="bold 12px system-ui";c.textAlign="center";c.textBaseline="middle";c.fillText(n,x,y+.5);
- if(String(n)===pick){c.strokeStyle="#FFD35C";c.lineWidth=2.5;c.beginPath();c.arc(x,y,BR+1.5,0,7);c.stroke()}}
+ if(NUMMARK.has(n)){c.strokeStyle="#FFD35C";c.lineWidth=2.5;c.beginPath();c.arc(x,y,BR+1.5,0,7);c.stroke()}}
 function drumDraw(c){c.setTransform(2,0,0,2,0,0);c.clearRect(0,0,300,320);const cx=150,cy=136;
  c.fillStyle="#0009";c.fillRect(cx-21,cy+DR-8,42,200);c.strokeStyle="#E8B74A";c.lineWidth=3;c.beginPath();c.moveTo(cx-22,cy+DR-8);c.lineTo(cx-22,320);c.moveTo(cx+22,cy+DR-8);c.lineTo(cx+22,320);c.stroke();
  const g=c.createRadialGradient(cx-30,cy-40,10,cx,cy,DR);g.addColorStop(0,"rgba(255,255,255,.28)");g.addColorStop(1,"rgba(255,255,255,.05)");c.fillStyle=g;c.beginPath();c.arc(cx,cy,DR,0,7);c.fill();
@@ -868,12 +1316,12 @@ async function anNum(o){const t=+o.big;$("tray").innerHTML="";D.balls.forEach(b=
  const b=D.balls.find(x=>x.n===t);SND.drum(8);
  await new Promise(r=>{D.ex={b,u:0,x0:b.x,y0:b.y,done:r};setTimeout(()=>{if(D.ex){D.ex=null;b.out=true;r()}},4500)});
  $("tray").innerHTML=`<div class="bigball" style="--bc:hsl(${t*40},75%,45%)">${t}</div>`;SND.thunk();
- if(String(t)===pick){const r=$("tray").getBoundingClientRect();fireworks(r.left+r.width/2,r.top+r.height/2)}await wait(500)}
+ if(NUMMARK.has(t)){const r=$("tray").getBoundingClientRect();fireworks(r.left+r.width/2,r.top+r.height/2)}await wait(500)}
 
 /* ---------------- cricket ---------------- */
 function cboard(){const i=pick?+pick[0]:0,m=MT[i];if(!$("t0"))return;
  [0,1].forEach(k=>{const el=$("t"+k);el.className="tm";el.innerHTML=`<div class="nm">${badge(m[k],m[4+k])}${m[k]}</div><div class="sc">–</div><small>${pick&&pick[1]===(k?"b":"a")?"⭐ Your pick":"Yet to bat"}</small>`});
- $("cm").textContent=pick?"Ready! Add chips and press PLAY MATCH.":"Pick a team below to back them."}
+ $("cm").textContent=pick?"Ready! Add chips and press PLAY.":"Put chips on a team below to back them."}
 const ovs=b=>Math.floor(b/6)+"."+(b%6);
 function stamp(t,cls){const e=$("fxt");if(e)e.innerHTML=`<b class="${cls||""}">${t}</b>`}
 async function delivery(kind){const F=$("field");if(!F)return;const bw=$("bowler"),b=$("cball"),bt=$("batter"),stp=$("stumps"),W2=F.clientWidth/2,H2=F.clientHeight/2;
@@ -993,21 +1441,27 @@ async function enter(){
  if(!bad&&!s.data)bad="Could not load the game settings.";
  if(bad){await sb.auth.signOut();me=null;return err(bad)}
  me=p.data;S=s.data.data;msg="";view="lobby";loadProf();setBal(me.coins);render()}
-async function logout(){closeSheet();await sb.auth.signOut();me=null;prof=null;msg="";view="lobby";game="";pick=null;stake=0;sess=0;hist={};lastB={};RB={};RBundo=[];RBlast=null;RH=null;render()}
+async function logout(){closeSheet();await sb.auth.signOut();me=null;prof=null;msg="";view="lobby";game="";pick=null;stake=0;sess=0;hist={};lastB={};RB={};RBundo=[];RBlast=null;RH=null;lastB2={};GH={};lcStop();LC.m=[];LC.b=[];LC.mk=[];LC.slip=null;render()}
 document.addEventListener("click",async e=>{
  if(e.target.id==="sheet")return closeSheet();
- const t=e.target.closest("[data-p],[data-g],[data-s],[data-act],[data-t],[data-b],[data-rc]");if(!t||t.disabled)return;
+ const t=e.target.closest("[data-p],[data-g],[data-s],[data-act],[data-t],[data-b],[data-rc],[data-xo],[data-xm],[data-xk],[data-xnav],[data-xt],[data-xbt]");if(!t||t.disabled)return;
  try{
   if(t.dataset.t)return setTheme(t.dataset.t);
+  if(t.dataset.xo)return xOdds(t.dataset.xo);
+  if(t.dataset.xm)return xOpenMatch(t.dataset.xm);
+  if(t.dataset.xk)return xKey(t.dataset.xk);
+  if(t.dataset.xnav)return xNav(t.dataset.xnav);
+  if(t.dataset.xt){LC.mtab=t.dataset.xt;SND.click();return xRender()}
+  if(t.dataset.xbt){LC.btab=t.dataset.xbt;SND.click();return xRender()}
   if(t.dataset.b)return rPlace(t.dataset.b,t);
   if(t.dataset.rc){rchip=+t.dataset.rc;document.querySelectorAll(".crack .cp").forEach(x=>x.classList.toggle("sel",x===t));chipSound(1);return}
   if(t.dataset.p!==undefined)return choose(t.dataset.p,t);
-  if(t.dataset.g){if(busy)return;game=t.dataset.g;view="game";pick=null;stake=0;msg="";SND.click();ac();render();scrollTo(0,0);return}
+  if(t.dataset.g){if(busy)return;game=t.dataset.g;view="game";pick=null;stake=0;msg="";RB={};RBundo=[];RBlast=lastB2[game]||null;SND.click();ac();render();scrollTo(0,0);return}
   if(t.dataset.s)return addStake(t.dataset.s==="max"?"max":+t.dataset.s,t);
   const a=t.dataset.act;
   if(a==="play")await play();
   else if(a==="clear")clearBet();
-  else if(a==="r-spin")await rSpin();
+  else if(a==="r-spin")await doSpin();
   else if(a==="r-undo")rUndo();
   else if(a==="r-clear")rClear();
   else if(a==="r-x2")rX2();
@@ -1017,7 +1471,9 @@ document.addEventListener("click",async e=>{
   else if(a==="x2"){if(stake<1)return flash("Add chips first");addStake(stake,t)}
   else if(a==="skip"){ff=true;t.hidden=true}
   else if(a==="lobby"){if(busy)return;view="lobby";SND.click();render();scrollTo(0,0)}
-  else if(a==="rules")openSheet(rulesHtml());
+  else if(a==="rules")openSheet(view==="live"?lcRulesHtml():rulesHtml());
+  else if(a==="live"){if(busy)return;view="live";LC.page="home";LC.slip=null;SND.click();ac();render();scrollTo(0,0)}
+
   else if(a==="close")closeSheet();
   else if(a==="logout")await logout();
   else if(a==="bonus")await bonus();
