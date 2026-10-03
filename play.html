@@ -663,6 +663,160 @@ body.rlt .xv~*{}
 .l7road em{grid-column:1/-1;font-size:11px;opacity:.7;text-align:center}
 .l7cap{text-align:center;font-size:10.5px;opacity:.7}
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01s!important;animation-iteration-count:1!important}}
+/* Satta King */
+.t-sk{background:radial-gradient(circle at 80% 50%,#ffd35c55,transparent 45%),linear-gradient(120deg,#14020a,#5a0c1c 55%,#a0721c);grid-column:1/-1}
+.a-sk{position:relative;display:flex;gap:6px;align-items:center;justify-content:center;width:120px;height:90px}
+.a-sk b{width:44px;height:58px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(#111 50%,#000 50%);border:2px solid #d4ae55;font:900 36px/1 Georgia,serif;color:#ffe066;text-shadow:0 0 12px #ffb400;animation:skflip 3s ease-in-out infinite}
+.a-sk b:nth-child(2){animation-delay:.4s}
+.a-sk span{position:absolute;top:-6px;left:50%;transform:translateX(-50%);font-size:24px;filter:drop-shadow(0 2px 2px #000)}
+@keyframes skflip{0%,70%,100%{transform:rotateX(0)}80%{transform:rotateX(90deg)}90%{transform:rotateX(0)}}
+.skv{min-height:100vh;background:radial-gradient(ellipse at 50% -10%,#5a0c1c,#1a0308 55%,#0c0104);color:#fbe9c4;padding-bottom:calc(76px + env(safe-area-inset-bottom));font-size:14px}
+.skv .lempty{color:#fbe9c4}
+.skh{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:8px;padding:8px 10px;padding-top:max(8px,env(safe-area-inset-top));background:linear-gradient(#2a0510,#14020a);border-bottom:2px solid #d4ae55;box-shadow:0 4px 14px #000a}
+.skhb{flex:none;width:34px;height:34px;border-radius:50%;border:1px solid #d4ae55;background:#0006;color:#ffd35c;font-size:18px;font-weight:900;display:grid;place-items:center;padding:0}
+.sklogo{flex:1;line-height:1}.sklogo b{display:block;font:italic 900 20px Georgia,serif;letter-spacing:1px;background:linear-gradient(#fff6c8,#ffd35c 50%,#c98a1c);-webkit-background-clip:text;background-clip:text;color:transparent}.sklogo small{font-size:9px;letter-spacing:3px;color:#e9c97a}
+.skbal{text-align:right;line-height:1.1;padding-left:4px}.skbal small{font-size:9px;letter-spacing:1px;color:#e9c97a;display:block}.skbal b{font-size:15px;color:#fff}
+#skbody{padding:10px}
+.sk-hero{position:relative;text-align:center;padding:14px 10px 14px;border-radius:18px;background:linear-gradient(160deg,#3a0712,#16020a);border:1px solid #d4ae5588;box-shadow:inset 0 0 40px #000,0 8px 24px #0008;overflow:hidden}
+.sk-hero::before{content:"";position:absolute;inset:-60%;background:conic-gradient(from 0deg,transparent,#ffd35c26,transparent 25%,transparent 50%,#ffd35c1c,transparent 75%);animation:skspin 12s linear infinite}
+@keyframes skspin{to{transform:rotate(1turn)}}
+.sk-hero>*{position:relative}
+.sk-crown{font-size:32px;animation:skbob 2.4s ease-in-out infinite}@keyframes skbob{50%{transform:translateY(-4px)}}
+.sk-hero b{display:block;font:italic 900 32px/1.1 Georgia,serif;letter-spacing:3px;background:linear-gradient(#fff6c8,#ffd35c 45%,#c98a1c);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 0 #4a2a00)}
+.sk-hero>small{font-size:10px;letter-spacing:3px;color:#e9c97a}
+.sk-clock{margin-top:8px;display:inline-flex;align-items:baseline;gap:6px;padding:4px 14px;border-radius:99px;background:#000a;border:1px solid #d4ae5566}
+.sk-clock span{font:700 18px ui-monospace,Menlo,monospace;color:#7dffb0;letter-spacing:1px}.sk-clock small{font-size:10px;color:#e9c97a}
+.sk-sec{margin:16px 2px 8px;font-weight:900;letter-spacing:2px;font-size:12px;color:#ffd35c;display:flex;align-items:center;gap:8px}.sk-sec::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,#d4ae55,transparent)}
+.sk-board{border-radius:14px;overflow:hidden;border:1px solid #d4ae55;background:#0b0103;box-shadow:0 8px 20px #0009}
+.sk-br{display:grid;grid-template-columns:minmax(0,1fr) 74px 84px;align-items:center;padding:8px 10px;border-top:1px solid #ffffff12}
+.sk-br:nth-child(odd):not(.h){background:#ffffff06}
+.sk-br.h{background:linear-gradient(#e6c068,#a07a22);color:#2a1600;font-size:10px;font-weight:900;letter-spacing:1px;border:0;padding:6px 10px}.sk-br.h span:not(:first-child){text-align:center}
+.sk-br .n b{display:block;font-weight:900;color:#fff;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.sk-br .n small{font-size:11px;color:#e9c97a}
+.sk-br .y{text-align:center;font:900 20px Georgia,serif;color:#c9b07a}
+.sk-br .t{text-align:center}
+.sk-num{display:inline-block;min-width:56px;padding:2px 6px;border-radius:8px;font:900 26px/1.15 Georgia,serif;color:#ffe066;text-shadow:0 0 10px #ffb400;background:#2a1a00;border:1px solid #ffd35c66}
+.sk-wait{font-size:11px;font-weight:900;color:#ff9db0;letter-spacing:1px;animation:blink 1.6s infinite}
+.sk-void{font-size:11px;font-weight:900;color:#aaa}
+.sk-card{position:relative;width:100%;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;align-items:center;text-align:left;margin-bottom:10px;padding:12px 12px 10px 16px;border-radius:16px;border:1px solid #d4ae5599;background:linear-gradient(120deg,#4a0a18,#22040c);color:#fbe9c4;box-shadow:0 6px 18px #0009;overflow:hidden;font:inherit}
+.sk-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:#3ddc84;box-shadow:0 0 12px #3ddc84}
+.sk-card.closed::before,.sk-card.drawing::before{background:#ff4d6d;box-shadow:0 0 12px #ff4d6d}.sk-card.off{opacity:.55}.sk-card.off::before{background:#777;box-shadow:none}
+.sk-card:active{transform:scale(.98)}
+.skc-l b{display:block;font-size:17px;font-weight:900;color:#fff}.skc-l small{font-size:11px;color:#e9c97a}
+.skc-r{text-align:right;line-height:1.15}.skc-r em{font-style:normal;font-size:10px;font-weight:900;letter-spacing:1px;padding:2px 8px;border-radius:99px;background:#3ddc84;color:#032}
+.sk-card.closed .skc-r em,.sk-card.drawing .skc-r em{background:#ff4d6d;color:#fff}.sk-card.drawing .skc-r em{animation:blink 1s infinite}.sk-card.off .skc-r em{background:#777;color:#fff}
+.skc-r span{display:block;font-size:10px;color:#e9c97a;margin-top:3px}.skc-r b{font:700 16px ui-monospace,Menlo,monospace;color:#fff}
+[data-cd].hot{color:#ff7b8f!important}
+.skc-f{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:6px;padding-top:8px;border-top:1px dashed #d4ae5544;font-size:11px;color:#e9c97a}
+.skc-go{flex:none;padding:6px 16px;border-radius:99px;background:linear-gradient(#ffe27a,#d99a1e);color:#3a2600;font-weight:900;font-size:12px;box-shadow:0 3px 0 #8a5a00}
+.sk-mh{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:16px;background:linear-gradient(120deg,#4a0a18,#22040c);border:1px solid #d4ae55;box-shadow:0 6px 16px #0009}
+.sk-mh>div:nth-child(2){flex:1;min-width:0}.sk-mh b{display:block;font-size:18px;font-weight:900;color:#fff}.sk-mh small{font-size:11px;color:#e9c97a}
+.sk-mcd{text-align:right;line-height:1.1}.sk-mcd span{display:block;font-size:10px;color:#e9c97a}.sk-mcd b{font:700 17px ui-monospace,Menlo,monospace;color:#7dffb0}.sk-mcd b.r{color:#ff9db0}
+.sk-last{display:flex;gap:6px;align-items:center;overflow-x:auto;padding:8px 2px;font-size:11px;color:#e9c97a;scrollbar-width:none}.sk-last::-webkit-scrollbar{display:none}
+.sk-last i{font-style:normal;flex:none;min-width:34px;text-align:center;padding:3px 6px;border-radius:8px;background:#000a;border:1px solid #d4ae5555;color:#ffe066;font:900 15px Georgia,serif}
+.sk-last i:first-of-type{border-color:#ffd35c;box-shadow:0 0 8px #ffb40066}
+.sk-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:4px;border-radius:14px;background:#000a;border:1px solid #d4ae5555}.sk-tabs.two{grid-template-columns:1fr 1fr;margin-bottom:10px}
+.sk-tabs button{border:0;border-radius:10px;padding:8px 0 6px;background:none;color:#e9c97a;font-weight:900;font-size:13px;line-height:1.15}.sk-tabs button small{display:block;font-size:9px;font-weight:700;opacity:.8}
+.sk-tabs button.on{background:linear-gradient(#ffe27a,#d99a1e);color:#3a2600;box-shadow:0 2px 8px #ffb40066}
+.sk-amt{display:flex;align-items:center;gap:4px;margin:10px 0 8px;font-size:10px;font-weight:900;letter-spacing:1px;color:#e9c97a}
+.sk-amt span{margin-right:4px}
+.sk-amt button{flex:1;border:2px dashed #fff8;border-radius:50%;aspect-ratio:1;max-width:44px;background:var(--cc);color:#fff;font-weight:900;font-size:11px;box-shadow:0 0 0 3px var(--cc),0 3px 6px #000a;margin:3px;padding:0;transition:transform .15s}
+.sk-amt button.on{transform:translateY(-3px) scale(1.1);box-shadow:0 0 0 3px var(--cc),0 0 0 6px #ffd35c,0 6px 12px #000}
+.sk-bw{position:relative}
+.sk-abh{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin:2px 4px 8px;font-size:12px;color:#e9c97a}.sk-abh b{color:#ffd35c;white-space:nowrap}
+.sk-grid{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:3px;padding:6px;border-radius:14px;background:#0b0103;border:1px solid #d4ae5566}
+.skn{position:relative;aspect-ratio:1;border:0;border-radius:7px;background:linear-gradient(#3a0a14,#24040c);color:#f5dfa8;font:800 13px ui-monospace,Menlo,monospace;padding:0;box-shadow:inset 0 0 0 1px #ffffff14;display:grid;place-items:center}
+.skn b{font-weight:800;margin-top:-2px}
+.skn.on{background:linear-gradient(#ffe27a,#d99a1e);color:#3a2600;box-shadow:0 0 10px #ffb40088}
+.skn i{position:absolute;left:0;right:0;bottom:1px;font-style:normal;font-size:8px;font-weight:900;color:#7a1020;line-height:1}
+.skn.on b{margin-top:-8px}
+.skn.pop,.skd.pop{animation:skpop .3s}@keyframes skpop{50%{transform:scale(1.25)}}
+.sk-ab{display:grid;grid-template-columns:repeat(5,1fr);gap:14px 12px;padding:14px 12px 18px;border-radius:14px;background:#0b0103;border:1px solid #d4ae5566}
+.skd{position:relative;aspect-ratio:1;border-radius:50%;border:0;padding:0;background:radial-gradient(circle at 35% 30%,#fff 0,var(--bc) 42%,#000 125%);color:#fff;font:900 26px Georgia,serif;text-shadow:0 2px 2px #0008;box-shadow:0 5px 10px #000a,inset 0 -4px 8px #0006}
+.skd.on{box-shadow:0 0 0 3px #ffd35c,0 0 18px #ffd35c}
+.skd i{position:absolute;bottom:-9px;left:50%;transform:translateX(-50%);font:900 10px system-ui;padding:1px 6px;border-radius:99px;background:#ffd35c;color:#3a2600;white-space:nowrap;text-shadow:none}
+.sk-cr{padding:10px 12px 12px;border-radius:14px;background:#0b0103;border:1px solid #d4ae5566}
+.sk-cr h4{margin:6px 0 6px;font-size:11px;color:#ffd35c;letter-spacing:1px}
+.sk-dg{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:4px}
+.sk-dg button{aspect-ratio:1;border-radius:8px;border:1px solid #d4ae5566;background:#2a0510;color:#f5dfa8;font:900 15px Georgia,serif;padding:0}
+.sk-dg button.on{background:linear-gradient(#ffe27a,#d99a1e);color:#3a2600;box-shadow:0 0 8px #ffb40088}
+.sk-tg{margin:12px 0 6px;border:1px solid #d4ae5566;background:none;color:#e9c97a;border-radius:99px;padding:6px 12px;font-size:12px;font-weight:800}.sk-tg.on{background:#d4ae55;color:#2a1600}
+.sk-cprev{display:flex;flex-wrap:wrap;gap:4px;margin:8px 0 10px;max-height:96px;overflow:auto;font-size:12px;color:#c9b07a}.sk-cprev i{font-style:normal;padding:2px 6px;border-radius:6px;background:#2a0510;border:1px solid #d4ae5544;font:800 12px ui-monospace,Menlo,monospace;color:#ffe066}
+.sk-btn{width:100%;border:0;border-radius:12px;padding:12px;background:linear-gradient(#ffe27a,#d99a1e);color:#3a2600;font-weight:900;font-size:15px;box-shadow:0 4px 0 #8a5a00}
+.sk-btn:active{transform:translateY(2px);box-shadow:0 2px 0 #8a5a00}.sk-btn:disabled{filter:grayscale(1);opacity:.55}
+.sk-closed{position:absolute;inset:0;z-index:2;display:grid;place-items:center;text-align:center;border-radius:14px;background:#0b0103cc;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);font-size:18px;font-weight:900;color:#ff9db0}.sk-closed small{font-size:12px;color:#e9c97a}
+.sk-slip{margin-top:10px;padding:8px 10px 10px;border-radius:14px;background:#000a;border:1px solid #d4ae5555}
+.sk-sl{display:flex;flex-wrap:wrap;gap:5px;max-height:120px;overflow:auto}
+.sk-sl button{border:1px solid #d4ae5566;background:#2a0510;color:#fbe9c4;border-radius:99px;padding:3px 4px 3px 9px;font-size:11px;font-weight:800;display:flex;align-items:center;gap:5px}
+.sk-sl button b{color:#ffe066}.sk-sl button span{width:16px;height:16px;border-radius:50%;background:#ff4d6d;color:#fff;display:grid;place-items:center;font-size:9px}
+.sk-msg{min-height:16px;text-align:center;font-size:12px;font-weight:800;color:#ffd35c;margin:6px 0 0}.sk-msg.f{animation:skpop .3s}
+.sk-bar{position:sticky;bottom:calc(62px + env(safe-area-inset-bottom));z-index:20;margin-top:6px;display:flex;align-items:center;gap:6px;padding:8px 8px 8px 12px;border-radius:16px;background:linear-gradient(#2a0510,#14020a);border:1px solid #d4ae55;box-shadow:0 -4px 18px #000c}
+.sk-bar>div{flex:1;line-height:1.3;font-size:11px;color:#e9c97a}.sk-bar>div b{color:#fff;font-size:14px}.sk-bar>div b.g{color:#7dffb0}
+.sk-bar .sk-btn{width:auto;padding:10px 14px;font-size:14px}
+.sk-bar .clr{border:1px solid #d4ae5566;background:none;color:#e9c97a;border-radius:10px;padding:9px 10px;font-weight:800}.sk-bar .clr:disabled{opacity:.4}
+.sk-chart{border-radius:14px;overflow:auto;border:1px solid #d4ae55;background:#0b0103}
+.sk-chart table{width:100%;border-collapse:collapse;font-size:12px}
+.sk-chart th{background:linear-gradient(#e6c068,#a07a22);color:#2a1600;padding:7px 3px;font-size:10px;line-height:1.15}.sk-chart th small{font-size:9px;font-weight:700}
+.sk-chart td{text-align:center;padding:7px 3px;border-top:1px solid #ffffff10;font:900 17px Georgia,serif;color:#ffe066}
+.sk-chart td:first-child{font:700 11px system-ui,sans-serif;color:#e9c97a;white-space:nowrap;text-align:left;padding-left:8px}
+.sk-chart tr.td td{background:#3a0712}.sk-chart td.e{color:#ffffff30}
+.sk-bt{display:flex;align-items:center;gap:10px;padding:10px 12px;margin-bottom:8px;border-radius:12px;background:linear-gradient(120deg,#3a0712,#1a0308);border:1px solid #d4ae5544}
+.sk-bt .k{min-width:54px;text-align:center;line-height:1}.sk-bt .k small{display:block;font-size:9px;font-weight:900;letter-spacing:1px;color:#e9c97a;margin-bottom:3px}.sk-bt .k b{font:900 24px Georgia,serif;color:#ffe066}
+.sk-bt>div:nth-child(2){flex:1;min-width:0;font-size:12px;line-height:1.35;color:#e9c97a}.sk-bt>div:nth-child(2) b{color:#fff;font-size:13px}
+.sk-bt em{flex:none;font-style:normal;font-size:11px;font-weight:900;padding:3px 9px;border-radius:99px}
+.sk-bt em.o{background:#f2a900;color:#111}.sk-bt em.w{background:#3ddc84;color:#032}.sk-bt em.l{background:#ff4d6d;color:#fff}.sk-bt em.v{background:#888;color:#fff}
+.sknav{position:fixed;left:0;right:0;bottom:0;z-index:40;display:grid;grid-template-columns:repeat(5,1fr);background:linear-gradient(#22040c,#0c0104);border-top:1px solid #d4ae55;padding-bottom:env(safe-area-inset-bottom)}
+.sknav button{position:relative;border:0;background:none;color:#c9b07a;font-size:11px;font-weight:800;padding:7px 0 6px;display:flex;flex-direction:column;align-items:center;gap:1px}.sknav button span{font-size:19px;filter:grayscale(.7)}
+.sknav button.on{color:#ffd35c}.sknav button.on span{filter:none}
+.sknav i{position:absolute;top:3px;right:18%;min-width:16px;height:16px;border-radius:8px;background:#ffd35c;color:#111;font-style:normal;font-size:10px;font-weight:900;display:grid;place-items:center}.sknav i:empty{display:none}
+.sknote{text-align:center;font-size:11px;color:#c9b07a99;margin:12px}
+.sk-rv{position:fixed;inset:0;z-index:200;display:grid;place-items:center;background:#000c;animation:fade .3s}
+.sk-rvb{width:min(320px,86vw);text-align:center;padding:20px 16px 16px;border-radius:24px;background:radial-gradient(circle at 50% 0%,#6a0f22,#1a0308 70%);border:2px solid #d4ae55;box-shadow:0 0 60px #ffb40055;animation:skpop .5s}
+.sk-rvb>small{font-size:11px;letter-spacing:2px;font-weight:900;color:#e9c97a}
+.sk-rvb h3{margin:4px 0 14px;font:italic 900 24px Georgia,serif;color:#ffd35c}
+.sk-rvd{display:flex;justify-content:center;gap:10px}
+.sk-rvd span{position:relative;width:88px;height:112px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(#1a1a1a 50%,#050505 50%);border:2px solid #d4ae55;box-shadow:inset 0 0 20px #000,0 8px 20px #000}
+.sk-rvd span::after{content:"";position:absolute;left:0;right:0;top:50%;height:2px;background:#000}
+.sk-rvd i{font-style:normal;font:900 74px/1 Georgia,serif;color:#ffe066;text-shadow:0 0 18px #ffb400}
+.sk-rvd span.lock{animation:sklock .45s;border-color:#ffe066;box-shadow:inset 0 0 20px #000,0 0 26px #ffb400}@keyframes sklock{40%{transform:scale(1.15)}}
+.sk-rvb p{margin:14px 0 12px;font-weight:900;font-size:15px;color:#fff;min-height:20px}.sk-rvb p.w{color:#7dffb0;font-size:18px}
+
+/* Satta King · classic results look */
+.skc-ban{margin:-10px -10px 0;padding:10px 6px;background:#fff23a;color:#000;text-align:center;font:400 44px/1.05 "Times New Roman",Times,serif;letter-spacing:1px;border-bottom:4px solid #000;text-shadow:0 1px 0 #fff8}
+.skc-ban.sm{font-size:24px;padding:12px 6px;background:#f0923a;color:#fff;text-shadow:0 2px 0 #0006}
+.skc-live{margin:0 -10px;padding:12px 8px 16px;background:#fff;text-align:center;font-family:"Times New Roman",Times,serif}
+.skc-dt{font-weight:700;font-size:23px;color:#7d1a8c}
+.skc-sub{font-weight:700;font-size:19px;color:#111;margin:2px 0 6px}
+.skc-nm{font-weight:900;font-size:38px;line-height:1.1;color:#e8368f;margin-top:6px}
+.skc-wt,.skc-rn{font-weight:900;font-size:40px;line-height:1.1;color:#2d7a1f}
+.skc-wt{animation:blink 1.4s infinite}
+.skc-rn{font-size:46px;animation:skpop .6s}
+.skc-in{display:block;font:700 12px system-ui,sans-serif;color:#555}.skc-in b{font-family:ui-monospace,Menlo,monospace}
+.skc-grid{margin:0 -10px;display:grid;grid-template-columns:1fr 1fr;gap:3px;background:#000;padding:3px 0}
+.skc-b{display:flex;flex-direction:column;align-items:center;gap:2px;padding:14px 4px 10px;border:0;background:#3a0d0d;color:#fff;font-family:"Times New Roman",Times,serif;min-width:0}
+.skc-b.f{grid-column:1/-1;background:#0f2a5c}
+.skc-b:active{filter:brightness(1.25)}
+.skc-b b{font-size:17px;font-weight:700;letter-spacing:.5px;text-align:center}
+.skc-b .skt{font-size:15px;font-weight:700;color:#ffe94a}
+.skc-b .skr{color:#fff;display:flex;align-items:center;gap:5px;font-size:30px;font-weight:700;margin:2px 0}
+.skc-b .skr em{font-style:normal;display:inline-grid;place-items:center;width:28px;height:28px;border-radius:4px;background:#3ca82c;border:2px solid #fff;color:#fff;font:900 16px system-ui}
+.skc-b .skr i{font-style:normal;color:#ffe94a;min-width:26px;text-align:center}
+.skc-b .skp{margin-top:4px;padding:3px 10px;border-radius:99px;font:800 10px system-ui,sans-serif;letter-spacing:.3px;background:#3ddc84;color:#032}
+.skc-b .skp [data-cd].hot{color:#fff!important;text-decoration:underline}
+.skc-b .skp u{text-decoration:none;font-family:ui-monospace,Menlo,monospace}
+.skc-b .skp.closed,.skc-b .skp.drawing{background:#ff4d6d;color:#fff}.skc-b .skp.off{background:#777;color:#fff}
+.skc-hint{text-align:center;font-size:12px;color:#e9c97a;margin:10px 0 0}
+.skc-ref{position:fixed;right:0;bottom:calc(74px + env(safe-area-inset-bottom));z-index:35;border:0;border-radius:10px 0 0 10px;padding:10px 14px;background:#f2a93a;color:#111;font:700 16px "Times New Roman",Times,serif;box-shadow:0 4px 12px #0008}
+.skc-ref.spin{animation:skpop .5s}
+.skc-sel{margin:0 -10px;display:flex;justify-content:center;gap:6px;padding:12px 8px;background:#0000ff}
+.skc-sel select{border:0;border-radius:99px;padding:7px 10px;background:#eee;color:#c0142c;font:400 15px "Times New Roman",Times,serif}
+.skc-sel button{border:0;border-radius:4px;padding:7px 14px;background:#6cb35e;color:#fff;font:400 16px "Times New Roman",Times,serif}
+.skc-tw{margin:10px -10px 0;overflow-x:auto;-webkit-overflow-scrolling:touch;background:#fff}
+.skc-t{border-collapse:collapse;min-width:100%;font-family:"Times New Roman",Times,serif}
+.skc-t thead th{position:sticky;top:0;background:#0000ee;color:#fff;font-size:13px;font-weight:700;padding:8px 8px;line-height:1.15;white-space:normal;min-width:62px}
+.skc-t thead th:first-child{background:#a5695a;min-width:54px;position:sticky;left:0;z-index:2}
+.skc-t tbody th{position:sticky;left:0;background:#cfc6e8;color:#d01c1c;font-size:12px;font-weight:700;padding:10px 6px;border:1px solid #000;white-space:nowrap}
+.skc-t td{text-align:center;padding:10px 6px;border:1px solid #000;color:#000;font-size:17px;font-weight:700}
+.skc-t tr.td th{background:#fff23a}.skc-t tr.td td{background:#fffbd1}
 </style>
 </head>
 <body>
@@ -838,21 +992,22 @@ function art(g){
  return `<div class="a-cr"><span class="bt">🏏</span><i class="bl"></i></div>`}
 const bonusDone=()=>{try{return localStorage.getItem("pbbonus")===today()}catch(e){return false}};
 function render(){
- W.alive=false;D.alive=false;if(view!=="live")lcStop();
+ W.alive=false;D.alive=false;if(view!=="live")lcStop();if(view!=="satta")skStop();
  document.body.classList.toggle("ingame",!!me&&view==="game");
  $("balp").hidden=!me;$("menu").hidden=!me;$("lv").innerHTML=me&&prof?lvHtml():"";if(me&&!busy)setBal(me.coins);
  if(!me){document.body.classList.remove("rlt");$("app").innerHTML=loginHtml();return}
  const gs=G.filter(g=>S.games&&S.games[g[0]]);
  if(view==="game"&&!gs.some(g=>g[0]===game))view="lobby";
- const rl=view==="game"||view==="live";
+ const rl=view==="game"||view==="live"||view==="satta";
  document.body.classList.toggle("ingame",view==="game"&&!rl);document.body.classList.toggle("rlt",rl);
- if(view==="lobby")lobby(gs);else if(view==="live")liveView();else if(game==="roulette")rouletteView();else tableView()}
+ if(view==="lobby")lobby(gs);else if(view==="live")liveView();else if(view==="satta")skView();else if(game==="roulette")rouletteView();else tableView()}
 function lobby(gs){
  const bon=S.bonus>0&&!bonusDone();
  let h=`<section class="hero"><div><small>Welcome back</small><h2>${esc(me.name)}</h2><div class="lv">${lvHtml()}</div></div>${bon?`<button class="gift" id="gift" data-act="bonus">🎁 +${fmt(S.bonus)}<small>Daily bonus</small></button>`:""}</section>`;
  if(S.maint)h+='<div class="card warn" style="margin-top:10px">Games are paused for maintenance. Please check back soon.</div>';
  if(msg)h+=`<div class="card" style="margin-top:10px">${esc(msg)}</div>`;
  h+='<h3 class="sec">Sports</h3><button class="tile t-live wide-tile" data-act="live"><span class="badge livebadge">● LIVE</span><div class="art"><div class="a-live"><span>🏏</span><i></i><i></i><i></i></div></div><div class="tl"><b>📡 Live Cricket</b><small>Real matches · live odds and scores</small></div></button>';
+ if(S.games&&S.games.satta)h+='<h3 class="sec">Satta King</h3><button class="tile t-sk wide-tile" data-act="satta"><span class="badge">DAILY</span><div class="art"><div class="a-sk"><span>👑</span><b>4</b><b>7</b></div></div><div class="tl"><b>👑 Satta King</b><small>Daily markets · Jodi, Andar, Bahar</small></div></button>';
  h+='<h3 class="sec">Games</h3>';
  if(!gs.length)h+='<div class="card">No games are available right now. Please check back soon.</div>';
  h+='<div class="tiles">'+gs.map((g,i)=>`<button class="tile t-${g[0]}" data-g="${g[0]}" style="animation-delay:${i*70}ms"><span class="badge">${g[4]}</span><div class="art">${art(g[0])}</div><div class="tl"><b>${g[1]} ${g[2]}</b><small>${g[3]}</small></div></button>`).join("")+'</div>';
@@ -1571,12 +1726,161 @@ async function enter(){
  if(!bad&&!s.data)bad="Could not load the game settings.";
  if(bad){await sb.auth.signOut();me=null;return err(bad)}
  me=p.data;S=s.data.data;msg="";view="lobby";loadProf();setBal(me.coins);render()}
-async function logout(){closeSheet();await sb.auth.signOut();me=null;prof=null;msg="";view="lobby";game="";pick=null;stake=0;sess=0;hist={};lastB={};RB={};RBundo=[];RBlast=null;RH=null;lastB2={};GH={};lcStop();LC.m=[];LC.b=[];LC.mk=[];LC.slip=null;render()}
+async function logout(){closeSheet();await sb.auth.signOut();me=null;prof=null;msg="";view="lobby";game="";pick=null;stake=0;sess=0;hist={};lastB={};RB={};RBundo=[];RBlast=null;RH=null;lastB2={};GH={};lcStop();LC.m=[];LC.b=[];LC.mk=[];LC.slip=null;skStop();SK.st=null;SK.res=[];SK.bets=[];SK.seen={};SK.slip={};render()}
+/* ---------------- Satta King ---------------- */
+const SK={st:null,res:[],bets:[],page:"home",mk:null,tab:"jodi",amt:10,slip:{},cA:[],cB:[],cut:false,btab:"open",off:0,chan:null,iv:null,poll:null,err:null,seen:{},busy:false,last:0};
+const SKAMT=[10,50,100,500,1000];
+const sk2=n=>n==null?"--":String(n).padStart(2,"0");
+const skNow=()=>Date.now()+SK.off;
+function skT(t){const[h,m]=String(t||"0:0").split(":").map(Number);return ((h%12)||12)+":"+String(m).padStart(2,"0")+(h<12?" AM":" PM")}
+function skDay(d,n){const x=new Date(d+"T00:00:00Z");x.setUTCDate(x.getUTCDate()+n);return x.toISOString().slice(0,10)}
+function skDate(d){if(!SK.st)return d;if(d===SK.st.today)return"Today";if(d===skDay(SK.st.today,1))return"Tomorrow";if(d===skDay(SK.st.today,-1))return"Yesterday";return new Date(d+"T00:00:00Z").toLocaleDateString("en-IN",{weekday:"short",day:"numeric",month:"short",timeZone:"UTC"})}
+function skCd(ms){if(ms<=0)return"00:00:00";const s=Math.floor(ms/1000);return[Math.floor(s/3600),Math.floor(s%3600/60),s%60].map(v=>String(v).padStart(2,"0")).join(":")}
+function skStop(){if(SK.chan){try{sb.removeChannel(SK.chan)}catch(e){}SK.chan=null}clearInterval(SK.iv);clearInterval(SK.poll);SK.iv=SK.poll=null}
+async function skLoad(){const s=await sb.rpc("sk_state");
+ if(s.error||!s.data){SK.err=s.error?s.error.message:"no data";return}
+ SK.err=null;SK.st=s.data;SK.off=Date.parse(s.data.now)-Date.now();
+ const r=await sb.from("sk_results").select("*").gte("draw_date",skDay(s.data.today,-20)).order("draw_date",{ascending:false});if(!r.error)SK.res=r.data||[];
+ const b=await sb.from("sk_bets").select("*").order("created_at",{ascending:false}).limit(300);if(!b.error)SK.bets=b.data||[]}
+const skKey=r=>r.market_id+"|"+r.draw_date;
+function skNewRes(){const n=SK.res.filter(r=>!SK.seen[skKey(r)]);n.forEach(r=>SK.seen[skKey(r)]=1);return n}
+function skStart(){skStop();
+ try{SK.chan=sb.channel("sk-x").on("postgres_changes",{event:"*",schema:"public",table:"sk_results"},()=>skRefresh()).on("postgres_changes",{event:"*",schema:"public",table:"sk_markets"},()=>skRefresh()).subscribe()}catch(e){}
+ SK.iv=setInterval(skTick,1000);SK.poll=setInterval(skRefresh,20000)}
+async function skRefresh(){if(SK.busy||view!=="satta")return;SK.busy=true;SK.last=Date.now();
+ try{await skLoad();const nw=skNewRes();skRender();for(const r of nw)await skReveal(r)}catch(e){console.error(e)}finally{SK.busy=false}}
+function skStatus(m){const now=skNow();if(!m.active||!SK.st.cfg.on)return"off";if(now<Date.parse(m.close_at))return"open";if(now<Date.parse(m.draw_at))return"closed";return"drawing"}
+function skTick(){if(view!=="satta"||!$("skbody")){skStop();return}const now=skNow();
+ document.querySelectorAll("[data-cd]").forEach(e=>{const t=+e.dataset.cd;e.textContent=skCd(t-now);e.classList.toggle("hot",t-now<600000)});
+ const dt=$("skdt");if(dt)dt.textContent=skDT();const ck=$("skclock");if(ck)ck.textContent=new Date(now).toLocaleTimeString("en-IN",{timeZone:"Asia/Kolkata",hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false});
+ if(!SK.st)return;let need=false,chg=false;
+ SK.st.markets.forEach(m=>{const st=skStatus(m);if(m._s&&m._s!==st)chg=true;m._s=st;if(st==="drawing"&&Date.now()-SK.last>5000)need=true});
+ if(chg)skRender();if(need)skRefresh()}
+function skMkt(id){return SK.st&&SK.st.markets.find(m=>m.id===id)}
+function skResOf(id,d){return SK.res.find(r=>r.market_id===id&&r.draw_date===d)}
+function skResHtml(r,big){if(!r)return big?'<span class="sk-wait">WAIT</span>':"–";if(r.void)return'<span class="sk-void">VOID</span>';return big?`<span class="sk-num">${sk2(r.num)}</span>`:sk2(r.num)}
+function skHome(){if(SK.err&&!SK.st)return `<div class="lempty">Satta King isn't set up yet.<br><small>Ask your admin to run the Satta King update.</small></div>`;
+ if(!SK.st)return'<div class="lempty">Loading markets…</div>';const td=SK.st.today,yd=skDay(td,-1),ms=SK.st.markets.filter(m=>m.active);
+ const lastR=SK.res.filter(r=>!r.void&&r.num!=null&&ms.some(m=>m.id===r.market_id)).sort((x,y)=>(y.draw_date>x.draw_date?1:y.draw_date<x.draw_date?-1:0)||Date.parse(y.drawn_at||0)-Date.parse(x.drawn_at||0))[0];
+ const nx=ms.slice().sort((x,y)=>Date.parse(x.draw_at)-Date.parse(y.draw_at))[0],lm=lastR&&skMkt(lastR.market_id);
+ const order=ms.slice().sort((x,y)=>x.time<y.time?-1:x.time>y.time?1:0);
+ const full=order.map((m,i)=>i%5===0);if(order.length&&!full[order.length-1]){let c=0;for(let i=order.length-1;i>=0&&!full[i];i--)c++;if(c%2)full[order.length-1]=true}
+ return `<div class="skc-ban">SATTA KING</div>
+ <div class="skc-live"><div class="skc-dt" id="skdt">${skDT()}</div><div class="skc-sub">Satta King Live Result Today</div>
+ ${nx?`<div class="skc-nm">${esc(nx.name.toUpperCase())}</div><div class="skc-wt">WAIT</div><small class="skc-in">result in <b data-cd="${Date.parse(nx.draw_at)}">${skCd(Date.parse(nx.draw_at)-skNow())}</b></small>`:""}
+ ${lm?`<div class="skc-nm">${esc(lm.name.toUpperCase())}</div><div class="skc-rn">${sk2(lastR.num)}</div>`:""}</div>
+ <div class="skc-grid">${order.map((m,i)=>{const y=skResOf(m.id,yd),t=skResOf(m.id,td),st=skStatus(m),c=Date.parse(m.close_at),d=Date.parse(m.draw_at);
+  const pl=st==="open"?`▶ PLAY · closes in <u data-cd="${c}">${skCd(c-skNow())}</u>`:st==="closed"?`🔒 CLOSED · result in <u data-cd="${d}">${skCd(d-skNow())}</u>`:st==="drawing"?"⏳ RESULT COMING…":"PAUSED";
+  return `<button class="skc-b${full[i]?" f":""}" data-sk="m:${m.id}"><b>${esc(m.name.toUpperCase())}</b><span class="skt">( ${skT(m.time)} )</span><div class="skr">{ ${y?(y.void?"✕":sk2(y.num)):"--"} } <em>➜</em> [ <i>${t?(t.void?"✕":sk2(t.num)):"&nbsp;&nbsp;"}</i> ]</div><span class="skp ${st}">${pl}</span></button>`}).join("")}</div>
+ <p class="skc-hint">Tap any market to play · betting closes <b>${SK.st.cfg.close} min</b> before each result<br>Jodi ${SK.st.cfg.jodi}× · Andar/Bahar ${SK.st.cfg.andar}×</p>
+ <button class="skc-ref" data-sk="refresh">⟳ Refresh</button>`}
+function skDT(){const d=new Date(skNow()),o={timeZone:"Asia/Kolkata"};return d.toLocaleDateString("en-GB",Object.assign({day:"2-digit",month:"long",year:"numeric"},o))+" "+d.toLocaleTimeString("en-US",Object.assign({hour:"2-digit",minute:"2-digit",hour12:true},o))}
+function skCross(){const out=[],a=SK.cA.slice().sort(),b=SK.cB.slice().sort();a.forEach(x=>b.forEach(y=>{if(SK.cut&&x===y)return;out.push(""+x+y)}));return out}
+function skSlipStats(){const c=SK.st.cfg,ks=Object.keys(SK.slip),tot=ks.reduce((a,k)=>a+SK.slip[k],0);let best=0;
+ for(let n=0;n<100;n++){const v=(SK.slip["j"+sk2(n)]||0)*c.jodi+(SK.slip["a"+Math.floor(n/10)]||0)*c.andar+(SK.slip["b"+n%10]||0)*c.bahar;if(v>best)best=v}
+ return{n:ks.length,tot,best}}
+function skLabel(k){return k[0]==="j"?"Jodi "+k.slice(1):k[0]==="a"?"Andar "+k.slice(1):"Bahar "+k.slice(1)}
+function skMarket(){const m=skMkt(SK.mk);if(!m){SK.page="home";return skHome()}
+ const st=skStatus(m),c=Date.parse(m.close_at),d=Date.parse(m.draw_at),cfg=SK.st.cfg,open=st==="open";
+ const last=SK.res.filter(r=>r.market_id===m.id).slice(0,10);
+ const cd=open?`<span>closes in</span><b data-cd="${c}">${skCd(c-skNow())}</b>`:st==="closed"?`<span>result in</span><b class="r" data-cd="${d}">${skCd(d-skNow())}</b>`:`<span>result</span><b class="r">soon</b>`;
+ const tabs=[["jodi","Jodi","00–99"],["andar","Andar","1st digit"],["bahar","Bahar","2nd digit"],["cross","Crossing","combos"]];
+ let board="";
+ if(SK.tab==="jodi"){board=`<div class="sk-abh"><span>Pick exact numbers</span><b>pays ${cfg.jodi}×</b></div><div class="sk-grid">`;for(let n=0;n<100;n++){const k="j"+sk2(n),v=SK.slip[k];board+=`<button class="skn${v?" on":""}" data-sk="n:${k}"><b>${sk2(n)}</b>${v?`<i>${short(v)}</i>`:""}</button>`}board+="</div>"}
+ else if(SK.tab==="andar"||SK.tab==="bahar"){const p=SK.tab[0],cols=["#e11d48","#f59e0b","#16a34a","#0ea5e9","#7c3aed","#db2777","#059669","#2563eb","#ea580c","#9333ea"];
+  board=`<div class="sk-abh"><span>${p==="a"?"First digit (Andar) — the 4 in 47":"Second digit (Bahar) — the 7 in 47"}</span><b>pays ${p==="a"?cfg.andar:cfg.bahar}×</b></div><div class="sk-ab">${[0,1,2,3,4,5,6,7,8,9].map(i=>{const k=p+i,v=SK.slip[k];return `<button class="skd${v?" on":""}" data-sk="n:${k}" style="--bc:${cols[i]}">${i}${v?`<i>${short(v)}</i>`:""}</button>`}).join("")}</div>`}
+ else{const ns=skCross();board=`<div class="sk-cr"><h4>ANDAR DIGITS (first)</h4><div class="sk-dg">${[0,1,2,3,4,5,6,7,8,9].map(i=>`<button class="${SK.cA.includes(i)?"on":""}" data-sk="c:a${i}">${i}</button>`).join("")}</div>
+  <h4>BAHAR DIGITS (second)</h4><div class="sk-dg">${[0,1,2,3,4,5,6,7,8,9].map(i=>`<button class="${SK.cB.includes(i)?"on":""}" data-sk="c:b${i}">${i}</button>`).join("")}</div>
+  <button class="sk-tg${SK.cut?" on":""}" data-sk="cut">✂️ Without doubles (11, 22…)</button>
+  <div class="sk-cprev">${ns.map(n=>`<i>${n}</i>`).join("")||'<small>Pick at least one digit in each row.</small>'}</div>
+  <button class="sk-btn" data-sk="cadd"${ns.length?"":" disabled"}>Add ${ns.length} Jodi${ns.length===1?"":"s"} × ${fmt(SK.amt)} = ${fmt(ns.length*SK.amt)}</button></div>`}
+ const ss=skSlipStats(),ks=Object.keys(SK.slip);
+ return `<div class="sk-mh"><button class="skhb" data-sk="nav:home" aria-label="Back to markets">‹</button><div><b>${esc(m.name)}</b><small>Draw ${skDate(m.date)} · ${skT(m.time)}</small></div><div class="sk-mcd">${cd}</div></div>
+ <div class="sk-last"><span>Last:</span>${last.length?last.map(r=>`<i>${r.void?"✕":sk2(r.num)}</i>`).join(""):"<span>no results yet</span>"}</div>
+ <div class="sk-tabs">${tabs.map(t=>`<button class="${SK.tab===t[0]?"on":""}" data-sk="tab:${t[0]}">${t[1]}<small>${t[2]}</small></button>`).join("")}</div>
+ <div class="sk-amt"><span>AMOUNT</span>${SKAMT.map(v=>`<button class="${SK.amt===v?"on":""}" data-sk="amt:${v}" style="--cc:${CHC[v]}">${short(v)}</button>`).join("")}</div>
+ <div class="sk-bw">${board}${open?"":`<div class="sk-closed"><div>🔒 Betting closed<br><small>${st==="off"?"This market is paused":"Result at "+skT(m.time)}</small></div></div>`}</div>
+ ${ks.length?`<div class="sk-slip"><div class="sk-abh"><span>Your slip</span><b>${ks.length} number${ks.length>1?"s":""}</b></div><div class="sk-sl">${ks.map(k=>`<button data-sk="x:${k}">${skLabel(k)} · <b>${fmt(SK.slip[k])}</b><span>✕</span></button>`).join("")}</div></div>`:""}
+ <p class="sk-msg" id="skmsg"></p>
+ <div class="sk-bar"><div>${ss.n} bet${ss.n===1?"":"s"} · Total <b>${fmt(ss.tot)}</b><br>Win up to <b class="g">${fmt(ss.best)}</b></div><button class="clr" data-sk="clr"${ss.n?"":" disabled"}>Clear</button><button class="sk-btn" id="skplace" data-sk="place"${ss.n&&open?"":" disabled"}>PLACE BET</button></div>`}
+async function skChartLoad(){const t=SK.st?SK.st.today:new Date().toISOString().slice(0,10);if(!SK.cm)SK.cm={y:+t.slice(0,4),m:+t.slice(5,7)};
+ const y=SK.cm.y,m=SK.cm.m,first=y+"-"+String(m).padStart(2,"0")+"-01",last=skDay(new Date(Date.UTC(y,m,1)).toISOString().slice(0,10),-1);
+ const r=await sb.from("sk_results").select("*").gte("draw_date",first).lte("draw_date",last);SK.cres=r.error?[]:(r.data||[]);SK.cload=first}
+function skChart(){if(!SK.st)return skHome();const ms=SK.st.markets.slice().sort((x,y)=>x.time<y.time?-1:1),cm=SK.cm||{y:+SK.st.today.slice(0,4),m:+SK.st.today.slice(5,7)};
+ const MN=["January","February","March","April","May","June","July","August","September","October","November","December"],ty=+SK.st.today.slice(0,4);
+ const days=new Date(Date.UTC(cm.y,cm.m,0)).getUTCDate(),res=SK.cres||[];let rows="";
+ for(let d=1;d<=days;d++){const ds=cm.y+"-"+String(cm.m).padStart(2,"0")+"-"+String(d).padStart(2,"0");if(ds>SK.st.today&&d>1&&rows&&false)break;
+  rows+=`<tr class="${ds===SK.st.today?"td":""}"><th>${String(d).padStart(2,"0")}-${String(cm.m).padStart(2,"0")}</th>${ms.map(m=>{const r=res.find(x=>x.market_id===m.id&&x.draw_date===ds);return `<td>${r?(r.void?"✕":sk2(r.num)):"--"}</td>`}).join("")}</tr>`}
+ return `<div class="skc-ban sm">SATTA KING RECORD CHART ${cm.y}</div>
+ <div class="skc-sel"><select id="sky" aria-label="Year">${[ty-1,ty].map(y=>`<option${y===cm.y?" selected":""}>${y}</option>`).join("")}</select><select id="skmo" aria-label="Month">${MN.map((n,i)=>`<option value="${i+1}"${i+1===cm.m?" selected":""}>${n}</option>`).join("")}</select><button data-sk="chartgo">Submit</button></div>
+ <div class="skc-tw"><table class="skc-t"><thead><tr><th>DATE</th>${ms.map(m=>`<th>${esc(m.name.toUpperCase())}</th>`).join("")}</tr></thead><tbody>${SK.cload?rows:'<tr><td colspan="9">Loading…</td></tr>'}</tbody></table></div>
+ <button class="skc-ref" data-sk="refresh">⟳ Refresh</button>`}
+function skBets(){const open=SK.bets.filter(b=>b.status==="open"),done=SK.bets.filter(b=>b.status!=="open"),list=SK.btab==="open"?open:done;
+ const won=done.filter(b=>b.status==="won").reduce((a,b)=>a+ +b.payout,0);
+ return `<div class="sk-sec">MY BETS</div><div class="sk-tabs two"><button class="${SK.btab==="open"?"on":""}" data-sk="bt:open">Open<small>${open.length} bets</small></button><button class="${SK.btab==="done"?"on":""}" data-sk="bt:done">Settled<small>won ${fmt(won)}</small></button></div>`+
+ (list.length?list.map(b=>{const m=skMkt(b.market_id),r=skResOf(b.market_id,b.draw_date),st={open:["OPEN","o"],won:["WON +"+fmt(b.payout),"w"],lost:["LOST","l"],void:["REFUNDED","v"]}[b.status];
+  return `<div class="sk-bt"><div class="k"><small>${b.btype.toUpperCase()}</small><b>${b.btype==="jodi"?sk2(b.pick):b.pick}</b></div><div><b>${esc(m?m.name:"Market")}</b> · ${skDate(b.draw_date)}<br>Stake ${fmt(b.stake)} · pays ${+b.mult}×${r&&!r.void?" · result "+sk2(r.num):""}</div><em class="${st[1]}">${st[0]}</em></div>`}).join(""):'<div class="lempty">No bets here yet.</div>')}
+function skRender(){const body=$("skbody");if(!body)return;const sy=scrollY;
+ body.innerHTML=SK.page==="mk"?skMarket():SK.page==="chart"?skChart():SK.page==="bets"?skBets():skHome();
+ document.querySelectorAll(".sknav button[data-sk]").forEach(b=>b.classList.toggle("on",b.dataset.sk==="nav:"+(SK.page==="mk"?"home":SK.page)));
+ const nb=$("sknb"),ob=SK.bets.filter(b=>b.status==="open").length;if(nb)nb.textContent=ob||"";
+ skTick();if(Math.abs(scrollY-sy)>2)scrollTo(0,sy)}
+function skMsg(t){const e=$("skmsg");if(e){e.textContent=t;e.classList.remove("f");void e.offsetWidth;e.classList.add("f")}tone(220,.1,"square",.04)}
+function skErr(m){m=String(m);if(/closed/.test(m))return"Betting is closed for this draw";if(/bad stake/.test(m))return"Check your amounts (max "+fmt(SK.st.cfg.max)+" per bet slip, and enough coins)";if(/disabled/.test(m))return"Satta King is switched off right now";if(/maintenance/.test(m))return"Games are paused for maintenance";if(/sk_place|PGRST202|schema cache/.test(m))return"Satta King needs the database update";return friendly(m)}
+async function skPlace(){const m=skMkt(SK.mk);if(!m||skStatus(m)!=="open")return skMsg("Betting is closed for this draw");const ss=skSlipStats();
+ if(!ss.n)return skMsg("Tap numbers to add bets");if(ss.tot>me.coins)return skMsg("Not enough coins");if(ss.tot>SK.st.cfg.max)return skMsg("Max "+fmt(SK.st.cfg.max)+" per bet slip");
+ const b=$("skplace");if(b)b.disabled=true;ac();
+ const r=await sb.rpc("sk_place",{p_market:m.id,p_bets:SK.slip});
+ if(r.error){if(b)b.disabled=false;return skMsg(skErr(r.error.message))}
+ me.coins=r.data.balance;tweenBal(me.coins,600);chipSound(4);SND.nomore();
+ const bb=$("skbody").querySelector(".sk-bw");if(bb){const rc=bb.getBoundingClientRect();burst(30,true,rc.left+rc.width/2,rc.top+rc.height/2)}
+ toast("🎟️","Bet placed",r.data.count+" number"+(r.data.count>1?"s":"")+" · "+fmt(r.data.total)+" on "+r.data.market);
+ SK.slip={};await skLoad();skNewRes();skRender();skMsg("✔ Placed! Good luck for "+skT(m.time))}
+async function skReveal(r){if(r.void||r.num==null)return;const m=skMkt(r.market_id),name=m?m.name:"Market";
+ const myb=SK.bets.filter(b=>b.market_id===r.market_id&&b.draw_date===r.draw_date),won=myb.reduce((a,b)=>a+(b.status==="won"?+b.payout:0),0);
+ const ov=document.createElement("div");ov.className="sk-rv";ov.innerHTML=`<div class="sk-rvb"><small>👑 RESULT DECLARED</small><h3>${esc(name)}</h3><div class="sk-rvd"><span><i id="rv1">0</i></span><span><i id="rv2">0</i></span></div><p id="rvp">Drawing…</p><button class="sk-btn" id="rvok">OK</button></div>`;
+ document.body.appendChild(ov);let done=false;const close=()=>{if(done)return;done=true;ov.remove()};ov.querySelector("#rvok").onclick=close;ac();
+ const dg=[Math.floor(r.num/10),r.num%10];
+ for(let k=0;k<2;k++){const el=ov.querySelector("#rv"+(k+1));if(!el)break;const t0=performance.now(),dur=(1300+k*600)*spd();let lt=0;
+  await new Promise(res=>{const step=t=>{if(done)return res();const p=(t-t0)/dur;if(p>=1){el.textContent=dg[k];el.parentNode.classList.add("lock");tone(k?988:784,.18,"triangle",.14);sfx("thunk",.3,1.1);return res()}
+   if(t-lt>60+p*120){lt=t;el.textContent=Math.floor(Math.random()*10);SND.tick()}requestAnimationFrame(step)};requestAnimationFrame(step)})}
+ const p=ov.querySelector("#rvp");
+ if(p){if(won>0){p.className="w";p.textContent="🏆 You won +"+fmt(won)+"!";SND.win();const rc=ov.querySelector(".sk-rvd").getBoundingClientRect();fireworks(rc.left+rc.width/2,rc.top);setTimeout(()=>fireworks(rc.left+20,rc.top+30),300);flyCoins&&flyCoins(ov.querySelector(".sk-rvd"),14)}
+  else if(myb.length){p.textContent="No win this time · better luck next draw";SND.lose()}else p.textContent=name+" result: "+sk2(r.num)}
+ if(myb.length){const pr=await sb.from("profiles").select("coins").eq("id",me.id).single();if(pr.data){me.coins=pr.data.coins;tweenBal(me.coins,900)}}
+ await wait(4500);close()}
+async function skView(){
+ $("app").innerHTML=`<div class="skv"><div class="skh"><button class="skhb" data-act="lobby" aria-label="Back to games">‹</button><div class="sklogo"><b>SATTA KING</b><small>PLAYBOOK</small></div><button class="skhb" data-act="rules" aria-label="How to play">?</button><div class="skbal"><small>BALANCE</small><b id="rbal">${fmt(shown)}</b></div></div>
+<div id="skbody"><div class="lempty">Loading markets…</div></div><p class="sknote">Play money only · coins have no cash value · results are drawn at random by the server</p></div>
+<div class="sknav"><button data-sk="nav:home" class="on"><span>🏠</span>Markets</button><button data-sk="nav:chart"><span>📊</span>Chart</button><button data-sk="nav:bets"><span>🎟️</span>My Bets<i id="sknb"></i></button><button data-act="lobby"><span>🎰</span>Casino</button><button data-act="menu"><span>☰</span>Menu</button></div>`;
+ SK.busy=true;try{await skLoad()}finally{SK.busy=false}SK.res.forEach(r=>SK.seen[skKey(r)]=1);skRender();skStart()}
+function skAct(a){const i=a.indexOf(":"),k=i<0?a:a.slice(0,i),v=i<0?"":a.slice(i+1);
+ if(k==="nav"){SK.page=v;SND.click();skRender();scrollTo(0,0);if(v==="chart"){SK.cload=null;skRender();skChartLoad().then(skRender)}return}
+ if(k==="chartgo"){SK.cm={y:+$("sky").value,m:+$("skmo").value};SND.click();SK.cload=null;skRender();skChartLoad().then(skRender);return}
+ if(k==="refresh"){SND.click();const b=document.querySelector(".skc-ref");if(b)b.classList.add("spin");skRefresh().then(()=>{if(SK.page==="chart")skChartLoad().then(skRender)});return}
+ if(k==="m"){SK.mk=+v;SK.page="mk";SK.slip={};SK.tab="jodi";SK.cA=[];SK.cB=[];SND.click();skRender();scrollTo(0,0);return}
+ if(k==="tab"){SK.tab=v;SND.click();return skRender()}
+ if(k==="amt"){SK.amt=+v;chipSound(1);return skRender()}
+ if(k==="bt"){SK.btab=v;SND.click();return skRender()}
+ if(k==="place")return skPlace();
+ const m=skMkt(SK.mk),open=m&&skStatus(m)==="open";
+ if(k==="n"){if(!open)return skMsg("Betting is closed for this draw");const cur=SK.slip[v]||0;if(!cur&&Object.keys(SK.slip).length>=120)return skMsg("Max 120 numbers in one slip");
+  SK.slip[v]=cur+SK.amt;chipSound(1);skRender();const e=document.querySelector(`[data-sk="n:${v}"]`);if(e)e.classList.add("pop");return}
+ if(k==="x"){delete SK.slip[v];SND.click();return skRender()}
+ if(k==="clr"){SK.slip={};chipSound(3);return skRender()}
+ if(k==="c"){const arr=v[0]==="a"?SK.cA:SK.cB,d=+v[1],j=arr.indexOf(d);if(j>=0)arr.splice(j,1);else arr.push(d);SND.click();return skRender()}
+ if(k==="cut"){SK.cut=!SK.cut;SND.click();return skRender()}
+ if(k==="cadd"){if(!open)return skMsg("Betting is closed for this draw");const ns=skCross();if(!ns.length)return skMsg("Pick Andar and Bahar digits first");
+  const add=ns.filter(n=>!SK.slip["j"+n]).length;if(Object.keys(SK.slip).length+add>120)return skMsg("Too many numbers (max 120 in one slip)");
+  ns.forEach(n=>SK.slip["j"+n]=(SK.slip["j"+n]||0)+SK.amt);chipSound(4);SK.cA=[];SK.cB=[];SK.tab="jodi";skRender();return skMsg(ns.length+" Jodi numbers added to your slip")}}
+function skRulesHtml(){const c=(SK.st&&SK.st.cfg)||{jodi:90,andar:9,bahar:9,close:10};
+ return `<h3>👑 How to play Satta King</h3><p>Every market draws one number from <b>00 to 99</b> once a day at its fixed time (India time). Betting closes ${c.close} minutes before the draw. The server picks every result at random.</p><ul class="pays"><li><span>Jodi · exact number (e.g. 47)</span><b>${c.jodi}×</b></li><li><span>Andar · first digit (the 4 in 47)</span><b>${c.andar}×</b></li><li><span>Bahar · second digit (the 7 in 47)</span><b>${c.bahar}×</b></li></ul><p class="meta">Crossing: pick some Andar digits and some Bahar digits, and every combination is added as a Jodi bet. "Without doubles" leaves out 00, 11, 22… Winnings are added to your balance as soon as the result is declared. Coins are play-money only.</p><button class="btn wide" data-act="close">GOT IT</button>`}
 document.addEventListener("click",async e=>{
  if(e.target.id==="sheet")return closeSheet();
- const t=e.target.closest("[data-p],[data-g],[data-s],[data-act],[data-t],[data-b],[data-rc],[data-xo],[data-xm],[data-xk],[data-xnav],[data-xt],[data-xbt]");if(!t||t.disabled)return;
+ const t=e.target.closest("[data-p],[data-g],[data-s],[data-act],[data-t],[data-b],[data-rc],[data-xo],[data-xm],[data-xk],[data-xnav],[data-xt],[data-xbt],[data-sk]");if(!t||t.disabled)return;
  try{
   if(t.dataset.t)return setTheme(t.dataset.t);
+  if(t.dataset.sk)return skAct(t.dataset.sk);
   if(t.dataset.xo)return xOdds(t.dataset.xo);
   if(t.dataset.xm)return xOpenMatch(t.dataset.xm);
   if(t.dataset.xk)return xKey(t.dataset.xk);
@@ -1601,7 +1905,8 @@ document.addEventListener("click",async e=>{
   else if(a==="x2"){if(stake<1)return flash("Add chips first");addStake(stake,t)}
   else if(a==="skip"){ff=true;t.hidden=true}
   else if(a==="lobby"){if(busy)return;view="lobby";SND.click();render();scrollTo(0,0)}
-  else if(a==="rules")openSheet(view==="live"?lcRulesHtml():rulesHtml());
+  else if(a==="rules")openSheet(view==="live"?lcRulesHtml():view==="satta"?skRulesHtml():rulesHtml());
+  else if(a==="satta"){if(busy)return;view="satta";SK.page="home";SK.slip={};SND.click();ac();render();scrollTo(0,0)}
   else if(a==="live"){if(busy)return;view="live";LC.page="home";LC.slip=null;SND.click();ac();render();scrollTo(0,0)}
 
   else if(a==="close")closeSheet();
