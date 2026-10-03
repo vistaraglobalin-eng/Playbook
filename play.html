@@ -406,6 +406,18 @@ body.rlt main{max-width:520px;padding:0;padding-bottom:calc(66px + env(safe-area
 .rl-res{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;z-index:4}
 .rl-res b{width:86px;height:86px;border-radius:50%;display:grid;place-items:center;font-size:42px;font-weight:900;border:4px solid #fff;box-shadow:0 0 34px #fffa,0 8px 20px #000a;animation:resIn .7s cubic-bezier(.2,1.6,.4,1) both}
 .rl-wz .ann{top:auto;bottom:0}
+.rtimer{position:absolute;left:4px;top:2px;width:66px;height:66px;z-index:6;display:grid;place-items:center;border-radius:50%;background:radial-gradient(circle at 35% 30%,#3a0812,#0d0105);box-shadow:0 0 0 2px #d4ae55,0 6px 16px #000b;transition:opacity .3s,transform .3s}
+.rtimer svg{position:absolute;inset:3px;width:60px;height:60px;transform:rotate(-90deg)}
+.rtimer circle{fill:none;stroke-width:5}.rtimer .bg{stroke:#ffffff1f}.rtimer .fg{stroke:#3ddc84;stroke-linecap:round;stroke-dasharray:163.4;transition:stroke .3s}
+.rtimer b{position:relative;font:900 24px/1 Georgia,serif;color:#fff;text-shadow:0 0 8px #3ddc84}
+.rtimer small{position:absolute;bottom:9px;font-size:7px;font-weight:900;letter-spacing:1px;color:#ffe9a8}
+.rtimer.mid .fg{stroke:#ffc23d}.rtimer.mid b{text-shadow:0 0 8px #ffc23d}
+.rtimer.warn .fg{stroke:#ff3b3b}.rtimer.warn b{color:#ffd0d0;text-shadow:0 0 10px #ff3b3b}.rtimer.warn{animation:rtp .5s infinite alternate}
+.rtimer.off{opacity:.45;transform:scale(.9);animation:none}
+.tg .rtimer{transform:scale(.82);transform-origin:0 0}.tg .rtimer.off{transform:scale(.74)}
+.tg-kingjack .rtimer{left:auto;right:58px}.tg-num .rtimer{left:0;transform:scale(.72)}.tg-num .rtimer.off{transform:scale(.66)}
+.tg .rtimer.warn{animation-name:rtp2}@keyframes rtp2{to{transform:scale(.9);box-shadow:0 0 0 2px #ff3b3b,0 0 22px #ff3b3b}}
+@keyframes rtp{to{transform:scale(1.08);box-shadow:0 0 0 2px #ff3b3b,0 0 22px #ff3b3b}}
 .rl-mid{display:grid;grid-template-columns:40px minmax(0,1fr) 60px;gap:7px;padding:6px 8px 4px;align-items:start}
 .hcol{display:flex;flex-direction:column;gap:3px;align-items:center}
 .hcol .hi{font-size:15px;margin:4px 0 1px}
@@ -993,13 +1005,13 @@ function rHistHtml(){const c=n=>n===0?"g":RED.includes(n)?"r":"k";let h='<span c
 function rouletteView(){rHistLoad();
  $("app").innerHTML=`<div class="rl"><div class="rl-top"><button class="cb sm" data-act="lobby" aria-label="Back to games">‹</button><div class="rl-logo"><b>Roulette</b><small>PLAYBOOK · EUROPEAN</small></div><span class="streak" id="strk">${streakHtml()}</span><button class="cb sm" data-act="rules" aria-label="How to play">?</button><button class="cb sm" id="rmu" data-act="mute" aria-label="Sound on or off">${mute?"🔇":"🔊"}</button><button class="cb sm" data-act="menu" aria-label="Menu">☰</button></div>
 ${S.maint?'<div class="card warn" style="margin:8px">Games are paused for maintenance.</div>':""}
-<div class="rl-wz" id="stage"><canvas id="wc" width="720" height="720"></canvas><div class="rl-res" id="rres"></div><div class="ann" id="ann"></div><button class="skip" id="skip" data-act="skip" hidden>⏩ Skip</button></div>
+<div class="rl-wz" id="stage"><canvas id="wc" width="720" height="720"></canvas>${rTimerHtml()}<div class="rl-res" id="rres"></div><div class="ann" id="ann"></div><button class="skip" id="skip" data-act="skip" hidden>⏩ Skip</button></div>
 <div class="rl-mid"><div class="hcol" id="hcol">${rHistHtml()}</div><div class="rtab" id="rtab">${rTableHtml()}</div>
 <div class="ccol"><button class="cb" data-act="r-rebet" aria-label="Rebet">↻</button><button class="cb tx" data-act="r-x2" aria-label="Double all bets">2X</button><button class="cb spin" id="rgo" data-act="r-spin" aria-label="Spin"${S.maint?" disabled":""}>SPIN</button><button class="cb" data-act="r-undo" aria-label="Undo last chip">↶</button><button class="cb" data-act="r-clear" aria-label="Clear all bets">✕</button>
 <div class="crack">${RCH.map(v=>`<button class="cp${v===rchip?" sel":""}" data-rc="${v}" style="--cc:${CHC[v]}" aria-label="Chip ${v}">${short(v)}</button>`).join("")}</div></div></div>
 <p class="rl-note">Play money only · coins have no cash value · max total bet ${fmt(S.maxStake)} per spin</p></div>
 <div class="rl-bar"><div><small>BALANCE</small><b id="rbal">${fmt(shown)}</b></div><div><small>BET</small><b id="rbet">0</b></div><div><small>WIN</small><b id="rwin">0</b></div></div>`;
- rouStart();rDraw();rUpd();announce("PLACE YOUR BETS",true)}
+ rouStart();rDraw();rUpd();announce("PLACE YOUR BETS",true);rTimerStart()}
 function rDraw(){document.querySelectorAll("#rtab .tcp").forEach(e=>e.remove());
  Object.keys(RB).forEach(k=>{const el=document.querySelector(`#rtab [data-b="${k}"]`);if(el)el.insertAdjacentHTML("beforeend",`<span class="cp tcp" style="--cc:${chipCol(RB[k])}">${short(RB[k])}</span>`)})}
 function rUpd(){if($("rbet"))$("rbet").textContent=fmt(rTotal());if($("betc"))$("betc").textContent=fmt(rTotal())}
@@ -1030,12 +1042,24 @@ async function rCall(bets){let r=await sb.rpc("play_roulette",{p_bets:bets});if(
    return{data:{balance:q.data.balance,n:+q.data.big,total:bets[k],payout:bets[k]*q.data.mult,wins:q.data.mult>0?[k]:[]}}}
   return{error:{message:"PB:Several bets need the roulette update (roulette_multi.sql)"}}}
  return r}
+const RTSEC=30,RT={end:0,iv:0,last:-1},TIMED=["roulette","lucky7","kingjack","num"];
+function rTimerHtml(){return TIMED.includes(game)?'<div class="rtimer" id="rtimer" aria-label="Betting time left"><svg viewBox="0 0 60 60"><circle class="bg" cx="30" cy="30" r="26"/><circle class="fg" cx="30" cy="30" r="26"/></svg><b>30</b><small>BET TIME</small></div>':""}
+function rTimerStop(off){clearInterval(RT.iv);RT.iv=0;const el=$("rtimer");if(el&&off){el.className="rtimer off";el.querySelector("b").textContent="—"}}
+function rTimerStart(){rTimerStop();RT.end=Date.now()+RTSEC*1000;RT.last=-1;rTimerTick();RT.iv=setInterval(rTimerTick,100)}
+function rTimerTick(){const el=$("rtimer");if(!el||!TIMED.includes(game)){rTimerStop();return}if(busy)return;
+ const left=Math.max(0,RT.end-Date.now()),sec=Math.ceil(left/1000);
+ el.querySelector(".fg").style.strokeDashoffset=(163.4*(1-left/(RTSEC*1000))).toFixed(1);
+ if(sec!==RT.last){RT.last=sec;el.querySelector("b").textContent=sec;el.className="rtimer"+(sec<=5?" warn":sec<=10?" mid":"");
+  if(sec<=5&&sec>0)tone(sec<=3?1180:880,.07,"square",.035);if(sec===5)announce("LAST BETS · HURRY!",false,"red")}
+ if(left>0)return;rTimerStop(true);
+ if(rTotal()>0&&!S.maint){doSpin().then(()=>{if(TIMED.includes(game)&&!busy&&!RT.iv)rTimerStart()})}
+ else{announce("NO BETS · NEW ROUND",false,"red");setTimeout(()=>{if(TIMED.includes(game)&&!busy&&$("rtimer")){announce("PLACE YOUR BETS",true);rTimerStart()}},1400)}}
 async function rSpin(){if(busy)return;const tot=rTotal();
  if(S.maint)return rFlash("Paused for maintenance");if(tot<1)return rFlash("Tap the table to place chips");if(tot>me.coins)return rFlash("Not enough coins");if(tot>S.maxStake)return rFlash("Max total bet "+fmt(S.maxStake));
- busy=true;rLock(true);rClearMarks();const bets=Object.assign({},RB);RBlast=Object.assign({},RB);lastB2[game]=RBlast;ac();buildSfx();
+ rTimerStop(true);busy=true;rLock(true);rClearMarks();const bets=Object.assign({},RB);RBlast=Object.assign({},RB);lastB2[game]=RBlast;ac();buildSfx();
  announce("NO MORE BETS",false,"red");SND.nomore();tweenBal(me.coins-tot,400);$("rwin").textContent="0";scrollTo({top:0,behavior:RM?"auto":"smooth"});
  let r;try{r=await rCall(bets)}catch(e){r={error:{message:String(e)}}}
- if(r.error){busy=false;rLock(false);tweenBal(me.coins,300);const em=String(r.error.message);rFlash(em.indexOf("PB:")===0?em.slice(3):friendly(em));return}
+ if(r.error){busy=false;rLock(false);tweenBal(me.coins,300);const em=String(r.error.message);rFlash(em.indexOf("PB:")===0?em.slice(3):friendly(em));rTimerStart();return}
  const o=r.data,n=+o.n,wins=o.wins||[];$("skip").hidden=false;
  try{await anRou2(n)}finally{if($("skip"))$("skip").hidden=true;ff=false}
  me.coins=o.balance;sess+=o.payout-o.total;RH.unshift(n);RH=RH.slice(0,100);try{localStorage.setItem("pbrh_"+me.code,JSON.stringify(RH))}catch(e){}
@@ -1043,7 +1067,7 @@ async function rSpin(){if(busy)return;const tot=rTotal();
  rWinKeys(n).forEach(k=>{const e=document.querySelector(`#rtab [data-b="${k}"]`);if(e)e.classList.add("win")});
  const ne=document.querySelector(`#rtab [data-b="n${n}"]`);if(ne)ne.insertAdjacentHTML("beforeend",'<i class="dolly"></i>');
  announce(n+" "+(n===0?"GREEN":RED.includes(n)?"RED":"BLACK"),false,o.payout>0?"gold":"");await wait(700);
- await tSettle(bets,o,wins,$("wc"),k=>k[0]==="n"?35:/^[dc]\d$/.test(k)?2:1)}
+ await tSettle(bets,o,wins,$("wc"),k=>k[0]==="n"?35:/^[dc]\d$/.test(k)?2:1);if(TIMED.includes(game))rTimerStart()}
 async function tSettle(bets,o,wins,sink,pm){
  Object.keys(bets).forEach((k,i)=>{if(wins.includes(k))return;const el=document.querySelector(`#rtab [data-b="${k}"] .tcp`);if(el){cpFly(el,sink,bets[k],{fade:1,delay:i*40,ms:520});el.remove()}});
  if(Object.keys(bets).some(k=>!wins.includes(k)))setTimeout(()=>chipSound(4),150);
@@ -1124,27 +1148,27 @@ function hHtml(){return '<span class="hi" title="Last results">🕘</span>'+GH[g
 function tableView(){const d=TG[game];hLoad();
  $("app").innerHTML=`<div class="rl tg tg-${game}"><div class="rl-top"><button class="cb sm" data-act="lobby" aria-label="Back to games">‹</button><div class="rl-logo"><b>${d.t}</b><small>${d.s}</small></div><span class="streak" id="strk">${streakHtml()}</span><button class="cb sm" data-act="rules" aria-label="How to play">?</button><button class="cb sm" id="rmu" data-act="mute" aria-label="Sound on or off">${mute?"🔇":"🔊"}</button><button class="cb sm" data-act="menu" aria-label="Menu">☰</button></div>
 ${S.maint?'<div class="card warn" style="margin:8px">Games are paused for maintenance.</div>':""}
-<div class="tg-scene" id="stage">${d.scene()}<div class="ann" id="ann"></div><button class="skip" id="skip" data-act="skip" hidden>⏩ Skip</button></div>
+<div class="tg-scene" id="stage">${d.scene()}${rTimerHtml()}<div class="ann" id="ann"></div><button class="skip" id="skip" data-act="skip" hidden>⏩ Skip</button></div>
 <div class="rl-mid"><div class="hcol" id="hcol">${hHtml()}</div><div class="tboard" id="${d.zones?"l7board":"rtab"}">${d.board()}</div>
 <div class="ccol"><button class="cb" data-act="r-rebet" aria-label="Rebet">↻</button><button class="cb tx" data-act="r-x2" aria-label="Double all bets">2X</button><button class="cb spin" id="rgo" data-act="r-spin" aria-label="${d.go}"${S.maint?" disabled":""}>${d.go}</button><button class="cb" data-act="r-undo" aria-label="Undo last chip">↶</button><button class="cb" data-act="r-clear" aria-label="Clear all bets">✕</button>
 <div class="crack">${RCH.map(v=>`<button class="cp${v===rchip?" sel":""}" data-rc="${v}" style="--cc:${CHC[v]}" aria-label="Chip ${v}">${short(v)}</button>`).join("")}</div></div></div>
 <p class="rl-note">Play money only · coins have no cash value · max total bet ${fmt(S.maxStake)} per round</p></div>
 <div class="rl-bar"><div><small>BALANCE</small><b id="rbal">${fmt(shown)}</b></div><div><small>BET</small><b id="rbet">0</b></div><div><small>WIN</small><b id="rwin">0</b></div></div>`;
- if(d.init)d.init();rDraw();rUpd();announce("PLACE YOUR BETS",true)}
+ if(d.init)d.init();rDraw();rUpd();announce("PLACE YOUR BETS",true);if(TIMED.includes(game))rTimerStart()}
 function doSpin(){return game==="roulette"?rSpin():tSpin()}
 async function tSpin(){if(busy)return;const d=TG[game],tot=rTotal();
  if(S.maint)return rFlash("Paused for maintenance");if(tot<1)return rFlash("Tap the table to place chips");if(tot>me.coins)return rFlash("Not enough coins");if(tot>S.maxStake)return rFlash("Max total bet "+fmt(S.maxStake));
- busy=true;rLock(true);rClearMarks();const bets=Object.assign({},RB);RBlast=Object.assign({},RB);lastB2[game]=RBlast;ac();buildSfx();
+ rTimerStop(true);busy=true;rLock(true);rClearMarks();const bets=Object.assign({},RB);RBlast=Object.assign({},RB);lastB2[game]=RBlast;ac();buildSfx();
  announce("NO MORE BETS",false,"red");SND.nomore();tweenBal(me.coins-tot,400);$("rwin").textContent="0";scrollTo({top:0,behavior:RM?"auto":"smooth"});
  let r;try{r=await d.call(bets)}catch(e){r={error:{message:String(e)}}}
- if(r.error){busy=false;rLock(false);tweenBal(me.coins,300);const em=String(r.error.message);rFlash(em.indexOf("PB:")===0?em.slice(3):friendly(em));return}
+ if(r.error){busy=false;rLock(false);tweenBal(me.coins,300);const em=String(r.error.message);rFlash(em.indexOf("PB:")===0?em.slice(3):friendly(em));if(TIMED.includes(game))rTimerStart();return}
  const o=r.data,wins=o.wins||[];$("skip").hidden=false;
  try{await d.anim(o)}finally{if($("skip"))$("skip").hidden=true;ff=false}
  me.coins=o.balance;sess+=o.payout-o.total;GH[game].unshift(d.hist(o));GH[game]=GH[game].slice(0,60);try{localStorage.setItem("pbh_"+game+"_"+me.code,JSON.stringify(GH[game]))}catch(e){}
  $("hcol").innerHTML=hHtml();if(d.refresh)d.refresh();
  d.win(o).forEach(k=>{const e=document.querySelector(`#rtab [data-b="${k}"]`);if(e)e.classList.add("win")});
  announce(d.label(o),false,o.payout>0?"gold":"");await wait(700);
- await tSettle(bets,o,wins,$("stage"),d.pm)}
+ await tSettle(bets,o,wins,$("stage"),d.pm);if(TIMED.includes(game))rTimerStart()}
 
 /* ---------------- Lucky 7 · 3D dice table ---------------- */
 const L7POS=[[-36,-4,-16],[32,8,13]];
