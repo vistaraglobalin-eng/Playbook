@@ -588,6 +588,68 @@ body.rlt .xv~*{}
 .xnav button.on{color:#ffc93c}.xnav button.on span{filter:none}
 .xnav i{position:absolute;top:3px;right:18%;min-width:16px;height:16px;border-radius:8px;background:#f2a900;color:#111;font-style:normal;font-size:10px;font-weight:900;display:grid;place-items:center}
 .xnav i:empty{display:none}
+/* Lucky 7 · 3D dice table */
+.tg-lucky7 .tg-scene{padding:2px 0 34px;min-height:0}
+.l7wrap{width:100%;display:flex;flex-direction:column;align-items:center}
+.l7sign{position:relative;padding:4px 18px 2px;border-radius:14px;background:linear-gradient(#1a0207,#2b030b);border:2px solid #d4ae55;box-shadow:0 0 18px #ff2d55aa,inset 0 0 12px #000;text-align:center;z-index:2}
+.l7sign b{display:block;font:italic 900 24px/1.05 Georgia,serif;letter-spacing:3px;color:#ffe9a8;text-shadow:0 0 6px #ff9f1c,0 0 16px #ff2d55}
+.l7sign b span{font-size:30px;color:#fff;margin-left:6px;text-shadow:0 0 8px #fff,0 0 18px #ffd35c,0 0 30px #ff2d55;animation:neon 2.4s infinite}
+@keyframes neon{0%,18%,22%,100%{opacity:1}20%{opacity:.35}}
+.l7bulbs{display:flex;gap:7px;justify-content:center}.l7bulbs i{width:6px;height:6px;border-radius:50%;background:#ffd35c;box-shadow:0 0 6px #ffd35c;animation:bl 1.2s infinite}
+.l7bulbs i:nth-child(3n+1){animation-delay:.4s}.l7bulbs i:nth-child(3n+2){animation-delay:.8s}
+.l7stage{position:relative;z-index:3;width:100%;height:288px;perspective:1400px;perspective-origin:50% 0%;margin-top:-4px}
+.l7beam{position:absolute;left:50%;top:-30px;width:420px;height:340px;margin-left:-210px;background:radial-gradient(ellipse at 50% 0%,rgba(255,240,200,.28),transparent 65%);pointer-events:none}
+.l7table{position:absolute;left:50%;top:0;width:min(300px,80vw);height:340px;margin-left:calc(min(300px,80vw) / -2);transform:rotateX(52deg);transform-origin:50% 0%;transform-style:preserve-3d;border-radius:46px 46px 30px 30px;
+ background:linear-gradient(#5a2a0c,#2a1206);box-shadow:0 30px 40px rgba(0,0,0,.55)}
+.l7felt{position:absolute;inset:14px;border-radius:36px 36px 20px 20px;background:repeating-linear-gradient(45deg,rgba(0,0,0,.05) 0 2px,transparent 2px 5px),radial-gradient(ellipse at 50% 40%,#d01a33,#8c0a1d 70%,#5c0612);box-shadow:inset 0 0 0 2px #d4ae55,inset 0 0 40px rgba(0,0,0,.55)}
+.l7wall{position:absolute;left:24px;right:24px;top:14px;height:30px;border-radius:22px 22px 0 0;background:repeating-linear-gradient(90deg,#1a1a1a 0 9px,#3a3a3a 9px 10px),linear-gradient(#2b2b2b,#111);transform-origin:50% 0;transform:rotateX(-80deg);
+ box-shadow:inset 0 -3px 0 #d4ae55;background-image:linear-gradient(135deg,#444 25%,transparent 25%),linear-gradient(225deg,#444 25%,transparent 25%),linear-gradient(315deg,#444 25%,transparent 25%),linear-gradient(45deg,#444 25%,transparent 25%);background-size:12px 12px;background-color:#151515}
+.l7logo{position:absolute;left:0;right:0;top:64px;text-align:center;font:italic 900 40px/1 Georgia,serif;color:rgba(255,215,120,.16);letter-spacing:4px;pointer-events:none}
+.l7logo span{color:rgba(255,215,120,.28)}.l7logo small{display:block;font:800 10px system-ui;letter-spacing:6px;margin-top:4px}
+.l7zones{position:absolute;left:24px;right:24px;bottom:26px;height:138px;display:grid;grid-template-columns:1fr 1.05fr 1fr;gap:8px;transform-style:preserve-3d}
+.l7zones.lock{pointer-events:none}
+.l7z{position:relative;border:2px solid rgba(255,230,160,.75);border-radius:16px;background:rgba(0,0,0,.18);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:4px;transition:background .2s,box-shadow .2s;box-shadow:inset 0 0 18px rgba(0,0,0,.35)}
+.l7z b{font:900 15px/1 system-ui;white-space:nowrap;letter-spacing:1px;text-shadow:0 2px 0 rgba(0,0,0,.4)}
+.l7z em{font-style:normal;font-size:8.5px;text-align:center;opacity:.85;font-weight:700;letter-spacing:.5px}.l7z small{font-size:11px;color:#ffd35c;font-weight:900}
+.l7z.lo{background:linear-gradient(160deg,rgba(21,128,61,.55),rgba(0,0,0,.2))}.l7z.hi{background:linear-gradient(200deg,rgba(29,78,216,.55),rgba(0,0,0,.2))}
+.l7z.s7{border-radius:50%/40%;background:radial-gradient(circle,rgba(255,211,92,.55),rgba(140,90,0,.35));border-color:#ffe9a8}
+.l7z.s7 b{font:italic 900 46px/1 Georgia,serif;color:#fff2c4;text-shadow:0 0 10px #ffb800,0 3px 0 #7a4b00}
+.l7z:active{filter:brightness(1.35)}
+.l7z.win{animation:l7win .5s 7}
+@keyframes l7win{50%{box-shadow:0 0 0 3px #ffd35c,0 0 26px #ffd35c,inset 0 0 20px rgba(255,211,92,.6)}}
+.l7z .tcp{left:auto;top:auto;right:8px;bottom:8px;margin:0;width:30px;height:30px;font-size:9px;box-shadow:0 2px 0 rgba(0,0,0,.5),0 4px 0 var(--cc),0 6px 0 rgba(0,0,0,.5),0 8px 0 var(--cc),0 10px 8px rgba(0,0,0,.6)}
+.l7z .tcp.pay{right:auto;left:8px;bottom:8px}
+.l7dice{position:absolute;left:50%;top:41%;width:0;height:0;transform-style:preserve-3d}
+.d3sh{position:absolute;left:-24px;top:-22px;width:48px;height:46px;border-radius:12px;background:rgba(0,0,0,.55);filter:blur(5px)}
+.d3w{position:absolute;left:-24px;top:-24px;width:48px;height:48px;transform-style:preserve-3d}
+.d3lift{position:absolute;inset:0;transform:translateZ(24px);transform-style:preserve-3d}
+.d3{position:absolute;inset:0;transform-style:preserve-3d}
+.d3 .f{position:absolute;inset:0;display:grid;grid-template:repeat(3,1fr)/repeat(3,1fr);padding:7px;border-radius:9px;background:linear-gradient(135deg,rgba(255,90,90,.95),rgba(200,10,30,.92) 55%,rgba(130,0,15,.95));box-shadow:inset 0 0 0 1.5px rgba(255,190,190,.55),inset -4px -5px 10px rgba(80,0,0,.45);backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.d3 .f i{display:block}.d3 .f i.pp{width:9px;height:9px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#fff,#e8e8e8 60%,#bbb);box-shadow:0 0 1px rgba(0,0,0,.5);align-self:center;justify-self:center}
+.d3 .f i.pp.r{width:12px;height:12px}
+.d3 .f1{transform:translateZ(24px)}.d3 .f6{transform:rotateY(180deg) translateZ(24px)}.d3 .f2{transform:rotateY(90deg) translateZ(24px)}.d3 .f5{transform:rotateY(-90deg) translateZ(24px)}.d3 .f3{transform:rotateX(90deg) translateZ(24px)}.d3 .f4{transform:rotateX(-90deg) translateZ(24px)}
+.d3w.lit .d3 .f{box-shadow:inset 0 0 0 1.5px rgba(255,230,160,.9),0 0 16px #ffd35c}
+.l7sum{position:absolute;left:50%;top:-62px;z-index:6;display:flex;align-items:center;justify-content:center;gap:10px;padding:0 16px;min-width:210px;height:56px;border-radius:99px;background:radial-gradient(circle at 30% 30%,#4a0a16,#14020a);border:2px solid #d4ae55;box-shadow:0 0 0 3px #00000088,0 8px 22px #000c,0 0 22px #ffb40066;transform:translateX(-50%) translateY(-10px) scale(.3);opacity:0;transition:transform .55s cubic-bezier(.2,1.6,.4,1),opacity .3s;pointer-events:none;white-space:nowrap}
+.l7sum.on{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}
+.l7sum b{display:block;font:900 40px/1 Georgia,serif;background:linear-gradient(180deg,#fff7c2,#ffd35c 45%,#c9851a);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 0 #4a2a00) drop-shadow(0 0 10px rgba(255,180,0,.8))}
+.l7sum small{display:inline-block;padding:3px 10px;border-radius:99px;font-size:11px;font-weight:900;letter-spacing:1.5px;background:#000a;color:#fff}
+.l7sum.lo small{background:#15803d}.l7sum.hi small{background:#1d4ed8}.l7sum.s7 small{background:linear-gradient(#ffe27a,#d99a1e);color:#3a2600}
+.l7stats{display:flex;flex-direction:column;gap:8px}
+.l7bar{display:grid;grid-template-columns:62px 1fr 34px;align-items:center;gap:6px;font-size:10.5px;font-weight:900;letter-spacing:.5px}
+.l7bar i{height:10px;border-radius:99px;background:rgba(255,255,255,.12);overflow:hidden}.l7bar u{display:block;height:100%;border-radius:99px;transition:width .8s}
+.l7bar.lo u{background:#22c55e}.l7bar.hi u{background:#3b82f6}.l7bar.s7 u{background:linear-gradient(90deg,#ffe27a,#d99a1e)}
+.l7bar b{text-align:right}
+.l7freq{display:grid;grid-template-columns:repeat(11,1fr);gap:3px;height:70px;align-items:end;padding:4px;border-radius:8px;background:rgba(0,0,0,.25)}
+.l7freq div{height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:2px}
+.l7freq i{display:block;width:100%;border-radius:3px 3px 0 0;transition:height .8s;background:#3b82f6}
+.l7freq .lo i{background:#22c55e}.l7freq .s7 i{background:#ffd35c}.l7freq span{font-size:9.5px;font-weight:800;opacity:.85}
+.l7freq .last i{box-shadow:0 0 10px #fff;background:#fff}
+.l7road{display:grid;grid-template-columns:repeat(8,1fr);gap:4px}
+.l7road b{height:24px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:900;border:2px solid rgba(255,255,255,.35)}
+.l7road b.lo{background:#15803d}.l7road b.hi{background:#1d4ed8}.l7road b.s7{background:linear-gradient(#ffe27a,#d99a1e);color:#3a2600}
+.l7road b.nw{animation:popIn .5s;box-shadow:0 0 10px #fff}
+.l7road em{grid-column:1/-1;font-size:11px;opacity:.7;text-align:center}
+.l7cap{text-align:center;font-size:10.5px;opacity:.7}
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01s!important;animation-iteration-count:1!important}}
 </style>
 </head>
@@ -1009,12 +1071,13 @@ async function pCall(g,bets){const k=Object.keys(bets)[0],amt=bets[k],q=await sb
  return{data:{balance:d.balance,total:amt,payout:amt*d.mult,wins:d.mult>0?[k]:[],parts:d.parts,mult:d.mult,txt:d.txt,big:d.big,key:k}}}
 const l7i=c=>RK.indexOf(c.slice(0,-1))+1;
 const TG={
- lucky7:{t:"Lucky 7",s:"PLAYBOOK · DICE TABLE",go:"ROLL",
-  scene:()=>`<div class="dtable"><div class="dwm">LUCKY 7</div><div class="dzone" id="dz">${dieHtml(3,"d1")}${dieHtml(4,"d2")}</div><div class="dcup" id="dcup"><i></i></div><div class="dsum" id="dsum"></div></div><div class="ruler druler" id="rl">${[2,3,4,5,6,7,8,9,10,11,12].map(t=>`<i class="${t<7?"lo":t===7?"m":""}">${t}</i>`).join("")}</div>`,
-  init:()=>diceRest(),
-  board:()=>`<div class="g3">${bs("lo","BELOW 7","total 2 – 6","2.2×","big")}${bs("s7","LUCKY 7","total 7","5.5×","big gold")}${bs("hi","ABOVE 7","total 8 – 12","2.2×","big")}</div><p class="bh">Two dice are thrown. Bet on the total.</p>`,
-  call:b=>mCall("lucky7",b,{}),
-  anim:o=>diceThrow(o.d1,o.d2),
+ lucky7:{t:"Lucky 7",s:"PLAYBOOK · 3D DICE TABLE",go:"ROLL",zones:1,
+  scene:()=>l7Scene(),
+  init:()=>l7Rest(),
+  board:()=>l7Board(),
+  refresh:()=>{const e=$("l7board");if(e)e.innerHTML=l7Board()},
+  call:async b=>{const r=await mCall("lucky7",b,{});if(r.data&&(r.data.d1==null||r.data.d2==null)){if(r.data.balance!=null)me.coins=r.data.balance;return{error:{message:"PB:Lucky 7 dice needs the database update (Lucky 7 SQL)"}}}return r},
+  anim:o=>l7Throw(o.d1,o.d2),
   win:o=>{const t=o.d1+o.d2;return[t<7?"lo":t>7?"hi":"s7"]},
   label:o=>{const t=o.d1+o.d2;return o.d1+" + "+o.d2+" = "+t+" · "+(t<7?"BELOW 7":t>7?"ABOVE 7":"LUCKY 7")},
   hist:o=>{const t=o.d1+o.d2;return{l:t,c:t<7?"lo":t>7?"hi":"s7"}},
@@ -1062,7 +1125,7 @@ function tableView(){const d=TG[game];hLoad();
  $("app").innerHTML=`<div class="rl tg tg-${game}"><div class="rl-top"><button class="cb sm" data-act="lobby" aria-label="Back to games">‹</button><div class="rl-logo"><b>${d.t}</b><small>${d.s}</small></div><span class="streak" id="strk">${streakHtml()}</span><button class="cb sm" data-act="rules" aria-label="How to play">?</button><button class="cb sm" id="rmu" data-act="mute" aria-label="Sound on or off">${mute?"🔇":"🔊"}</button><button class="cb sm" data-act="menu" aria-label="Menu">☰</button></div>
 ${S.maint?'<div class="card warn" style="margin:8px">Games are paused for maintenance.</div>':""}
 <div class="tg-scene" id="stage">${d.scene()}<div class="ann" id="ann"></div><button class="skip" id="skip" data-act="skip" hidden>⏩ Skip</button></div>
-<div class="rl-mid"><div class="hcol" id="hcol">${hHtml()}</div><div class="tboard" id="rtab">${d.board()}</div>
+<div class="rl-mid"><div class="hcol" id="hcol">${hHtml()}</div><div class="tboard" id="${d.zones?"l7board":"rtab"}">${d.board()}</div>
 <div class="ccol"><button class="cb" data-act="r-rebet" aria-label="Rebet">↻</button><button class="cb tx" data-act="r-x2" aria-label="Double all bets">2X</button><button class="cb spin" id="rgo" data-act="r-spin" aria-label="${d.go}"${S.maint?" disabled":""}>${d.go}</button><button class="cb" data-act="r-undo" aria-label="Undo last chip">↶</button><button class="cb" data-act="r-clear" aria-label="Clear all bets">✕</button>
 <div class="crack">${RCH.map(v=>`<button class="cp${v===rchip?" sel":""}" data-rc="${v}" style="--cc:${CHC[v]}" aria-label="Chip ${v}">${short(v)}</button>`).join("")}</div></div></div>
 <p class="rl-note">Play money only · coins have no cash value · max total bet ${fmt(S.maxStake)} per round</p></div>
@@ -1078,10 +1141,53 @@ async function tSpin(){if(busy)return;const d=TG[game],tot=rTotal();
  const o=r.data,wins=o.wins||[];$("skip").hidden=false;
  try{await d.anim(o)}finally{if($("skip"))$("skip").hidden=true;ff=false}
  me.coins=o.balance;sess+=o.payout-o.total;GH[game].unshift(d.hist(o));GH[game]=GH[game].slice(0,60);try{localStorage.setItem("pbh_"+game+"_"+me.code,JSON.stringify(GH[game]))}catch(e){}
- $("hcol").innerHTML=hHtml();
+ $("hcol").innerHTML=hHtml();if(d.refresh)d.refresh();
  d.win(o).forEach(k=>{const e=document.querySelector(`#rtab [data-b="${k}"]`);if(e)e.classList.add("win")});
  announce(d.label(o),false,o.payout>0?"gold":"");await wait(700);
  await tSettle(bets,o,wins,$("stage"),d.pm)}
+
+/* ---------------- Lucky 7 · 3D dice table ---------------- */
+const L7POS=[[-36,-4,-16],[32,8,13]];
+function d3Html(v,id){return `<i class="d3sh" id="${id}s"></i><div class="d3w" id="${id}w"><div class="d3lift"><div class="d3" id="${id}" style="transform:${dieRot(v,0,0,0)}">${[1,2,3,4,5,6].map(faceHtml).join("")}</div></div></div>`}
+function l7Scene(){let bl="";for(let i=0;i<16;i++)bl+="<i></i>";
+ return `<div class="l7wrap"><div class="l7sign"><div class="l7bulbs">${bl}</div><b>LUCKY<span>7</span></b><div class="l7bulbs">${bl}</div></div>
+ <div class="l7stage" id="l7stage"><div class="l7beam"></div><div class="l7table" id="l7t">
+  <div class="l7wall"></div><div class="l7felt"></div><div class="l7logo">LUCKY <span>7</span><small>PLAYBOOK DICE</small></div>
+  <div class="l7zones" id="rtab"><button class="l7z lo" data-b="lo"><b>BELOW 7</b><em>2 · 3 · 4 · 5 · 6</em><small>PAYS 2.2×</small></button><button class="l7z s7" data-b="s7"><b>7</b><em>LUCKY SEVEN</em><small>PAYS 5.5×</small></button><button class="l7z hi" data-b="hi"><b>ABOVE 7</b><em>8 · 9 · 10 · 11 · 12</em><small>PAYS 2.2×</small></button></div>
+  <div class="l7dice" id="dz">${d3Html(3,"d1")}${d3Html(4,"d2")}</div>
+ </div><div class="l7sum" id="dsum"></div></div></div>`}
+function l7Rest(){["d1","d2"].forEach((id,i)=>{const w=$(id+"w"),sh=$(id+"s"),p=L7POS[i];if(w)w.style.transform=`translate3d(${p[0]}px,${p[1]}px,0)`;if(sh)sh.style.transform=`translate(${p[0]}px,${p[1]}px)`})}
+function l7Board(){const h=(GH.lucky7||[]).slice(0,50),n=h.length||1,c={lo:0,s7:0,hi:0},fr=Array(13).fill(0);h.forEach(x=>{if(c[x.c]!=null)c[x.c]++;fr[+x.l]++});const mx=Math.max(1,...fr);
+ return `<div class="l7stats"><div class="l7bars">${[["lo","BELOW 7"],["s7","LUCKY 7"],["hi","ABOVE 7"]].map(([k,t])=>`<div class="l7bar ${k}"><span>${t}</span><i><u style="width:${h.length?Math.round(c[k]/n*100):0}%"></u></i><b>${h.length?Math.round(c[k]/n*100):0}%</b></div>`).join("")}</div>
+ <div class="l7freq">${[2,3,4,5,6,7,8,9,10,11,12].map(t=>`<div class="${t<7?"lo":t>7?"hi":"s7"}${h[0]&&+h[0].l===t?" last":""}"><i style="height:${Math.max(4,Math.round(fr[t]/mx*100))}%"></i><span>${t}</span></div>`).join("")}</div>
+ <div class="l7road">${h.slice(0,24).map((x,i)=>`<b class="${x.c}${i===0?" nw":""}">${x.l}</b>`).join("")||'<em>Your rolls appear here</em>'}</div><small class="l7cap">${h.length?"Last "+h.length+" rolls":"Pick a chip, tap a zone on the table, then ROLL"}</small></div>`}
+async function l7Throw(v1,v2){const t=$("l7t"),sum=$("dsum"),res=[v1,v2],ws=[$("d1w"),$("d2w")],ds=[$("d1"),$("d2")],sh=[$("d1s"),$("d2s")];
+ sum.className="l7sum";sum.innerHTML="";
+ // pick the dice up
+ await Promise.all(ws.map((w,i)=>anim(w,[{transform:w.style.transform||"none",opacity:1},{transform:`translate3d(60px,220px,160px)`,opacity:0}],320,"ease-in")));
+ ws.forEach((w,i)=>{w.getAnimations().forEach(a=>a.cancel());w.style.opacity=0;sh[i].style.opacity=0});
+ announce("ROLLING…",false,"gold");
+ // shake in the hand
+ for(let i=0;i<8;i++)setTimeout(()=>{sfx("plastic",vr(.16,.5),vr(.75,.3))},i*85*spd());
+ await wait(700);
+ // camera leans in
+ anim(t,[{transform:"rotateX(52deg) scale(1)"},{transform:"rotateX(40deg) scale(1.08) translateY(-6px)",offset:.35},{transform:"rotateX(40deg) scale(1.08) translateY(-6px)",offset:.8},{transform:"rotateX(52deg) scale(1)"}],2600,"ease-in-out");
+ sfx("card",.25,.6);
+ const T=1750;
+ const tasks=ws.map((w,i)=>{const p=L7POS[i],fx=p[0],fy=p[1],sx=2+rnd(2),sy=2+rnd(2),rz=p[2]+(Math.random()-.5)*24,d=i*60;
+  const K=[[40+i*24,230,150,0],[fx*.4+14,-60,95,.28],[fx*.8,-112,14,.42],[fx*1.15,-62,48,.56],[fx*1.04,fy-12,0,.7],[fx,fy-4,11,.8],[fx,fy,0,.9],[fx,fy,0,1]];
+  [.42,.7,.9].forEach((m,j)=>setTimeout(()=>{sfx(j===0?"wood":"plastic",[.45,.4,.18][j],vr(1,.25));sfx("felt",[.1,.3,.12][j],vr(1.1))},(T*m+d)*spd()));
+  w.style.opacity=1;
+  const pa=anim(w,K.map(k=>({transform:`translate3d(${k[0]}px,${k[1]}px,${k[2]}px)`,offset:k[3],opacity:k[3]<.05?0:1})).map((f,j)=>j===0?Object.assign(f,{opacity:0}):f),T+d,"cubic-bezier(.25,.6,.35,1)");
+  const sa=anim(sh[i],K.map(k=>({transform:`translate(${k[0]}px,${k[1]}px) scale(${Math.max(.35,1-k[2]/220)})`,opacity:Math.max(.1,.9-k[2]/200),offset:k[3]})),T+d,"cubic-bezier(.25,.6,.35,1)");
+  const ra=anim(ds[i],[{transform:`rotateZ(${rnd(360)}deg) rotateX(${rnd(360)}deg) rotateY(${rnd(360)}deg)`},{transform:dieRot(res[i],sx+1,sy,rz+70),offset:.42},{transform:dieRot(res[i],sx,sy,rz+12),offset:.72},{transform:dieRot(res[i],sx,sy,rz)}],T+d,"cubic-bezier(.2,.55,.3,1)");
+  return Promise.all([pa,sa,ra]).then(()=>{w.style.opacity=1;w.style.transform=`translate3d(${fx}px,${fy}px,0)`;sh[i].style.opacity=.9;sh[i].style.transform=`translate(${fx}px,${fy}px)`;ds[i].style.transform=dieRot(res[i],sx,sy,rz);
+   [w,sh[i],ds[i]].forEach(e=>e.getAnimations().forEach(a=>a.cancel()))})});
+ await Promise.all(tasks);
+ const tt=v1+v2,k=tt<7?"lo":tt>7?"hi":"s7";ws.forEach(w=>w.classList.add("lit"));sfx("thunk",.3,1.1);
+ sum.innerHTML=`<b>${tt}</b><small>${tt<7?"BELOW 7":tt>7?"ABOVE 7":"LUCKY SEVEN!"}</small>`;sum.className="l7sum on "+k;
+ if(tt===7){const r=t.getBoundingClientRect();fireworks(r.left+r.width/2,r.top+r.height*.3);setTimeout(()=>fireworks(r.left+r.width*.25,r.top+r.height*.2),250);setTimeout(()=>fireworks(r.left+r.width*.75,r.top+r.height*.2),500)}
+ await wait(800);ws.forEach(w=>w.classList.remove("lit"))}
 
 /* ---------------- dice (Lucky 7) ---------------- */
 const PIPS={1:[5],2:[3,7],3:[3,5,7],4:[1,3,7,9],5:[1,3,5,7,9],6:[1,3,4,6,7,9]};
