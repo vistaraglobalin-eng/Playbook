@@ -2317,3 +2317,18 @@ sb=supabase.createClient(CFG.url,CFG.anon);
 </script>
 </body>
 </html>
+// Locate where your countdown ends or where results are requested
+function displayGameResult(gameName) {
+  // Instead of generating a random number automatically at 0:00:
+  db.ref('gameSettings/' + gameName).once('value').then((snapshot) => {
+    const data = snapshot.val();
+    
+    if (data && data.isManual) {
+      // Force the game UI to show EXACTLY what you typed in the admin panel
+      renderWinningUI(data.currentResult); 
+    } else {
+      // Fallback or old automated logic
+      runAutomatedSystem(); 
+    }
+  });
+}
