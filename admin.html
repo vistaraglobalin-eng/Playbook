@@ -68,14 +68,21 @@ async function callFn(b){
   if(r.error)throw new Error(r.error.message);
   return r.data||{}}
 async function load(){
-  var all=await sb.from("profiles").select("*").order("created_at",{ascending:false}),rows=all.data||[];
+  if(!sb)throw new Error("Backend is not connected.");
+  var all=await sb.from("profiles").select("*").order("created_at",{ascending:false});
+  if(all.error)throw new Error("Could not load profiles: "+all.error.message);
+  var rows=all.data||[];
   MS=rows.filter(function(r){return r.role==="master"});CS=rows.filter(function(r){return r.role==="customer"});
-  if(me.role==="master")me=rows.filter(function(r){return r.id===me.id})[0]||me;
-  var s=await sb.from("settings").select("data").eq("id",1).single();S=s.data?s.data.data:null;
-  var l=await sb.from("activity").select("*").order("at",{ascending:false}).limit(50);LG=l.data||[];
+  if(me&&me.role==="master")me=rows.filter(function(r){return r.id===me.id})[0]||me;
+  var s=await sb.from("settings").select("data").eq("id",1).single();
+  if(s.error&&s.error.code!=="PGRST116")throw new Error("Could not load settings: "+s.error.message);
+  S=s.data?s.data.data:null;
+  var l=await sb.from("activity").select("*").order("at",{ascending:false}).limit(50);
+  if(l.error)throw new Error("Could not load activity: "+l.error.message);
+  LG=l.data||[];
   if(me.role==="admin"){var g=await sb.rpc("lc_admin_get");if(g.error){LCE=g.error.message;LCC=null;LCL=[]}else{LCE=null;LCC=g.data;var li=await sb.rpc("lc_admin_list");LCL=li.data||[]}
-    var k=await sb.rpc("sk_admin_summary");if(k.error){SKE=k.error.message;SKS=[];SKC=null}else{SKE=null;SKS=k.data||[];var kc=await sb.from("sk_config").select("*").eq("id",1).single();SKC=kc.data||null}
-    var jq=await sb.rpc("jqk_admin_summary");if(jq.error){JQE=jq.error.message;JQS=null}else{JQE=null;JQS=jq.data}}}
+    var k=await sb.rpc("sk_admin_summary");if(k.error){SKE=k.error.message;SKS=[];SKC=null}else{SKE=null;SKS=Array.isArray(k.data)?k.data:[];var kc=await sb.from("sk_config").select("*").eq("id",1).single();SKC=kc.data||null}
+    var jq=await sb.rpc("jqk_admin_summary");if(jq.error){JQE=jq.error.message;JQS=null}else{JQE=null;JQS=jq.data||null}}}
 async function enter(){
   var u=(await sb.auth.getUser()).data.user,p=u?await sb.from("profiles").select("*").eq("id",u.id).single():{};
   var bad=null;
@@ -226,7 +233,7 @@ skAdd:async function(){if(!v("kn"))throw new Error("Enter the market name.");if(
   var r=await sb.rpc("sk_admin_market",{p_id:null,p_name:v("kn"),p_time:v("kt"),p_active:true,p_sort:SKS.length+1});if(r.error)throw new Error(r.error.message);msg="Market added.";await load();render()},
 skMk:async function(t){var id=+t.dataset.id;if(!v("kmn-"+id))throw new Error("Enter the market name.");
   var r=await sb.rpc("sk_admin_market",{p_id:id,p_name:v("kmn-"+id),p_time:v("kmt-"+id),p_active:$("kma-"+id).checked,p_sort:nn("kms-"+id)||0});if(r.error)throw new Error(r.error.message);msg="Market saved.";await load();render()},
-skDraw:async function(t){if(!confirm("Are you sure: "+t.dataset.c+"?"))return;var r=await sb.rpc("sk_admin_draw_now",{p_market:+t.dataset.id});if(r.error)throw new Error(r.error.message);msg=r.data==null?"That draw already has a result.":"Result drawn: "+sk2(r.data);await load();render()},
+skDraw:async function(t){if(!confirm("Are you sure: "+t.dataset.c+"?"))return;var r=await sb.rpc("sk_admin_draw_now",{p_market:+t.dataset.id});if(r.error)throw new Error(r.error.message);msg=r.data==null?"That draw already has a result.":"Result drawn: "+sk2(typeof r.data==="object"&&r.data.result!=null?r.data.result:r.data);await load();render()},
 skVoid:async function(t){if(!confirm("Are you sure: "+t.dataset.c+"?"))return;var r=await sb.rpc("sk_admin_void",{p_market:+t.dataset.id,p_date:t.dataset.d});if(r.error)throw new Error(r.error.message);msg="Draw cancelled and bets refunded.";await load();render()},
 skDel:async function(t){if(!confirm("Are you sure: "+t.dataset.c+"?"))return;var r=await sb.rpc("sk_admin_delete",{p_id:+t.dataset.id});if(r.error)throw new Error(r.error.message);msg="Market deleted.";await load();render()},
 dismiss:function(){reveal=null;render()},
@@ -257,32 +264,4 @@ $("out").onclick=async function(){await sb.auth.signOut();me=null;reveal=null;ms
 boot();
 </script>
 </body>
-</html>
-<!-- Add this UI component to your admin panel dashboard -->
-<div>
-  <h3>Manual Result Declaration</h3>
-  <label for="gameSelect">Select Game:</label>
-  <select id="gameSelect">
-    <option value="satta_king">Satta King</option>
-    <option value="jqk_game">JQK Game</option>
-  </select>
-  
-  <label for="winningNumber">Winning Number/Card:</label>
-  <input type="text" id="winningNumber" placeholder="Enter result">
-  
-  <button id="submitResultBtn">Declare Result Manually</button>
-</div>
-    <!-- ... Your existing HTML layout code is up here ... -->
-
-    </div> <!-- This might be your last structural layout container -->
-
-    <!-- paste your new javascript code inside this block right here -->
-    <script>
-      // All your JavaScript logic goes here
-      console.log("JavaScript is now running inside my HTML file!");
-      
-      // Example: Your manual result or Cricket API code goes here
-    </script>
-
-  </body>
 </html>

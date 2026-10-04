@@ -960,46 +960,7 @@ h1.kx-brand{display:flex;align-items:center;gap:7px;background:none!important;-w
 <div id="toasts"></div>
 <canvas id="fx"></canvas>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-<script><script>
-// Configuration constants
-const CRICKET_API_URL = "https://YOUR_API_PROVIDER_ENDPOINT/v1/match/live"; 
-const API_KEY = "YOUR_SECRET_API_KEY"; // Acquired from your provider dashboard
-const TARGET_MATCH_ID = "123456";      // Change dynamically based on current live fixture
-
-async function fetchLiveCricketScore() {
-  try {
-    const response = await fetch(`${CRICKET_API_URL}?match_id=${TARGET_MATCH_ID}`, {
-      method: "GET",
-      headers: {
-        "X-RapidAPI-Key": API_KEY, // Standard header structural format for RapidAPI
-        "Content-Type": "application/json"
-      }
-    });
-
-    if (!response.ok) throw new Error("Network stream latency issue");
-    
-    const data = await response.json();
-    
-    // Parse the payload depending entirely on your API's JSON structural schema
-    if (data && data.live_snapshot) {
-      document.getElementById("match-teams").innerText = `${data.team_a} vs ${data.team_b}`;
-      document.getElementById("live-score").innerText = `${data.runs}/${data.wickets} (${data.overs} Ov)`;
-      document.getElementById("match-status").innerText = data.status_note || "Match in Progress";
-    }
-  } catch (error) {
-    console.error("Cricket API Sync Error:", error);
-    document.getElementById("match-status").innerText = "Reconnecting to live pitch data...";
-  }
-}
-
-// Polling interval cycle loop (1000ms = 1 second update threshold)
-// Note: Verify your subscription tier handles 60 requests/minute safely before scaling down
-setInterval(fetchLiveCricketScore, 1000);
-
-// Run immediately upon player layout loading
-window.addEventListener("DOMContentLoaded", fetchLiveCricketScore);
-</script>
-
+<script>
 const CFG={url:"https://jmvvuitwjixgsmhrdapg.supabase.co",anon:"sb_publishable_VZRaBdHeQk0YAWzJammc1w_9NL6owyx"};
 const G=[["cricket","🏏","Cricket","Virtual one-day match","MATCH"],["casino","🎰","Casino","3-reel slot machine","JACKPOT"],["roulette","🎡","Roulette","European wheel","HOT"],["lucky7","🎲","Lucky 7","Two dice · below, above or 7","DICE"],["kingjack","👑","King Jack","King or Jack first?","CARDS"],["num","🔢","1–9","Lottery drum","DRAW"]];
 const RULE={cricket:["Put chips on the team you back (one team per match round), then press PLAY. Winning pays your stake × the team's odds.",[["Team odds","1.75× – 2.10×"]]],
@@ -1197,8 +1158,8 @@ function lobby(gs){
  if(S.maint)h+='<div class="card warn" style="margin-top:10px">Games are paused for maintenance. Please check back soon.</div>';
  if(msg)h+=`<div class="card" style="margin-top:10px">${esc(msg)}</div>`;
  h+='<h3 class="sec">Sports</h3><button class="tile t-live wide-tile" data-act="live"><span class="badge livebadge">● LIVE</span><div class="art"><div class="a-live"><span>🏏</span><i></i><i></i><i></i></div></div><div class="tl"><b>📡 Live Cricket</b><small>Real matches · live odds and scores</small></div></button>';
- if(S.games&&S.games.satta)h+='<h3 class="sec">Satta King</h3><button class="tile t-sk wide-tile" data-act="satta"><span class="badge">DAILY</span><div class="art"><div class="a-sk"><span>👑</span><b>4</b><b>7</b></div></div><div class="tl"><b>👑 Satta King</b><small>Daily markets · Jodi, Andar, Bahar</small></div></button>';
- if(S.games&&S.games.jqk){jqEnsureDefs();h+=`<h3 class="sec">Card draw</h3><button class="tile t-jq wide-tile" data-act="jqk"><span class="badge livebadge">● HOURLY</span><div class="art"><div class="a-jq">${jqCard("J","S","")}${jqCard("Q","H","")}${jqCard("K","D","")}</div></div><div class="tl"><b>🃏 JQK Cards</b><small>Jack · Queen · King · result every hour at :59</small></div></button>`}
+ if(S&&S.games&&S.games.satta)h+='<h3 class="sec">Satta King</h3><button class="tile t-sk wide-tile" data-act="satta"><span class="badge">DAILY</span><div class="art"><div class="a-sk"><span>👑</span><b>4</b><b>7</b></div></div><div class="tl"><b>👑 Satta King</b><small>Daily markets · Jodi, Andar, Bahar</small></div></button>';
+ if(S&&S.games&&S.games.jqk){jqEnsureDefs();h+=`<h3 class="sec">Card draw</h3><button class="tile t-jq wide-tile" data-act="jqk"><span class="badge livebadge">● HOURLY</span><div class="art"><div class="a-jq">${jqCard("J","S","")}${jqCard("Q","H","")}${jqCard("K","D","")}</div></div><div class="tl"><b>🃏 JQK Cards</b><small>Jack · Queen · King · result every hour at :59</small></div></button>`}
  h+='<h3 class="sec">Games</h3>';
  if(!gs.length)h+='<div class="card">No games are available right now. Please check back soon.</div>';
  h+='<div class="tiles">'+gs.map((g,i)=>`<button class="tile t-${g[0]}" data-g="${g[0]}" style="animation-delay:${i*70}ms"><span class="badge">${g[4]}</span><div class="art">${art(g[0])}</div><div class="tl"><b>${g[1]} ${g[2]}</b><small>${g[3]}</small></div></button>`).join("")+'</div>';
@@ -1910,7 +1871,10 @@ async function login(){const id=$("li").value.trim().toUpperCase(),pw=$("lp").va
  if(r.error)return err("ID or password is incorrect.");
  await enter()}
 async function enter(){
- const u=(await sb.auth.getUser()).data.user,p=u?await sb.from("profiles").select("*").eq("id",u.id).single():{};let bad=null;
+ if(!sb)throw new Error("Backend is not connected.");
+ const gu=await sb.auth.getUser();
+ if(gu.error)throw new Error("Could not verify your session: "+gu.error.message);
+ const u=gu.data.user,p=u?await sb.from("profiles").select("*").eq("id",u.id).single():{};let bad=null;
  if(!p.data)bad="Could not load your account.";
  else if(p.data.role!=="customer")bad="Master and admin IDs sign in to the admin panel, not here.";
  else if(!p.data.active)bad="This ID is suspended. Contact your Master.";
@@ -2162,8 +2126,12 @@ function skDay(d,n){const x=new Date(d+"T00:00:00Z");x.setUTCDate(x.getUTCDate()
 function skDate(d){if(!SK.st)return d;if(d===SK.st.today)return"Today";if(d===skDay(SK.st.today,1))return"Tomorrow";if(d===skDay(SK.st.today,-1))return"Yesterday";return new Date(d+"T00:00:00Z").toLocaleDateString("en-IN",{weekday:"short",day:"numeric",month:"short",timeZone:"UTC"})}
 function skCd(ms){if(ms<=0)return"00:00:00";const s=Math.floor(ms/1000);return[Math.floor(s/3600),Math.floor(s%3600/60),s%60].map(v=>String(v).padStart(2,"0")).join(":")}
 function skStop(){if(SK.chan){try{sb.removeChannel(SK.chan)}catch(e){}SK.chan=null}clearInterval(SK.iv);clearInterval(SK.poll);SK.iv=SK.poll=null}
-async function skLoad(){const s=await sb.rpc("sk_state");
- if(s.error||!s.data){SK.err=s.error?s.error.message:"no data";return}
+async function skLoad(){
+ if(!sb){SK.err="Backend is not connected.";return}
+ const s=await sb.rpc("sk_state");
+ if(s.error||!s.data){SK.err=s.error?s.error.message:"Satta King state is unavailable";return}
+ if(!Array.isArray(s.data.markets))s.data.markets=[];
+ if(!s.data.cfg)s.data.cfg={on:false,jodi:90,andar:9,bahar:9,close:10,max:20000};
  SK.err=null;SK.st=s.data;SK.off=Date.parse(s.data.now)-Date.now();
  const r=await sb.from("sk_results").select("*").gte("draw_date",skDay(s.data.today,-20)).order("draw_date",{ascending:false});if(!r.error)SK.res=r.data||[];
  const b=await sb.from("sk_bets").select("*").order("created_at",{ascending:false}).limit(300);if(!b.error)SK.bets=b.data||[]}
@@ -2174,12 +2142,12 @@ function skStart(){skStop();
  SK.iv=setInterval(skTick,1000);SK.poll=setInterval(skRefresh,20000)}
 async function skRefresh(){if(SK.busy||view!=="satta")return;SK.busy=true;SK.last=Date.now();
  try{await skLoad();const nw=skNewRes();skRender();for(const r of nw)await skReveal(r)}catch(e){console.error(e)}finally{SK.busy=false}}
-function skStatus(m){const now=skNow();if(!m.active||!SK.st.cfg.on)return"off";if(now<Date.parse(m.close_at))return"open";if(now<Date.parse(m.draw_at))return"closed";return"drawing"}
+function skStatus(m){const now=skNow();if(!m||!SK.st||!SK.st.cfg||!m.active||!SK.st.cfg.on)return"off";if(now<Date.parse(m.close_at))return"open";if(now<Date.parse(m.draw_at))return"closed";return"drawing"}
 function skTick(){if(view!=="satta"||!$("skbody")){skStop();return}const now=skNow();
  document.querySelectorAll("[data-cd]").forEach(e=>{const t=+e.dataset.cd;e.textContent=skCd(t-now);e.classList.toggle("hot",t-now<600000)});
  const dt=$("skdt");if(dt)dt.textContent=skDT();const ck=$("skclock");if(ck)ck.textContent=new Date(now).toLocaleTimeString("en-IN",{timeZone:"Asia/Kolkata",hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false});
  if(!SK.st)return;let need=false,chg=false;
- SK.st.markets.forEach(m=>{const st=skStatus(m);if(m._s&&m._s!==st)chg=true;m._s=st;if(st==="drawing"&&Date.now()-SK.last>5000)need=true});
+ (SK.st.markets||[]).forEach(m=>{const st=skStatus(m);if(m._s&&m._s!==st)chg=true;m._s=st;if(st==="drawing"&&Date.now()-SK.last>5000)need=true});
  if(chg)skRender();if(need)skRefresh()}
 function skMkt(id){return SK.st&&SK.st.markets.find(m=>m.id===id)}
 function skResOf(id,d){return SK.res.find(r=>r.market_id===id&&r.draw_date===d)}
@@ -2206,8 +2174,8 @@ function skSlipStats(){const c=SK.st.cfg,ks=Object.keys(SK.slip),tot=ks.reduce((
  for(let n=0;n<100;n++){const v=(SK.slip["j"+sk2(n)]||0)*c.jodi+(SK.slip["a"+Math.floor(n/10)]||0)*c.andar+(SK.slip["b"+n%10]||0)*c.bahar;if(v>best)best=v}
  return{n:ks.length,tot,best}}
 function skLabel(k){return k[0]==="j"?"Jodi "+k.slice(1):k[0]==="a"?"Andar "+k.slice(1):"Bahar "+k.slice(1)}
-function skMarket(){const m=skMkt(SK.mk);if(!m){SK.page="home";return skHome()}
- const st=skStatus(m),c=Date.parse(m.close_at),d=Date.parse(m.draw_at),cfg=SK.st.cfg,open=st==="open";
+function skMarket(){const m=skMkt(SK.mk);if(!m||!SK.st){SK.page="home";return skHome()}
+ const st=skStatus(m),c=Date.parse(m.close_at),d=Date.parse(m.draw_at),cfg=SK.st.cfg||{},open=st==="open";
  const last=SK.res.filter(r=>r.market_id===m.id).slice(0,10);
  const cd=open?`<span>closes at</span><b>${skTT(c)}</b>`:st==="closed"?`<span>result at</span><b class="r">${skT(m.time)}</b>`:`<span>result</span><b class="r">soon</b>`;
  const tabs=[["jodi","Jodi","00–99"],["andar","Andar","1st digit"],["bahar","Bahar","2nd digit"],["cross","Crossing","combos"]];
@@ -2252,7 +2220,7 @@ function skRender(){const body=$("skbody");if(!body)return;const sy=scrollY;
  const nb=$("sknb"),ob=SK.bets.filter(b=>b.status==="open").length;if(nb)nb.textContent=ob||"";
  skTick();if(Math.abs(scrollY-sy)>2)scrollTo(0,sy)}
 function skMsg(t){const e=$("skmsg");if(e){e.textContent=t;e.classList.remove("f");void e.offsetWidth;e.classList.add("f")}tone(220,.1,"square",.04)}
-function skErr(m){m=String(m);if(/closed/.test(m))return"Betting is closed for this draw";if(/bad stake/.test(m))return"Check your amounts (max "+fmt(SK.st.cfg.max)+" per bet slip, and enough coins)";if(/disabled/.test(m))return"Satta King is switched off right now";if(/maintenance/.test(m))return"Games are paused for maintenance";if(/sk_place|PGRST202|schema cache/.test(m))return"Satta King needs the database update";return friendly(m)}
+function skErr(m){m=String(m||"Unknown error");if(/closed/.test(m))return"Betting is closed for this draw";if(/bad stake/.test(m))return"Check your amounts (max "+fmt(SK.st.cfg.max)+" per bet slip, and enough coins)";if(/disabled/.test(m))return"Satta King is switched off right now";if(/maintenance/.test(m))return"Games are paused for maintenance";if(/sk_place|PGRST202|schema cache/.test(m))return"Satta King needs the database update";return friendly(m)}
 async function skPlace(){const m=skMkt(SK.mk);if(!m||skStatus(m)!=="open")return skMsg("Betting is closed for this draw");const ss=skSlipStats();
  if(!ss.n)return skMsg("Tap numbers to add bets");if(ss.tot>me.coins)return skMsg("Not enough coins");if(ss.tot>SK.st.cfg.max)return skMsg("Max "+fmt(SK.st.cfg.max)+" per bet slip");
  const b=$("skplace");if(b)b.disabled=true;ac();
@@ -2356,129 +2324,3 @@ sb=supabase.createClient(CFG.url,CFG.anon);
 </script>
 </body>
 </html>
-// Locate where your countdown ends or where results are requested
-function displayGameResult(gameName) {
-  // Instead of generating a random number automatically at 0:00:
-  db.ref('gameSettings/' + gameName).once('value').then((snapshot) => {
-    const data = snapshot.val();
-    
-    if (data && data.isManual) {
-      // Force the game UI to show EXACTLY what you typed in the admin panel
-      renderWinningUI(data.currentResult); 
-    } else {
-      // Fallback or old automated logic
-      runAutomatedSystem(); 
-    }
-  });
-}
-<!-- Live Cricket Score Match Banner -->
-<div id="cricket-widget" style="background: #111; color: #fff; padding: 15px; border-radius: 8px; text-align: center; font-family: sans-serif;">
-  <div style="font-size: 12px; color: #ff3b30; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">
-    🔴 Live ODI Match Update
-  </div>
-  <div id="match-teams" style="font-size: 18px; margin: 8px 0; font-weight: bold;">Loading Match Data...</div>
-  <div id="live-score" style="font-size: 24px; color: #4cd964; font-weight: bold; margin-bottom: 5px;">0/0 (0.0 Overs)</div>
-  <div id="match-status" style="font-size: 12px; color: #aaa;">Waiting for live stream connection...</div>
-</div>
-<!-- ============================================= -->
-<!-- 1. LIVE MATCH PANEL HOUSING (HTML LAYOUT)     -->
-<!-- ============================================= -->
-<div id="live-line-panel" style="background: #0b132b; color: #ffffff; padding: 15px; border-radius: 12px; font-family: Arial, sans-serif; max-width: 440px; margin: 20px auto; border: 1px solid #1c2541; box-shadow: 0 5px 15px rgba(0,0,0,0.4);">
-  
-  <!-- Header Title Banner -->
-  <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1c2541; padding-bottom: 8px; margin-bottom: 12px;">
-    <span style="background: #ff0055; color: #fff; font-size: 10px; padding: 3px 8px; font-weight: bold; border-radius: 3px; letter-spacing: 1px; animation: flash 1.5s infinite;">LIVE LINE</span>
-    <span id="match-format" style="font-size: 11px; color: #5bc0be; font-weight: bold;">ODI MATCH</span>
-  </div>
-  
-  <!-- Score and Live Teams Display -->
-  <h3 id="teams-header" style="margin: 5px 0; text-align: center; font-size: 18px; color: #ffffff;">Loading Match Data...</h3>
-  <div id="live-scoreboard" style="font-size: 24px; text-align: center; color: #64dfdf; font-weight: bold; margin: 10px 0;">0/0 (0.0 Ov)</div>
-  <div id="ball-commentary" style="font-size: 13px; text-align: center; color: #bdc3c7; font-style: italic; margin-bottom: 15px;">Awaiting ball event...</div>
-
-  <!-- Market Odds Columns Header -->
-  <div style="display: flex; background: #1c2541; padding: 6px; font-size: 11px; font-weight: bold; border-radius: 4px; text-align: center; color: #abc4ff; margin-bottom: 8px;">
-    <div style="width: 40%; text-align: left; padding-left: 5px;">MATCH ODDS</div>
-    <div style="width: 30%;">BACK (LAGAI)</div>
-    <div style="width: 30%;">LAY (KHAI)</div>
-  </div>
-
-  <!-- Team A Data Row Container -->
-  <div style="display: flex; align-items: center; background: #111a36; padding: 8px; margin-bottom: 6px; border-radius: 6px; text-align: center; border: 1px solid #1c2541;">
-    <div id="team-a-title" style="width: 40%; text-align: left; font-weight: bold; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Team 1</div>
-    <div style="width: 30%;"><button id="team-a-back-val" style="width: 85%; background: #00b4d8; color: #000; border: none; padding: 8px; font-weight: bold; border-radius: 4px; font-size: 15px;">-</button></div>
-    <div style="width: 30%;"><button id="team-a-lay-val" style="width: 85%; background: #ffb703; color: #000; border: none; padding: 8px; font-weight: bold; border-radius: 4px; font-size: 15px;">-</button></div>
-  </div>
-
-  <!-- Team B Data Row Container -->
-  <div style="display: flex; align-items: center; background: #111a36; padding: 8px; border-radius: 6px; text-align: center; border: 1px solid #1c2541;">
-    <div id="team-b-title" style="width: 40%; text-align: left; font-weight: bold; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Team 2</div>
-    <div style="width: 30%;"><button id="team-b-back-val" style="width: 85%; background: #00b4d8; color: #000; border: none; padding: 8px; font-weight: bold; border-radius: 4px; font-size: 15px;">-</button></div>
-    <div style="width: 30%;"><button id="team-b-lay-val" style="width: 85%; background: #ffb703; color: #000; border: none; padding: 8px; font-weight: bold; border-radius: 4px; font-size: 15px;">-</button></div>
-  </div>
-
-  <p id="stream-status" style="font-size: 10px; text-align: center; color: #4a5568; margin-top: 12px; margin-bottom: 0;">Status: Ready to connect</p>
-</div>
-
-<style>
-  @keyframes flash { 50% { opacity: 0.4; } }
-</style>
-
-<!-- ============================================= -->
-<!-- 2. DATA CONNECTION HANDLER (JAVASCRIPT LOGIC) -->
-<!-- ============================================= -->
-<script>
-// API Configurations - Update with your chosen provider credentials
-const LIVE_LINE_ENDPOINT = "https://rapidapi.com"; 
-const ACCESS_TOKEN = "YOUR_EXACT_RAPIDAPI_KEY_HERE";
-const ACTIVE_MATCH_ID = "123456"; // Target unique match fixture identifier
-
-async function streamLiveLineUpdates() {
-  try {
-    const response = await fetch(`${LIVE_LINE_ENDPOINT}?match_id=${ACTIVE_MATCH_ID}`, {
-      method: "GET",
-      headers: {
-        "X-RapidAPI-Key": ACCESS_TOKEN,
-        "X-RapidAPI-Host": "cricket-api-free-data.p.rapidapi.com",
-        "Content-Type": "application/json"
-      }
-    });
-
-    if (!response.ok) throw new Error("Data stream connectivity lag");
-    const json = await response.json();
-
-    // Map fields matching the JSON structure from your data provider
-    if (json && json.results) {
-      const match = json.results;
-
-      // Update primary text and scoreboard metrics inside UI
-      document.getElementById("teams-header").innerText = `${match.team_a} vs ${match.team_b}`;
-      document.getElementById("live-scoreboard").innerText = `${match.runs}/${match.wickets} (${match.overs} Ov)`;
-      document.getElementById("team-a-title").innerText = match.team_a;
-      document.getElementById("team-b-title").innerText = match.team_b;
-      
-      // Update the latest delivery commentary event text
-      if (match.last_ball_commentary) {
-         document.getElementById("ball-commentary").innerText = match.last_ball_commentary;
-      }
-
-      // Update the panel odds buttons dynamically
-      document.getElementById("team-a-back-val").innerText = match.odds_team_a_back || "1.90";
-      document.getElementById("team-a-lay-val").innerText = match.odds_team_a_lay || "1.92";
-      document.getElementById("team-b-back-val").innerText = match.odds_team_b_back || "1.90";
-      document.getElementById("team-b-lay-val").innerText = match.odds_team_b_lay || "1.92";
-
-      document.getElementById("stream-status").innerText = "Status: Secure Live Connection Active";
-    }
-  } catch (error) {
-    console.error("Live Line Stream Error:", error);
-    document.getElementById("stream-status").innerText = "Status: Reconnecting data stream...";
-  }
-}
-
-// 1000 milliseconds execution cycle = Pulls fresh data exactly every 1 second
-setInterval(streamLiveLineUpdates, 1000);
-
-// Initialize connection automatically when user structural layout completes rendering
-window.addEventListener("DOMContentLoaded", streamLiveLineUpdates);
-</script>
