@@ -84,10 +84,10 @@ async function load(){
     var lt=await sb.rpc("admin_statement_list",{p_account:null,p_limit:100});
     window.PB_LEDGER=lt.error?[]:(lt.data||[]);
   }
-  if(me.role==="admin"||me.role==="master"){var g=await sb.rpc("lc_admin_get");if(g.error){LCE=g.error.message;LCC=null;LCL=[]}else{LCE=null;LCC=g.data;var li=await sb.rpc("lc_admin_list");LCL=li.data||[]}
-  }
+  if(me.role==="admin"){var g=await sb.rpc("lc_admin_get");if(g.error){LCE=g.error.message;LCC=null;LCL=[]}else{LCE=null;LCC=g.data;var li=await sb.rpc("lc_admin_list");LCL=li.data||[]} } else if(me.role==="master"){var g=await sb.rpc("lc_master_get");if(g.error){LCE=g.error.message;LCC=null;LCL=[]}else{LCE=null;LCC=g.data;var li=await sb.rpc("lc_master_list");LCL=li.data||[]} }
   if(me.role==="admin"){var k=await sb.rpc("sk_admin_summary");if(k.error){SKE=k.error.message;SKS=[];SKC=null}else{SKE=null;SKS=Array.isArray(k.data)?k.data:[];var kc=await sb.from("sk_config").select("*").eq("id",1).single();SKC=kc.data||null}
-    var jq=await sb.rpc("jqk_admin_summary");if(jq.error){JQE=jq.error.message;JQS=null}else{JQE=null;JQS=jq.data||null}}}
+    var jq=await sb.rpc("jqk_admin_summary");if(jq.error){JQE=jq.error.message;JQS=null}else{JQE=null;JQS=jq.data||null}}
+}
 async function enter(){
   var u=(await sb.auth.getUser()).data.user,p=u?await sb.from("profiles").select("*").eq("id",u.id).single():{};
   var bad=null;
