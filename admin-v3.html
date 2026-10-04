@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>KingXBet Admin</title>
+<style>
+:root{--bg:#EEF1EA;--c:#fff;--ink:#14261E;--mu:#5F6F66;--ln:#D5DCD1;--g:#0F4A35;--y:#E8A317;--yi:#3A2600;--ok:#137A45;--no:#B3372B}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,sans-serif}
+header{background:var(--g);color:#fff;padding:14px 16px;display:flex;justify-content:space-between;align-items:center}
+h1,h2,h3{margin:0}h1{font-size:21px}h2{font-size:18px;margin-bottom:8px}small{display:block;opacity:.8;font-size:12px}
+.banner{background:var(--y);color:var(--yi);font-size:12.5px;padding:6px 16px}
+main{max-width:860px;margin:0 auto;padding:12px}
+button{font:inherit;cursor:pointer}
+.tabs{display:flex;gap:6px;overflow-x:auto;margin-bottom:12px}
+.tabs button{flex:none;padding:9px 14px;border:1px solid var(--ln);background:var(--c);color:var(--ink);border-radius:99px;font-weight:700}
+.tabs button[aria-selected=true]{background:var(--g);color:#fff}
+.card{background:var(--c);border:1px solid var(--ln);border-radius:14px;padding:14px;margin-bottom:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+label{display:block;font-size:13px;color:var(--mu);margin-bottom:3px}
+input[type=text],input[type=password],input[type=number],input[type=datetime-local]{width:100%;padding:10px;border:1.5px solid var(--ln);border-radius:9px;background:var(--bg);color:var(--ink);font:inherit}
+.btn{padding:10px 14px;border:0;border-radius:10px;background:var(--y);color:var(--yi);font-weight:800}
+.sm{padding:7px 10px;border:1.5px solid var(--ln);border-radius:9px;background:none;color:var(--ink);font-weight:700;font-size:13px}
+.sm.bad{color:var(--no)}
+.row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:10px}.row input{width:110px}
+.top{display:flex;justify-content:space-between;gap:8px}
+.id{font-weight:800;font-size:17px;letter-spacing:.03em}.meta{color:var(--mu);font-size:13px}
+.pill{font-weight:700;font-size:12px;padding:3px 9px;border-radius:99px;border:1.5px solid currentColor}
+.on{color:var(--ok)}.off{color:var(--no)}.msg{color:var(--no);font-weight:500}
+.reveal{border:2px solid var(--y)}
+.cred{font:700 18px ui-monospace,monospace;background:var(--bg);padding:8px 10px;border-radius:8px;display:inline-block;margin:4px 0}
+.chk{display:flex;gap:8px;align-items:center;margin:6px 0}.chk input{width:18px;height:18px}
+.empty{color:var(--mu);text-align:center;padding:18px}.log{font-size:13.5px;padding:7px 0;border-top:1px solid var(--ln)}
+.narrow{max-width:420px;margin:24px auto}
+.mkt{border-top:1px solid var(--ln);margin-top:10px}.mkc{background:var(--bg);border-radius:10px;padding:8px 10px;margin:6px 0}
+select{padding:9px;border:1.5px solid var(--ln);border-radius:9px;background:var(--bg);color:var(--ink);font:inherit}
+.kx-chip{display:inline-block;width:30px;height:30px;vertical-align:middle;margin-right:8px;background:radial-gradient(circle,#f7d26b 0 15%,#b61919 16% 35%,#111 36% 65%,#b61919 66%);border:2px solid #f4d477;border-radius:50%}
+<style>.result-jump{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.result-jump .btn{flex:1;min-width:150px}.jq-result-scroll{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;max-height:520px;overflow-y:auto;padding:8px;margin:10px 0;border:1px solid #e5e7eb;border-radius:14px;background:#fafafa}.jq-result-card{min-height:130px;border:1px solid #ddd;border-radius:12px;background:#fff;padding:7px;cursor:pointer}.jq-result-card svg{width:100%;height:auto;display:block}.jq-result-card.selected{outline:3px solid #111827;transform:translateY(-1px)}.result-selected{font-weight:700;padding:8px 0}.admin-jq{max-height:460px}.result-dash{scroll-margin-top:10px}</style></style>
+
+<style>
+/* KingXBet v3 premium control-panel shell — UI only; existing JS/backend preserved */
+:root{--kx-bg:#0b1511;--kx-panel:#11231b;--kx-panel2:#173126;--kx-gold:#e6ad35;--kx-gold2:#f3c85a;--kx-text:#eef7f1;--kx-muted:#9fb5aa;--kx-line:#29473a;--kx-green:#1d6045}
+body{background:#eef2ed!important}
+header{background:linear-gradient(135deg,#082d20,#14543d)!important;padding:18px 24px!important;min-height:78px;box-shadow:0 2px 12px #0002}
+header h1{font-size:25px!important;letter-spacing:.2px}
+.banner{background:linear-gradient(90deg,#d99d20,#efb83c)!important;font-weight:700!important;padding:9px 24px!important}
+main{max-width:1180px!important;padding:18px!important}
+.kx-shell{display:grid;grid-template-columns:220px minmax(0,1fr);gap:18px;align-items:start}
+.kx-side{position:sticky;top:12px;background:linear-gradient(180deg,var(--kx-bg),#12251d);border-radius:18px;padding:14px;box-shadow:0 12px 35px #0b151122;min-height:calc(100vh - 150px)}
+.kx-brand{display:flex;align-items:center;gap:10px;color:#fff;font-weight:900;font-size:18px;padding:8px 8px 16px;border-bottom:1px solid #ffffff1c;margin-bottom:10px}
+.kx-brand-dot{width:34px;height:34px;border-radius:50%;background:radial-gradient(circle,#f7d26b 0 15%,#b61919 16% 35%,#111 36% 65%,#b61919 66%);border:2px solid #f4d477;box-shadow:0 0 0 2px #ffffff20}
+.kx-role{font-size:11px;color:var(--kx-muted);font-weight:600;margin-top:2px}
+.kx-nav{display:grid;gap:5px}
+.kx-nav button{width:100%;text-align:left;border:1px solid transparent!important;background:transparent!important;color:#cfe0d7!important;border-radius:11px!important;padding:11px 12px!important;font-weight:750!important;display:flex;align-items:center;gap:10px}
+.kx-nav button:hover{background:#ffffff0c!important}
+.kx-nav button[aria-selected=true]{background:linear-gradient(90deg,#e5ad35,#f0c14e)!important;color:#1b180d!important;box-shadow:0 5px 14px #0003}
+.kx-icon{width:20px;text-align:center;opacity:.95}
+.kx-foot{margin-top:18px;padding:10px 8px;color:#81988d;font-size:11px;border-top:1px solid #ffffff14}
+.kx-content{min-width:0}
+.kx-topline{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
+.kx-title{font-size:24px;font-weight:900;color:#173126}
+.kx-sub{font-size:12px;color:#708078}
+.kx-content>.tabs{display:none!important}
+.kx-content .card{border-radius:16px!important;box-shadow:0 6px 20px #1634260d;margin-bottom:14px!important}
+.kx-content .btn{background:linear-gradient(180deg,#f0bf4c,#e0a52b)!important;box-shadow:0 3px 0 #b77e13;color:#251b06!important}
+.kx-content .sm{border-radius:10px}
+@media(max-width:760px){
+  main{padding:10px!important}
+  .kx-shell{display:block}
+  .kx-side{position:sticky;top:0;z-index:20;min-height:auto;padding:9px;margin-bottom:12px;border-radius:15px}
+  .kx-brand{display:none}
+  .kx-nav{display:flex;overflow-x:auto;gap:6px;scrollbar-width:none}
+  .kx-nav::-webkit-scrollbar{display:none}
+  .kx-nav button{width:auto;min-width:max-content;white-space:nowrap;padding:9px 13px!important}
+  .kx-foot{display:none}
+  .kx-topline{padding:2px 4px 5px}
+  .kx-title{font-size:20px}
+  header{padding:14px 16px!important}
+  header h1{font-size:21px!important}
+}
+</style>
+</head>
+<body>
+<header><div><h1><i class="kx-chip" aria-hidden="true"></i>KingXBet Admin</h1><small id="who">Control panel</small></div><button class="sm" id="out" style="color:#fff;border-color:#fff8" hidden>Log out</button></header>
+<div class="banner">Play-money demo. Coins are virtual. There are no deposits, withdrawals or payments.</div>
+<main id="app"></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script>
+// 1) Paste your Supabase project values here (Project settings > API). The anon key is safe to ship.
+var CFG={url:"https://jmvvuitwjixgsmhrdapg.supabase.co",anon:"sb_publishable_VZRaBdHeQk0YAWzJammc1w_9NL6owyx"};
+var GAMES=[["cricket","Cricket"],["casino","Casino"],["roulette","Roulette"],["lucky7","Lucky 7"],["kingjack","King Jack"],["num","1–9"],["satta","Satta King"],["jqk","JQK Cards"]];
+var sb=null,me=null,S=null,MS=[],CS=[],LG=[],tab="",reveal=null,msg="",LCC=null,LCL=[],LCE=null,SKS=[],SKC=null,SKE=null,JQS=null,JQE=null;window.PB_LEDGER=[];
+function $(i){return document.getElementById(i)}
+function v(i){return $(i)?$(i).value.trim():""}
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+function fmt(n){return Math.round(n).toLocaleString()}
+function nn(i){var n=Math.floor(+v(i));return isFinite(n)?n:NaN}
+function emailFor(c){return c.toLowerCase()+"@id.playbook.example"}
+function app(h){$("app").innerHTML=h}
+function err(t){msg=t;render()}
+function tabs(){if(me.role==="admin")return [["masters","Master IDs"],["customers","Customer IDs"],["control","Control panel"],["live","Live cricket"],["satta","Satta King"],["jqk","JQK Cards"],["activity","Activity"],["account","Account"]];if(me.role==="master")return [["customers","My customers"],["live","Live cricket"],["activity","Activity"],["account","Account"]];return [["customers","My customers"],["activity","Activity"],["account","Account"]]}
+async function callFn(b){
+  var m={create:["admin_create",{p_name:b.name,p_coins:b.coins,p_max:b.max_customers==null?null:b.max_customers}],
+    reset_password:["admin_reset",{p_code:b.code}],
+    set_active:["admin_set_active",{p_code:b.code,p_active:b.active}],
+    add_coins:["admin_add_coins",{p_code:b.code,p_amount:b.amount}],
+    delete:["admin_delete",{p_code:b.code}]}[b.action];
+  var r=await sb.rpc(m[0],m[1]);
+  if(r.error)throw new Error(r.error.message);
+  return r.data||{}}
+async function load(){
+  if(!sb)throw new Error("Backend is not connected.");
+  var all=await sb.from("profiles").select("*").order("created_at",{ascending:false});
+  if(all.error)throw new Error("Could not load profiles: "+all.error.message);
+  var rows=all.data||[];
+  MS=rows.filter(function(r){return r.role==="master"});CS=rows.filter(function(r){return r.role==="customer"});
+  if(me&&me.role==="master")me=rows.filter(function(r){return r.id===me.id})[0]||me;
+  var s=await sb.from("settings").select("data").eq("id",1).single();
+  if(s.error&&s.error.code!=="PGRST116")throw new Error("Could not load settings: "+s.error.message);
+  S=s.data?s.data.data:null;
+  var l=await sb.from("activity").select("*").order("at",{ascending:false}).limit(50);
+  if(l.error)throw new Error("Could not load activity: "+l.error.message);
+  LG=l.data||[];
+  if(me.role==="admin"){
+    var lt=await sb.rpc("admin_statement_list",{p_account:null,p_limit:100});
+    window.PB_LEDGER=lt.error?[]:(lt.data||[]);
+  }
+  if(me.role==="admin"){var g=await sb.rpc("lc_admin_get");if(g.error){LCE=g.error.message;LCC=null;LCL=[]}else{LCE=null;LCC=g.data;var li=await sb.rpc("lc_admin_list");LCL=li.data||[]}
+  } else if(me.role==="master"){var g=await sb.rpc("lc_master_get");if(g.error){LCE=g.error.message;LCC=null;LCL=[]}else{LCE=null;LCC=g.data;var li=await sb.rpc("lc_master_list");LCL=li.data||[]}
+  }
+  if(me.role==="admin"){var k=await sb.rpc("sk_admin_summary");if(k.error){SKE=k.error.message;SKS=[];SKC=null}else{SKE=null;SKS=Array.isArray(k.data)?k.data:[];var kc=await sb.from("sk_config").select("*").eq("id",1).single();SKC=kc.data||null}
+    var jq=await sb.rpc("jqk_admin_summary");if(jq.error){JQE=jq.error.message;JQS=null}else{JQE=null;JQS=jq.data||null}}}
+async function enter(){
+  var u=(await sb.auth.getUser()).data.user,p=u?await sb.from("profiles").select("*").eq("id",u.id).single():{};
+  var bad=null;
+  if(!p.data)bad="Could not load this account.";
+  else if(p.data.role==="customer")bad="Customer IDs sign in to the games app, not this panel.";
+  else if(!p.data.active)bad="This ID is suspended. Contact the admin.";
+  if(bad){await sb.auth.signOut();me=null;return err(bad)}
+  me=p.data;msg="";await load();render()}
+async function boot(){
+  if(CFG.url.indexOf("YOUR_")===0){app('<div class="card narrow"><h2>Connect your backend</h2><p class="meta">Open this file, set <b>CFG.url</b> and <b>CFG.anon</b> at the top of the script, then reload. See backend README for the setup steps.</p></div>');return}
+  sb=supabase.createClient(CFG.url,CFG.anon);
+  app('<div class="empty">Loading…</div>');
+  var s=await sb.auth.getSession();if(s.data.session)await enter();else render()}
+
+function render(){
+  $("who").textContent=me?(me.role==="admin"?"Admin":"Master")+" · "+me.code:"Control panel";$("out").hidden=!me;
+  if(!me){app(login());return}
+  if(!tab||!tabs().some(function(t){return t[0]===tab}))tab=tabs()[0][0];
+  var navIcons={masters:'◆',customers:'●',control:'⌂',live:'🏏',satta:'7',jqk:'♠',activity:'◷',account:'⚙'};var h='<div class="kx-shell"><aside class="kx-side"><div class="kx-brand"><span class="kx-brand-dot"></span><span>KingXBet<div class="kx-role">Exchange Control Panel</div></span></div><div class="kx-nav" role="tablist">'+tabs().map(function(t){return '<button role="tab" data-act="tab" data-t="'+t[0]+'" aria-selected="'+(t[0]===tab)+'"><span class="kx-icon">'+(navIcons[t[0]]||'•')+'</span>'+t[1]+'</button>'}).join("")+'</div><div class="kx-foot">KingXBet • Play-money demo<br>Virtual coins only</div></aside><section class="kx-content"><div class="kx-topline"><div><div class="kx-title">'+esc((tabs().filter(function(t){return t[0]===tab})[0]||['','Control panel'])[1])+'</div><div class="kx-sub">Secure operator workspace</div></div></div>';
+  if(msg)h+='<p class="msg" role="alert">'+esc(msg)+'</p>';
+  if(reveal)h+='<div class="card reveal"><h2>'+esc(reveal.what)+'</h2><div class="meta">ID</div><div class="cred">'+esc(reveal.id)+'</div><div class="meta">Temporary password</div><div class="cred">'+esc(reveal.pw)+'</div><p class="meta">Shown once and not stored. Share it securely and ask the holder to change it.</p><button class="sm" data-act="dismiss">I have saved it</button></div>';
+  h+={results:vResults,masters:vMasters,customers:vCustomers,control:vControl,live:vLive,satta:vSatta,jqk:vJqk,activity:vActivity,ledger:vLedger,account:vAccount}[tab]();h+='</section></div>';app(h)}
+function login(){return '<div class="card narrow"><h2>Sign in</h2><label for="li">Admin or Master ID</label><input id="li" type="text" autocapitalize="characters" autocomplete="username"><label for="lp" style="margin-top:8px">Password</label><input id="lp" type="password" autocomplete="current-password">'+(msg?'<p class="msg" role="alert">'+esc(msg)+'</p>':'')+'<div class="row"><button class="btn" data-act="login">Sign in</button></div><p class="meta">Customer IDs sign in to the games app, not this panel.</p></div>'}
+function btn(a,c,l,cls){return '<button class="sm '+(cls||"")+'" data-act="'+a+'" data-id="'+c.code+'" data-on="'+(c.active?1:0)+'">'+l+'</button>'}
+function vMasters(){
+  var h='<div class="card"><h2>Create a Master ID</h2><div class="grid"><div><label for="mn">Master name</label><input id="mn" type="text"></div><div><label for="mp">Virtual coin pool</label><input id="mp" type="number" min="0" value="10000"></div><div><label for="mm">Max customers</label><input id="mm" type="number" min="1" value="50"></div></div><div class="row"><button class="btn" data-act="addMaster">Create Master ID</button></div></div>';
+  if(!MS.length)return h+'<div class="empty">No Master IDs yet.</div>';
+  return h+MS.map(function(m){var n=CS.filter(function(c){return c.parent===m.id}).length;
+    return '<div class="card"><div class="top"><div><div class="id">'+m.code+'</div><div>'+esc(m.name)+'</div></div><span class="pill '+(m.active?"on":"off")+'">'+(m.active?"Active":"Suspended")+'</span></div><div class="meta">Pool '+fmt(m.coins)+' coins · Customers '+n+' / '+m.max_customers+'</div><div class="row"><input type="number" min="1" id="in-'+m.code+'" placeholder="Coins" aria-label="Coins to add to pool"><button class="sm" data-act="coins" data-id="'+m.code+'">Add to pool</button>'+btn("toggle",m,m.active?"Suspend":"Activate")+btn("reset",m,"Reset password")+btn("del",m,"Delete","bad")+'</div></div>'}).join("")}
+function vCustomers(){var h="",mine=me.role==="master";
+  if(mine)h+='<div class="card"><h2>Create a Customer ID</h2><p class="meta">Pool left: '+fmt(me.coins)+' coins · Customers '+CS.length+' / '+me.max_customers+'</p><div class="grid"><div><label for="cn">Customer name</label><input id="cn" type="text"></div><div><label for="cc">Starting coins</label><input id="cc" type="number" min="0" value="'+(S?S.start:1000)+'"></div></div><div class="row"><button class="btn" data-act="addCust">Create Customer ID</button></div></div>';
+  if(!CS.length)return h+'<div class="empty">No Customer IDs yet.'+(mine?"":" Masters create them from their own panel.")+'</div>';
+  return h+CS.map(function(c){var pm=MS.filter(function(m){return m.id===c.parent})[0];
+    return '<div class="card"><div class="top"><div><div class="id">'+c.code+'</div><div>'+esc(c.name)+'</div></div><span class="pill '+(c.active?"on":"off")+'">'+(c.active?"Active":"Suspended")+'</span></div><div class="meta">'+fmt(c.coins)+' coins'+(pm?' · Master '+pm.code:'')+'</div><div class="row">'+(mine?'<input type="number" min="1" id="in-'+c.code+'" placeholder="Coins" aria-label="Coins to add"><button class="sm" data-act="coins" data-id="'+c.code+'">Add coins</button>':'')+btn("toggle",c,c.active?"Suspend":"Activate")+btn("reset",c,"Reset password")+btn("del",c,"Delete","bad")+'</div></div>'}).join("")}
+function vControl(){var s=S;if(!s)return '<div class="empty">Settings could not be loaded.</div>';
+  return '<div class="card"><h2>Game settings</h2><p class="meta">Enforced by the server for every customer: the games app reads them at sign-in, and the database checks every round.</p><div class="grid"><div><label for="s1">Default starting coins</label><input id="s1" type="number" min="0" value="'+s.start+'"></div><div><label for="s2">Daily bonus coins</label><input id="s2" type="number" min="0" value="'+s.daily_bonus+'"></div><div><label for="s3">Minimum bet</label><input id="s3" type="number" min="1" value="'+s.min_bet+'"></div><div><label for="s4">Maximum bet</label><input id="s4" type="number" min="1" value="'+s.max_bet+'"></div></div><div class="row"><button class="btn" data-act="saveSettings">Save settings</button></div></div>';function vLive(){
+  if(LCE||!LCC)return '<div class="card"><h2>Live cricket</h2><p class="msg">Live cricket isn\'t installed yet.</p><p class="meta">Run the Live Cricket SQL in the Supabase SQL Editor, then tap Refresh.</p><div class="row"><button class="sm" data-act="lcRefresh">Refresh</button></div></div>';
+  var c=LCC,h='<div class="card"><h2>Live cricket · connection</h2>'+
+  '<p class="meta">Odds: '+(c.has_odds_key?'<b class="on">key saved</b>':'<b class="off">no key</b>')+' · last checked '+ago(c.last_odds)+' &nbsp;|&nbsp; Scores: '+(c.has_score_key?'<b class="on">key saved</b>':'<b class="off">no key</b>')+' · last checked '+ago(c.last_score)+'</p>'+
+  (c.sports_active?'<p class="meta">Leagues found: '+esc(c.sports_active)+'</p>':'')+
+  (c.last_ok?'<p class="meta">Last success: '+esc(c.last_ok)+'</p>':'')+
+  (c.last_error?'<p class="msg">Last error: '+esc(c.last_error)+'</p>':'')+
+  '<div class="grid"><div><label for="lk1">The Odds API key</label><input id="lk1" type="password" placeholder="'+(c.has_odds_key?"saved – type to replace":"paste key")+'" autocomplete="off"></div><div><label for="lk2">CricketData.org key</label><input id="lk2" type="password" placeholder="'+(c.has_score_key?"saved – type to replace":"paste key")+'" autocomplete="off"></div></div>'+
+  '<div class="grid" style="margin-top:8px"><div><label for="lk3">Check odds every (seconds)</label><input id="lk3" type="number" min="1" value="'+c.odds_every+'"></div><div><label for="lk4">Check scores every (seconds)</label><input id="lk4" type="number" min="1" value="'+c.score_every+'"></div><div><label for="lk6">Odds margin %</label><input id="lk6" type="number" min="0" max="50" value="'+Math.round(c.margin*100)+'"></div></div>'+
+  '<div class="row"><button class="sm" data-act="lcSpeed" data-o="7200" data-s="900">Free plans (slow)</button><button class="sm" data-act="lcSpeed" data-o="60" data-s="60">Every minute</button><button class="sm" data-act="lcSpeed" data-o="1" data-s="1">Every second (paid plans)</button></div>'+
+  '<label for="lk5" style="margin-top:8px">Leagues to follow (blank = all cricket). Example: cricket_ipl,cricket_odi</label><input id="lk5" type="text" value="'+esc(c.leagues)+'">'+
+  '<label class="chk"><input type="checkbox" id="lc1"'+(c.enabled?" checked":"")+'>Live cricket on</label><label class="chk"><input type="checkbox" id="lc2"'+(c.inplay?" checked":"")+'>Allow bets after a match starts (in-play)</label><label class="chk"><input type="checkbox" id="lc3"'+(c.auto_settle?" checked":"")+'>Pay results automatically when a match ends</label>'+
+  '<div class="row"><button class="btn" data-act="lcSave">Save live cricket settings</button><button class="sm" data-act="lcRefresh">Refresh</button></div><p class="meta">Free plans: about 500 odds checks a month and 100 score checks a day. Faster speeds need paid plans.</p></div>';
+
+  h+='<div class="card"><h2>Add a match by hand</h2><p class="meta">Use this if a match isn\'t in the feed, or before you have API keys. You set the odds and the result.</p><div class="grid"><div><label for="la0">League</label><input id="la0" type="text" placeholder="e.g. IPL"></div><div><label for="la1">Team A</label><input id="la1" type="text"></div><div><label for="la2">Team B</label><input id="la2" type="text"></div><div><label for="la3">Start time</label><input id="la3" type="datetime-local"></div><div><label for="la4">Odds A</label><input id="la4" type="number" step="0.01" min="1.01" value="1.90"></div><div><label for="la5">Odds B</label><input id="la5" type="number" step="0.01" min="1.01" value="1.90"></div></div><div class="row"><button class="btn" data-act="lcAdd">Add match</button></div></div>';
+
+  if(!LCL.length)return h+'<div class="empty">No matches yet. They appear here when the odds feed finds them, or when you add one.</div>';
+
+  return h+LCL.map(function(m){
+    var done=m.status==="settled"||m.status==="void",id=esc(m.id);
+    return '<div class="card"><div class="top"><div><div class="meta">'+esc(m.league||"Cricket")+(m.manual?" · added by hand":"")+'</div><div class="id" style="font-size:16px">'+esc(m.team_a)+' v '+esc(m.team_b)+'</div><div class="meta">'+(m.start_at?esc(new Date(m.start_at).toLocaleString()):"")+(m.live?' · <b class="off">LIVE</b>':"")+'</div></div><span class="pill '+(m.status==="open"?"on":"off")+'" style="white-space:nowrap;align-self:flex-start">'+esc(m.status.toUpperCase())+'</span></div>'+(m.status==="settled"?'<div class="meta"><b>Result: '+esc(m.winner==="a"?m.team_a:m.team_b)+' won</b></div>':'')+
+    (m.score_text?'<div class="meta" style="margin-top:4px"><b>'+esc(m.score_text)+'</b></div>':'')+(m.score_status?'<div class="meta">'+esc(m.score_status)+'</div>':'')+
+    '<div class="meta">Bets: '+(m.bets||0)+' · open stake '+fmt(m.open_stake||0)+' coins · odds '+(m.odds_lock?"set by you":"from feed")+'</div>'+
+    (done?'':'<div class="row"><input type="number" step="0.01" min="1.01" id="oa-'+id+'" value="'+(m.odds_a||"")+'" aria-label="Odds '+esc(m.team_a)+'"><input type="number" step="0.01" min="1.01" id="ob-'+id+'" value="'+(m.odds_b||"")+'" aria-label="Odds '+esc(m.team_b)+'"><button class="sm" data-act="lcOdds" data-id="'+id+'">Set odds</button>'+(m.odds_lock&&!m.manual?'<button class="sm" data-act="lcM" data-x="auto_odds" data-id="'+id+'">Use feed odds</button>':'')+'</div>'+
+    '<div class="row">'+(m.status==="open"?'<button class="sm" data-act="lcM" data-x="suspend" data-id="'+id+'">Suspend</button><button class="sm" data-act="lcM" data-x="close" data-id="'+id+'">Close betting</button>':'<button class="sm" data-act="lcM" data-x="open" data-id="'+id+'">Open betting</button>')+(m.live?'<button class="sm" data-act="lcM" data-x="settle_a" data-id="'+id+'" data-c="settle as '+esc(m.team_a)+'">Set '+esc(m.team_a)+' result</button><button class="sm" data-act="lcM" data-x="settle_b" data-id="'+id+'" data-c="settle as '+esc(m.team_b)+'">Set '+esc(m.team_b)+' result</button>':'')+'<button class="sm" data-act="lcM" data-x="hide" data-id="'+id+'">Hide</button><button class="sm bad" data-act="lcM" data-x="delete" data-id="'+id+'" data-c="delete this match">Delete</button></div></div>')
+  }).join("");
+}
+
+function ago(t){
+  if(!t)return"never";
+  var s=Math.round((Date.now()-new Date(t).getTime())/1000);
+  return s<60?s+"s ago":s<3600?Math.round(s/60)+" min ago":Math.round(s/3600)+" h ago"
+}
+
+function vSatta(){
+  if(SKE||!SKC)return '<div class="card"><h2>Satta King</h2><p class="msg">Satta King isn\'t installed yet.</p><p class="meta">Run the Satta King SQL in the Supabase SQL Editor, then tap Refresh.</p><div class="row"><button class="sm" data-act="skRefresh">Refresh</button></div></div>';
+  var c=SKC,h='<div class="card"><h2>Satta King · settings</h2><p class="meta">Play-money demo: results are entered manually by the admin.</p>';
+  h+='<div class="grid"><div><label for="skOpen">Open time</label><input id="skOpen" type="time" value="'+(c.open_time||"10:00")+'"></div><div><label for="skDraw">Draw time</label><input id="skDraw" type="time" value="'+(c.draw_time||"18:00")+'"></div></div>';
+  h+='<div class="row"><button class="btn" data-act="skRefresh">Refresh</button></div></div>';
+  h+='<div class="card"><h2>Recent Satta results</h2>';
+  if(Array.isArray(SKS)&&SKS.length)h+=SKS.map(function(x){return '<div class="log"><b>'+esc(x.result||"--")+'</b> · '+esc(x.draw_at||x.created_at||"")+'</div>'}).join("");
+  else h+='<div class="empty">No recent results.</div>';
+  return h+'</div>'
+}
+
+function vJqk(){
+  if(JQE||!JQS)return '<div class="card"><h2>JQK Cards</h2><p class="msg">JQK Cards isn\'t installed yet.</p><p class="meta">Run the JQK SQL in the Supabase SQL Editor, then tap Refresh.</p><div class="row"><button class="sm" data-act="jqRefresh">Refresh</button></div></div>';
+  var q=JQS,h='<div class="card"><h2>JQK Cards · control</h2><p class="meta">Play-money demo. Results are entered manually.</p>';
+  if(q.round)h+='<div class="grid"><div><div class="meta">Current round</div><b>'+esc(q.round)+'</b></div><div><div class="meta">Draw</div><b>'+esc(q.draw_at||"")+'</b></div><div><div class="meta">Bets</div><b>'+fmt(q.bets||0)+'</b></div></div>';
+  h+='<div class="row"><button class="btn" data-act="jqRefresh">Refresh</button></div></div>';
+  return h
+}
+
+function vActivity(){
+  return '<div class="card"><h2>Recent activity</h2>'+(
+    LG.length?LG.map(function(x){
+      return '<div class="log"><b>'+esc(x.action||"Activity")+'</b> · '+esc(x.actor_code||"")+' · '+esc(x.at||"")+(x.detail?' · '+esc(JSON.stringify(x.detail)):"")+'</div>'
+    }).join(""):'<div class="empty">No activity yet.</div>'
+  )+'</div>'
+}
+
+function vLedger(){
+  if(me.role!=="admin")return '<div class="card"><h2>Reports</h2><div class="empty">Reports are available to Admin accounts.</div></div>';
+  var a=window.PB_LEDGER||[];
+  return '<div class="card"><h2>Reports / Ledger</h2><p class="meta">Recent virtual-coin account activity.</p>'+
+    (a.length?a.map(function(x){return '<div class="log">'+esc(JSON.stringify(x))+'</div>'}).join(""):'<div class="empty">No ledger entries.</div>')+
+    '</div>'
+}
+
+function vAccount(){
+  return '<div class="card"><h2>KingXBet account</h2><div class="grid"><div><div class="meta">Role</div><b>'+esc(me.role||"")+'</b></div><div><div class="meta">ID</div><b>'+esc(me.code||"")+'</b></div><div><div class="meta">Name</div><b>'+esc(me.name||"")+'</b></div></div><div class="row"><button class="btn" data-act="logout">Log out</button></div></div>'
+}
+
+function vResults(){
+  return '<div class="card"><h2>Dashboard</h2><p class="meta">KingXBet operator overview</p><div class="grid">'+
+  '<div class="card" style="margin:0"><div class="meta">Masters</div><b style="font-size:24px">'+MS.length+'</b></div>'+
+  '<div class="card" style="margin:0"><div class="meta">Customers</div><b style="font-size:24px">'+CS.length+'</b></div>'+
+  '<div class="card" style="margin:0"><div class="meta">Cricket matches</div><b style="font-size:24px">'+LCL.length+'</b></div>'+
+  '<div class="card" style="margin:0"><div class="meta">My coins</div><b style="font-size:24px">'+fmt(me.coins||0)+'</b></div>'+
+  '</div></div>'+
+  '<div class="card"><h2>System health</h2><div class="grid">'+
+  '<div><div class="meta">Odds API</div><b class="'+(LCC&&LCC.has_odds_key?"on":"off")+'">'+(LCC&&LCC.has_odds_key?"Connected":"No key")+'</b></div>'+
+  '<div><div class="meta">CricketData</div><b class="'+(LCC&&LCC.has_score_key?"on":"off")+'">'+(LCC&&LCC.has_score_key?"Connected":"No key")+'</b></div>'+
+  '<div><div class="meta">Live Cricket</div><b class="'+(LCC&&LCC.enabled?"on":"off")+'">'+(LCC&&LCC.enabled?"Enabled":"Disabled")+'</b></div>'+
+  '</div></div>'
+}<script>
+async function run(b,what){
+  var d=await callFn(b);
+  if(what)reveal={what:what,id:d.code,pw:d.password};
+  msg="";
+  await load();
+  render()
+}
+
+var A={
+  tab:function(t){
+    tab=t.dataset.t;
+    msg="";
+    render()
+  },
+
+  mkAdd:async function(t){
+    var id=t.dataset.id,
+        tpl=$("mt-"+id).value,
+        p={
+          action:"add",
+          match:id,
+          tpl:tpl,
+          oa:+$("m1-"+id).value,
+          ob:+$("m2-"+id).value
+        };
+
+    if(tpl==="custom")p.name=v("mn-"+id);
+
+    if(tpl==="line"){
+      p.innings=nn("mi-"+id)||1;
+      p.overs=+$("mo-"+id).value;
+      p.line=+$("ml-"+id).value;
+
+      if(!(p.overs>0)||!(p.line>0))
+        throw new Error("Enter the overs and the runs line.")
+    }
+
+    if(!(p.oa>1)||(tpl!=="line"&&!(p.ob>1)))
+      throw new Error("Odds must be above 1.");
+
+    var r=await sb.rpc("lc_admin_market",{p:p});
+    if(r.error)throw new Error(r.error.message);
+
+    msg="";
+    await load();
+    render()
+  },
+
+  mkOdds:async function(t){
+    var k=t.dataset.k,
+        n=+t.dataset.n,
+        p={action:"odds",market:+k,odds:[]};
+
+    if(t.dataset.line==="1"){
+      p.line=+$("kl-"+k).value;
+      p.odds=[+$("ko-"+k+"-0").value]
+    }else{
+      for(var i=0;i<n;i++)
+        p.odds.push(+$("ko-"+k+"-"+i).value);
+    }
+
+    var r=await sb.rpc("lc_admin_market",{p:p});
+    if(r.error)throw new Error(r.error.message);
+
+    msg="";
+    await load();
+    render()
+  },
+
+  mkA:async function(t){
+    if(t.dataset.c&&!confirm("Are you sure: "+t.dataset.c+"?"))
+      return;
+
+    var p={
+      action:t.dataset.x,
+      market:+t.dataset.k
+    };
+
+    if(t.dataset.r)p.result=t.dataset.r;
+
+    var r=await sb.rpc("lc_admin_market",{p:p});
+    if(r.error)throw new Error(r.error.message);
+
+    msg=r.data&&r.data.bets?
+      ("Settled "+r.data.bets+" bet(s)."):
+      "";
+
+    await load();
+    render()
+  },
+
+  lcRefresh:async function(){
+    msg="";
+    await load();
+    render()
+  },
+
+  lcSpeed:function(t){
+    $("lk3").value=t.dataset.o;
+    $("lk4").value=t.dataset.s
+  },
+
+  lcSave:async function(){
+    var o=nn("lk3"),
+        sc=nn("lk4"),
+        mg=+v("lk6");
+
+    if(!(o>=1&&sc>=1))
+      throw new Error("Speeds must be at least 1 second.");
+
+    if(!(mg>=0&&mg<=50))
+      throw new Error("Margin must be 0–50%.");
+
+    var p={
+      odds_every:o,
+      score_every:sc,
+      margin:mg/100,
+      leagues:v("lk5").replace(/\s+/g,""),
+      enabled:$("lc1").checked,
+      inplay:$("lc2").checked,
+      auto_settle:$("lc3").checked
+    };
+
+    if(v("lk1"))p.odds_key=v("lk1");
+    if(v("lk2"))p.score_key=v("lk2");
+
+    var r=await sb.rpc("lc_admin_set",{p:p});
+    if(r.error)throw new Error(r.error.message);
+
+    msg="";
+    await load();
+    render()
+  },
+
+  lcAdd:async function(){
+    var st=v("la3")?
+      new Date(v("la3")).toISOString():
+      new Date().toISOString();
+
+    var oa=+v("la4"),
+        ob=+v("la5");
+
+    if(!v("la1")||!v("la2"))
+      throw new Error("Enter both teams.");
+
+    if(!(oa>1&&ob>1))
+      throw new Error("Odds must be above 1.");
+
+    var r=await sb.rpc("lc_admin_add",{
+      p_league:v("la0"),
+      p_a:v("la1"),
+      p_b:v("la2"),
+      p_start:st,
+      p_oa:oa,
+      p_ob:ob
+    });
+
+    if(r.error)throw new Error(r.error.message);
+
+    msg="";
+    await load();
+    render()
+  },
+
+  lcOdds:async function(t){
+    var id=t.dataset.id,
+        oa=+$("oa-"+id).value,
+        ob=+$("ob-"+id).value;
+
+    if(!(oa>1&&ob>1))
+      throw new Error("Odds must be above 1.");
+
+    var r=await sb.rpc("lc_admin_match",{
+      p_id:+id,
+      p_action:"odds",
+      p_oa:oa,
+      p_ob:ob
+    });
+
+    if(r.error)throw new Error(r.error.message);
+
+    msg="";
+    await load();
+    render()
+  },
+
+  lcM:async function(t){
+    if(t.dataset.c&&!confirm("Are you sure: "+t.dataset.c+"?"))
+      return;
+
+    var r=await sb.rpc("lc_admin_match",{
+      p_id:+t.dataset.id,
+      p_action:t.dataset.x
+    });
+
+    if(r.error)throw new Error(r.error.message);
+
+    msg=r.data&&r.data.bets?
+      ("Settled "+r.data.bets+" bet(s)."):
+      "";
+
+    await load();
+    render()
+  },
+
+  skRefresh:async function(){
+    msg="";
+    await load();
+    render()
+  },
+
+  skSave:async function(){
+    var p={
+      jodi_x:+v("k1"),
+      andar_x:+v("k2"),
+      bahar_x:+v("k3"),
+      close_min:nn("k4"),
+      max_total:nn("k5"),
+      enabled:$("k6").checked
+    };
+
+    if(!(p.jodi_x>=1&&p.andar_x>=1&&p.bahar_x>=1))
+      throw new Error("Payout values must be at least 1.");
+
+    if(!(p.close_min>=0))
+      throw new Error("Close time cannot be negative.");
+
+    if(!(p.max_total>=1))
+      throw new Error("Maximum coins must be at least 1.");
+
+    var r=await sb.rpc("sk_admin_set_config",{
+      p:p
+    });
+
+    if(r.error)throw new Error(r.error.message);
+
+    msg="Satta King settings saved.";
+    await load();
+    render()
+  },
+
+  skMk:async function(t){
+    var id=+t.dataset.id;
+
+    if(!v("kmn-"+id))
+      throw new Error("Enter the market name.");
+
+    var r=await sb.rpc("sk_admin_market",{
+      p_id:id,
+      p_name:v("kmn-"+id),
+      p_time:v("kmt-"+id),
+      p_active:$("kma-"+id).checked,
+      p_sort:nn("kms-"+id)||0
+    });
+
+    if(r.error)throw new Error(r.error.message);
+
+    msg="Market saved.";
+    await load();
+    render()
+  },
+
+  skSet:async function(t){
+    var n=nn("skr-"+t.dataset.id);
+
+    if(!(n>=0&&n<=99))
+      throw new Error("Enter a result from 00 to 99.");
+
+    var r=await sb.rpc("sk_admin_set_manual_result",{
+      p_market:+t.dataset.id,
+      p_date:t.dataset.d,
+      p_num:n
+    });
+
+    if(r.error)throw new Error(r.error.message);
+
+    msg="Manual Satta King result saved: "+sk2(n);
+    await load();
+    render()
+  },
+
+  skVoid:async function(t){
+    if(!confirm("Are you sure: "+t.dataset.c+"?"))
+      return;
+
+    var r=await sb.rpc("sk_admin_void",{
+      p_market:+t.dataset.id,
+      p_date:t.dataset.d
+    });
+
+    if(r.error)throw new Error(r.error.message);
+
+    msg="Draw cancelled and bets refunded.";
+    await load();
+    render()
+  },
+
+  skDel:async function(t){
+    if(!confirm("Are you sure: "+t.dataset.c+"?"))
+      return;
+
+    var r=await sb.rpc("sk_admin_delete",{
+      p_id:+t.dataset.id
+    });
+
+    if(r.error)throw new Error(r.error.message);
+
+    msg="Market deleted.";
+    await load();
+    render()
+  },
+
+  loadLedger:async function(){
+    var a=v("ldacct")||null;
+
+    var r=await sb.rpc("admin_statement_list",{
+      p_account:a,
+      p_limit:200
+    });
+
+    if(r.error)throw new Error(r.error.message);
+
+    window.PB_LEDGER=r.data||[];
+    msg="Statements refreshed.";
+    render()
+  },
+
+  adjustPoints:async function(){
+    var a=v("ldacct"),
+        amt=nn("ldamt"),
+        reason=v("ldre");
+
+    if(!a)
+      throw new Error("Select an account.");
+
+    if(!amt||amt===0)
+      throw new Error("Enter a non-zero point amount.");
+
+    if(!reason)
+      throw new Error("Reason is required.");
+
+    var r=await sb.rpc("admin_adjust_points",{
+      p_account:a,
+      p_amount:amt,
+      p_reason:reason
+    });
+
+    if(r.error)throw new Error(r.error.message);
+
+    msg="Virtual points updated. Transaction: "+
+      (r.data&&r.data.transaction_id||"");
+
+    var q=await sb.rpc("admin_statement_list",{
+      p_account:a,
+      p_limit:200
+    });
+
+    window.PB_LEDGER=q.error?[]:(q.data||[]);
+    render()
+  },
+
+  dismiss:function(){
+    reveal=null;
+    render()
+  },
+
+  login:async function(){
+    var id=v("li").toUpperCase();
+    msg="";
+
+    var r=await sb.auth.signInWithPassword({
+      email:emailFor(id),
+      password:$("lp").value
+    });
+
+    if(r.error)
+      return err("ID or password is incorrect.");
+
+    await enter()
+  },
+
+  addMaster:function(){
+    var n=nn("mm");
+
+    if(!v("mn"))
+      throw new Error("Enter the master's name.");
+
+    if(!(nn("mp")>=0))
+      throw new Error("Pool must be 0 or more.");
+
+    if(!(n>=1))
+      throw new Error("Allow at least 1 customer.");
+
+    return run({
+      action:"create",
+      name:v("mn"),
+      coins:nn("mp"),
+      max_customers:n
+    },"Master ID created")
+  },
+
+  addCust:function(){
+    if(!v("cn"))
+      throw new Error("Enter the customer's name.");
+
+    if(!(nn("cc")>=0))
+      throw new Error("Coins must be 0 or more.");
+
+    return run({
+      action:"create",
+      name:v("cn"),
+      coins:nn("cc")
+    },"Customer ID created")
+  },
+
+  coins:function(t){
+    return run({
+      action:"add_coins",
+      code:t.dataset.id,
+      amount:nn("in-"+t.dataset.id)
+    })
+  },
+
+  toggle:function(t){
+    return run({
+      action:"set_active",
+      code:t.dataset.id,
+      active:t.dataset.on!=="1"
+    })
+  },
+
+  reset:function(t){
+    return run({
+      action:"reset_password",
+      code:t.dataset.id
+    },"Password reset")
+  },
+
+  del:function(t){
+    return run({
+      action:"delete",
+      code:t.dataset.id
+    })
+  },
+
+  saveSet:async function(){
+    var a=nn("s1"),
+        b=nn("s2"),
+        c=nn("s3");
+
+    if(!(a>=0&&b>=0))
+      throw new Error("Coin amounts must be 0 or more.");
+
+    if(!(c>=1))
+      throw new Error("Max stake must be at least 1.");
+
+    var s={
+      start:a,
+      bonus:b,
+      maxStake:c,
+      maint:$("s4").checked,
+      games:{}
+    };
+
+    GAMES.forEach(function(g){
+      s.games[g[0]]=$("g-"+g[0]).checked?1:0
+    });
+
+    var r=await sb.from("settings")
+      .update({data:s})
+      .eq("id",1);
+
+    if(r.error)
+      throw new Error(r.error.message);
+
+    await sb.from("activity").insert({
+      actor:"ADMIN",
+      message:"Updated game settings"
+    });
+
+    msg="";
+    await load();
+    render()
+  },
+
+  chpw:async function(){
+    var n=$("a1").value;
+
+    var ok=await sb.auth.signInWithPassword({
+      email:emailFor(me.code),
+      password:$("a0").value
+    });
+
+    if(ok.error)
+      throw new Error("Current password is incorrect.");
+
+    if(n.length<8)
+      throw new Error("Use at least 8 characters.");
+
+    if(n!==$("a2").value)
+      throw new Error("The two new passwords don't match.");
+
+    var r=await sb.auth.updateUser({
+      password:n
+    });
+
+    if(r.error)
+      throw new Error(r.error.message);
+
+    msg="Password updated.";
+    render()
+  }
+};
+
+$("app").addEventListener("click",async function(e){
+  var t=e.target.closest("[data-act]");
+
+  if(!t||!A[t.dataset.act])
+    return;
+
+  try{
+    await A[t.dataset.act](t)
+  }catch(x){
+    err(x.message)
+  }
+});
+
+$("app").addEventListener("keydown",function(e){
+  if(
+    e.key==="Enter" &&
+    (e.target.id==="lp"||e.target.id==="li")
+  ){
+    A.login().catch(function(x){
+      err(x.message)
+    })
+  }
+});
+
+$("out").onclick=async function(){
+  await sb.auth.signOut();
+  me=null;
+  reveal=null;
+  msg="";
+  tab="";
+  render()
+};
+
+boot();
+</script>
+</body>
+</html>
