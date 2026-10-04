@@ -84,10 +84,11 @@ async function load(){
     var lt=await sb.rpc("admin_statement_list",{p_account:null,p_limit:100});
     window.PB_LEDGER=lt.error?[]:(lt.data||[]);
   }
-  if(me.role==="admin"){var g=await sb.rpc("lc_admin_get");if(g.error){LCE=g.error.message;LCC=null;LCL=[]}else{LCE=null;LCC=g.data;var li=await sb.rpc("lc_admin_list");LCL=li.data||[]} } else if(me.role==="master"){var g=await sb.rpc("lc_master_get");if(g.error){LCE=g.error.message;LCC=null;LCL=[]}else{LCE=null;LCC=g.data;var li=await sb.rpc("lc_master_list");LCL=li.data||[]} }
+  if(me.role==="admin"){var g=await sb.rpc("lc_admin_get");if(g.error){LCE=g.error.message;LCC=null;LCL=[]}else{LCE=null;LCC=g.data;var li=await sb.rpc("lc_admin_list");LCL=li.data||[]}
+  } else if(me.role==="master"){var g=await sb.rpc("lc_master_get");if(g.error){LCE=g.error.message;LCC=null;LCL=[]}else{LCE=null;LCC=g.data;var li=await sb.rpc("lc_master_list");LCL=li.data||[]}
+  }
   if(me.role==="admin"){var k=await sb.rpc("sk_admin_summary");if(k.error){SKE=k.error.message;SKS=[];SKC=null}else{SKE=null;SKS=Array.isArray(k.data)?k.data:[];var kc=await sb.from("sk_config").select("*").eq("id",1).single();SKC=kc.data||null}
-    var jq=await sb.rpc("jqk_admin_summary");if(jq.error){JQE=jq.error.message;JQS=null}else{JQE=null;JQS=jq.data||null}}
-}
+    var jq=await sb.rpc("jqk_admin_summary");if(jq.error){JQE=jq.error.message;JQS=null}else{JQE=null;JQS=jq.data||null}}}
 async function enter(){
   var u=(await sb.auth.getUser()).data.user,p=u?await sb.from("profiles").select("*").eq("id",u.id).single():{};
   var bad=null;
@@ -126,7 +127,7 @@ function vControl(){var s=S;if(!s)return '<div class="empty">Settings could not 
   return '<div class="card"><h2>Game settings</h2><p class="meta">Enforced by the server for every customer: the games app reads them at sign-in, and the database checks every round.</p><div class="grid"><div><label for="s1">Default starting coins</label><input id="s1" type="number" min="0" value="'+s.start+'"></div><div><label for="s2">Daily bonus coins</label><input id="s2" type="number" min="0" value="'+s.bonus+'"></div><div><label for="s3">Max stake per round</label><input id="s3" type="number" min="1" value="'+s.maxStake+'"></div></div><h3 style="margin:14px 0 4px;font-size:15px">Games available</h3>'+GAMES.map(function(g){return '<label class="chk"><input type="checkbox" id="g-'+g[0]+'"'+(s.games[g[0]]?" checked":"")+'>'+g[1]+'</label>'}).join("")+'<label class="chk"><input type="checkbox" id="s4"'+(s.maint?" checked":"")+'>Maintenance mode (pause all games)</label><div class="row"><button class="btn" data-act="saveSet">Save settings</button></div></div>'}
 function ago(t){if(!t)return"never";var s=Math.round((Date.now()-new Date(t).getTime())/1000);return s<60?s+"s ago":s<3600?Math.round(s/60)+" min ago":Math.round(s/3600)+" h ago"}
 function vLive(){
-  if(LCE||!LCC)return '<div class="card"><h2>Live cricket</h2><p class="msg">Live cricket could not load.</p><p class="meta">'+esc(LCE||'No Live Cricket configuration was returned.')+'</p><div class="row"><button class="sm" data-act="lcRefresh">Refresh</button></div></div>';
+  if(LCE||!LCC)return '<div class="card"><h2>Live cricket</h2><p class="msg">Live cricket isn\'t installed yet.</p><p class="meta">Run the Live Cricket SQL in the Supabase SQL Editor, then tap Refresh.</p><div class="row"><button class="sm" data-act="lcRefresh">Refresh</button></div></div>';
   var c=LCC,h='<div class="card"><h2>Live cricket · connection</h2>'+
   '<p class="meta">Odds: '+(c.has_odds_key?'<b class="on">key saved</b>':'<b class="off">no key</b>')+' · last checked '+ago(c.last_odds)+' &nbsp;|&nbsp; Scores: '+(c.has_score_key?'<b class="on">key saved</b>':'<b class="off">no key</b>')+' · last checked '+ago(c.last_score)+'</p>'+
   (c.sports_active?'<p class="meta">Leagues found: '+esc(c.sports_active)+'</p>':'')+(c.last_ok?'<p class="meta">Last success: '+esc(c.last_ok)+'</p>':'')+(c.last_error?'<p class="msg">Last error: '+esc(c.last_error)+'</p>':'')+
