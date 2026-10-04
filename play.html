@@ -2380,3 +2380,105 @@ function displayGameResult(gameName) {
   <div id="live-score" style="font-size: 24px; color: #4cd964; font-weight: bold; margin-bottom: 5px;">0/0 (0.0 Overs)</div>
   <div id="match-status" style="font-size: 12px; color: #aaa;">Waiting for live stream connection...</div>
 </div>
+<!-- ============================================= -->
+<!-- 1. LIVE MATCH PANEL HOUSING (HTML LAYOUT)     -->
+<!-- ============================================= -->
+<div id="live-line-panel" style="background: #0b132b; color: #ffffff; padding: 15px; border-radius: 12px; font-family: Arial, sans-serif; max-width: 440px; margin: 20px auto; border: 1px solid #1c2541; box-shadow: 0 5px 15px rgba(0,0,0,0.4);">
+  
+  <!-- Header Title Banner -->
+  <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1c2541; padding-bottom: 8px; margin-bottom: 12px;">
+    <span style="background: #ff0055; color: #fff; font-size: 10px; padding: 3px 8px; font-weight: bold; border-radius: 3px; letter-spacing: 1px; animation: flash 1.5s infinite;">LIVE LINE</span>
+    <span id="match-format" style="font-size: 11px; color: #5bc0be; font-weight: bold;">ODI MATCH</span>
+  </div>
+  
+  <!-- Score and Live Teams Display -->
+  <h3 id="teams-header" style="margin: 5px 0; text-align: center; font-size: 18px; color: #ffffff;">Loading Match Data...</h3>
+  <div id="live-scoreboard" style="font-size: 24px; text-align: center; color: #64dfdf; font-weight: bold; margin: 10px 0;">0/0 (0.0 Ov)</div>
+  <div id="ball-commentary" style="font-size: 13px; text-align: center; color: #bdc3c7; font-style: italic; margin-bottom: 15px;">Awaiting ball event...</div>
+
+  <!-- Market Odds Columns Header -->
+  <div style="display: flex; background: #1c2541; padding: 6px; font-size: 11px; font-weight: bold; border-radius: 4px; text-align: center; color: #abc4ff; margin-bottom: 8px;">
+    <div style="width: 40%; text-align: left; padding-left: 5px;">MATCH ODDS</div>
+    <div style="width: 30%;">BACK (LAGAI)</div>
+    <div style="width: 30%;">LAY (KHAI)</div>
+  </div>
+
+  <!-- Team A Data Row Container -->
+  <div style="display: flex; align-items: center; background: #111a36; padding: 8px; margin-bottom: 6px; border-radius: 6px; text-align: center; border: 1px solid #1c2541;">
+    <div id="team-a-title" style="width: 40%; text-align: left; font-weight: bold; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Team 1</div>
+    <div style="width: 30%;"><button id="team-a-back-val" style="width: 85%; background: #00b4d8; color: #000; border: none; padding: 8px; font-weight: bold; border-radius: 4px; font-size: 15px;">-</button></div>
+    <div style="width: 30%;"><button id="team-a-lay-val" style="width: 85%; background: #ffb703; color: #000; border: none; padding: 8px; font-weight: bold; border-radius: 4px; font-size: 15px;">-</button></div>
+  </div>
+
+  <!-- Team B Data Row Container -->
+  <div style="display: flex; align-items: center; background: #111a36; padding: 8px; border-radius: 6px; text-align: center; border: 1px solid #1c2541;">
+    <div id="team-b-title" style="width: 40%; text-align: left; font-weight: bold; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Team 2</div>
+    <div style="width: 30%;"><button id="team-b-back-val" style="width: 85%; background: #00b4d8; color: #000; border: none; padding: 8px; font-weight: bold; border-radius: 4px; font-size: 15px;">-</button></div>
+    <div style="width: 30%;"><button id="team-b-lay-val" style="width: 85%; background: #ffb703; color: #000; border: none; padding: 8px; font-weight: bold; border-radius: 4px; font-size: 15px;">-</button></div>
+  </div>
+
+  <p id="stream-status" style="font-size: 10px; text-align: center; color: #4a5568; margin-top: 12px; margin-bottom: 0;">Status: Ready to connect</p>
+</div>
+
+<style>
+  @keyframes flash { 50% { opacity: 0.4; } }
+</style>
+
+<!-- ============================================= -->
+<!-- 2. DATA CONNECTION HANDLER (JAVASCRIPT LOGIC) -->
+<!-- ============================================= -->
+<script>
+// API Configurations - Update with your chosen provider credentials
+const LIVE_LINE_ENDPOINT = "https://rapidapi.com"; 
+const ACCESS_TOKEN = "YOUR_EXACT_RAPIDAPI_KEY_HERE";
+const ACTIVE_MATCH_ID = "123456"; // Target unique match fixture identifier
+
+async function streamLiveLineUpdates() {
+  try {
+    const response = await fetch(`${LIVE_LINE_ENDPOINT}?match_id=${ACTIVE_MATCH_ID}`, {
+      method: "GET",
+      headers: {
+        "X-RapidAPI-Key": ACCESS_TOKEN,
+        "X-RapidAPI-Host": "cricket-api-free-data.p.rapidapi.com",
+        "Content-Type": "application/json"
+      }
+    });
+
+    if (!response.ok) throw new Error("Data stream connectivity lag");
+    const json = await response.json();
+
+    // Map fields matching the JSON structure from your data provider
+    if (json && json.results) {
+      const match = json.results;
+
+      // Update primary text and scoreboard metrics inside UI
+      document.getElementById("teams-header").innerText = `${match.team_a} vs ${match.team_b}`;
+      document.getElementById("live-scoreboard").innerText = `${match.runs}/${match.wickets} (${match.overs} Ov)`;
+      document.getElementById("team-a-title").innerText = match.team_a;
+      document.getElementById("team-b-title").innerText = match.team_b;
+      
+      // Update the latest delivery commentary event text
+      if (match.last_ball_commentary) {
+         document.getElementById("ball-commentary").innerText = match.last_ball_commentary;
+      }
+
+      // Update the panel odds buttons dynamically
+      document.getElementById("team-a-back-val").innerText = match.odds_team_a_back || "1.90";
+      document.getElementById("team-a-lay-val").innerText = match.odds_team_a_lay || "1.92";
+      document.getElementById("team-b-back-val").innerText = match.odds_team_b_back || "1.90";
+      document.getElementById("team-b-lay-val").innerText = match.odds_team_b_lay || "1.92";
+
+      document.getElementById("stream-status").innerText = "Status: Secure Live Connection Active";
+    }
+  } catch (error) {
+    console.error("Live Line Stream Error:", error);
+    document.getElementById("stream-status").innerText = "Status: Reconnecting data stream...";
+  }
+}
+
+// 1000 milliseconds execution cycle = Pulls fresh data exactly every 1 second
+setInterval(streamLiveLineUpdates, 1000);
+
+// Initialize connection automatically when user structural layout completes rendering
+window.addEventListener("DOMContentLoaded", streamLiveLineUpdates);
+</script>
