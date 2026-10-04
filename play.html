@@ -960,7 +960,46 @@ h1.kx-brand{display:flex;align-items:center;gap:7px;background:none!important;-w
 <div id="toasts"></div>
 <canvas id="fx"></canvas>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-<script>
+<script><script>
+// Configuration constants
+const CRICKET_API_URL = "https://YOUR_API_PROVIDER_ENDPOINT/v1/match/live"; 
+const API_KEY = "YOUR_SECRET_API_KEY"; // Acquired from your provider dashboard
+const TARGET_MATCH_ID = "123456";      // Change dynamically based on current live fixture
+
+async function fetchLiveCricketScore() {
+  try {
+    const response = await fetch(`${CRICKET_API_URL}?match_id=${TARGET_MATCH_ID}`, {
+      method: "GET",
+      headers: {
+        "X-RapidAPI-Key": API_KEY, // Standard header structural format for RapidAPI
+        "Content-Type": "application/json"
+      }
+    });
+
+    if (!response.ok) throw new Error("Network stream latency issue");
+    
+    const data = await response.json();
+    
+    // Parse the payload depending entirely on your API's JSON structural schema
+    if (data && data.live_snapshot) {
+      document.getElementById("match-teams").innerText = `${data.team_a} vs ${data.team_b}`;
+      document.getElementById("live-score").innerText = `${data.runs}/${data.wickets} (${data.overs} Ov)`;
+      document.getElementById("match-status").innerText = data.status_note || "Match in Progress";
+    }
+  } catch (error) {
+    console.error("Cricket API Sync Error:", error);
+    document.getElementById("match-status").innerText = "Reconnecting to live pitch data...";
+  }
+}
+
+// Polling interval cycle loop (1000ms = 1 second update threshold)
+// Note: Verify your subscription tier handles 60 requests/minute safely before scaling down
+setInterval(fetchLiveCricketScore, 1000);
+
+// Run immediately upon player layout loading
+window.addEventListener("DOMContentLoaded", fetchLiveCricketScore);
+</script>
+
 const CFG={url:"https://jmvvuitwjixgsmhrdapg.supabase.co",anon:"sb_publishable_VZRaBdHeQk0YAWzJammc1w_9NL6owyx"};
 const G=[["cricket","🏏","Cricket","Virtual one-day match","MATCH"],["casino","🎰","Casino","3-reel slot machine","JACKPOT"],["roulette","🎡","Roulette","European wheel","HOT"],["lucky7","🎲","Lucky 7","Two dice · below, above or 7","DICE"],["kingjack","👑","King Jack","King or Jack first?","CARDS"],["num","🔢","1–9","Lottery drum","DRAW"]];
 const RULE={cricket:["Put chips on the team you back (one team per match round), then press PLAY. Winning pays your stake × the team's odds.",[["Team odds","1.75× – 2.10×"]]],
