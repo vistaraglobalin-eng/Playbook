@@ -1044,10 +1044,19 @@ const SND={
  drumroll:d=>{const n=Math.floor(d/.045);for(let i=0;i<n;i++)noise(.06,200+Math.random()*80,1,.05+.13*i/n,i*.045,"lowpass");noise(1.3,5000,.7,.13,d,"highpass",9000);tone(65,.5,"sine",.3,d)},
  fanfare:()=>{[784,988,1175,1568,1976].forEach((f,i)=>tone(f,.38,"triangle",.11,i*.075));tone(2637,1.3,"sine",.05,.42);tone(1319,1.3,"sine",.05,.42);noise(.9,2000,1,.05,.35,"highpass",5000)},
  chime:()=>{[1319,1760,2093].forEach((f,i)=>tone(f,.9,"sine",.07,i*.12))}};
+/* dealer voice (the phone's built-in speech) */
+let VOICE=null,voiceOn=true;try{voiceOn=localStorage.getItem("pbvoice")!=="0"}catch(e){}
+function pickVoice(){try{const vs=speechSynthesis.getVoices();if(!vs.length)return null;
+ return vs.find(v=>/en[-_]IN/i.test(v.lang))||vs.find(v=>/en[-_]GB/i.test(v.lang)&&/female|serena|kate|martha/i.test(v.name))||vs.find(v=>/en[-_]GB/i.test(v.lang))||vs.find(v=>/^en/i.test(v.lang))||null}catch(e){return null}}
+if(window.speechSynthesis)try{speechSynthesis.onvoiceschanged=()=>{VOICE=pickVoice()}}catch(e){}
+function dealerSay(t){if(mute||!voiceOn||!window.speechSynthesis||!t)return;try{if(!VOICE)VOICE=pickVoice();speechSynthesis.cancel();
+ const u=new SpeechSynthesisUtterance(t);if(VOICE){u.voice=VOICE;u.lang=VOICE.lang}else u.lang="en-IN";u.rate=.95;u.pitch=.95;u.volume=1;speechSynthesis.speak(u)}catch(e){}}
+const sayNum=n=>String(n);
 /* iPhone: unlock sound on the first touch, and keep it playing when the ring/silent switch is on silent */
 let AUNL=false,SIL=null;
 function unlockAudio(){const a=ac();if(!a)return;
- if(!AUNL){AUNL=true;try{const b=a.createBuffer(1,1,22050),src=a.createBufferSource();src.buffer=b;src.connect(a.destination);src.start(0)}catch(e){}}
+ if(!AUNL){AUNL=true;try{const b=a.createBuffer(1,1,22050),src=a.createBufferSource();src.buffer=b;src.connect(a.destination);src.start(0)}catch(e){}
+  try{if(window.speechSynthesis){const u=new SpeechSynthesisUtterance(" ");u.volume=0;speechSynthesis.speak(u)}}catch(e){}}
  if(navigator.audioSession||mute)return;
  try{if(!SIL){SIL=document.createElement("audio");SIL.setAttribute("x-webkit-airplay","deny");SIL.setAttribute("playsinline","");SIL.preload="auto";SIL.loop=true;SIL.src="data:audio/wav;base64,UklGRmQGAABXQVZFZm10IBAAAAABAAEAQB8AAIA+AAACABAAZGF0YUAGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"}
   if(SIL.paused){const pr=SIL.play();if(pr&&pr.catch)pr.catch(()=>{})}}catch(e){}}
@@ -1353,7 +1362,7 @@ async function rSpin(){if(busy)return;const tot=rTotal();
  $("rres").innerHTML=`<b style="background:${rCol(n)}">${n}</b>`;$("hcol").innerHTML=rHistHtml();
  rWinKeys(n).forEach(k=>{const e=document.querySelector(`#rtab [data-b="${k}"]`);if(e)e.classList.add("win")});
  const ne=document.querySelector(`#rtab [data-b="n${n}"]`);if(ne)ne.insertAdjacentHTML("beforeend",'<i class="dolly"></i>');
- announce(n+" "+(n===0?"GREEN":RED.includes(n)?"RED":"BLACK"),false,o.payout>0?"gold":"");await wait(700);
+ announce(n+" "+(n===0?"GREEN":RED.includes(n)?"RED":"BLACK"),false,o.payout>0?"gold":"");dealerSay(n===0?"Zero, green":n+", "+(RED.includes(n)?"red":"black"));await wait(700);
  await tSettle(bets,o,wins,$("wc"),k=>k[0]==="n"?35:/^[dc]\d$/.test(k)?2:1);if(TIMED.includes(game))rTimerStart()}
 async function tSettle(bets,o,wins,sink,pm){
  Object.keys(bets).forEach((k,i)=>{if(wins.includes(k))return;const el=document.querySelector(`#rtab [data-b="${k}"] .tcp`);if(el){cpFly(el,sink,bets[k],{fade:1,delay:i*40,ms:520});el.remove()}});
@@ -1454,7 +1463,7 @@ async function tSpin(){if(busy)return;const d=TG[game],tot=rTotal();
  me.coins=o.balance;sess+=o.payout-o.total;GH[game].unshift(d.hist(o));GH[game]=GH[game].slice(0,60);try{localStorage.setItem("pbh_"+game+"_"+me.code,JSON.stringify(GH[game]))}catch(e){}
  $("hcol").innerHTML=hHtml();if(d.refresh)d.refresh();
  d.win(o).forEach(k=>{const e=document.querySelector(`#rtab [data-b="${k}"]`);if(e)e.classList.add("win")});
- announce(d.label(o),false,o.payout>0?"gold":"");await wait(700);
+ announce(d.label(o),false,o.payout>0?"gold":"");dealerSay(String(d.label(o)).replace(/·/g,",").replace(/×/g," times").replace(/\+/g," plus ").replace(/=/g," equals ").replace(/\bK([♠♥♦♣])/,"King $1").replace(/\bJ([♠♥♦♣])/,"Jack $1").replace(/♠/g,"of spades").replace(/♥/g,"of hearts").replace(/♦/g,"of diamonds").replace(/♣/g,"of clubs").toLowerCase());await wait(700);
  await tSettle(bets,o,wins,$("stage"),d.pm);if(TIMED.includes(game))rTimerStart()}
 
 /* ---------------- Lucky 7 · 3D dice table ---------------- */
@@ -1840,6 +1849,7 @@ function closeSheet(){$("sheet").hidden=true}
 function menuHtml(){return `<h3>${esc(me.name)}</h3><div class="meta">${esc(me.code)}</div>
 <div class="stats"><div><b>${prof.lvl}</b><small>Level</small></div><div><b>${prof.rounds}</b><small>Rounds</small></div><div><b>${prof.wins}</b><small>Wins</small></div><div><b>${fmt(prof.best)}</b><small>Best win</small></div></div>
 <h4>Badges</h4><div class="achs">${ACH.map(a=>`<span class="${prof.ach.includes(a[0])?"got":""}">${a[1]} ${a[2]}</span>`).join("")}</div>
+<h4>Sound</h4><div class="row" style="gap:8px;flex-wrap:wrap"><button class="sm" data-act="mute">${mute?"🔇 Sound effects: OFF":"🔊 Sound effects: ON"}</button><button class="sm" data-act="voice">${voiceOn?"🗣️ Dealer voice: ON":"🤐 Dealer voice: OFF"}</button><button class="sm" data-act="testsnd">▶ Test sound</button></div>
 <h4>Theme</h4><div class="thr">${TH.map(t=>`<button class="sw" data-t="${t[0]}" style="background:${t[1]}" aria-label="${t[0]} theme" aria-pressed="${document.documentElement.dataset.t===t[0]}"></button>`).join("")}</div>
 <div class="row" style="justify-content:space-between;margin-top:18px"><button class="sm danger" data-act="logout">Log out</button><button class="sm" data-act="close">Close</button></div>`}
 function rulesHtml(){const g=G.find(x=>x[0]===game),R=RULE[game];return `<h3>${g[1]} How to play ${g[2]}</h3><p>${R[0]}</p><ul class="pays">${R[1].map(p=>`<li><span>${p[0]}</span><b>${p[1]}</b></li>`).join("")}</ul><p class="meta">1. Pick a bet spot on the table. 2. Tap chips to add coins. 3. Press the gold button. Results are drawn on the server. Coins are play-money only.</p><button class="btn wide" data-act="close">GOT IT</button>`}
@@ -1950,7 +1960,9 @@ const jqDay=ms=>new Date(ms).toLocaleDateString("en-CA",{timeZone:"Asia/Kolkata"
 const jqRT=r=>((+r+1)*JQ.cfg.round-(JQ.cfg.offset||0))*1000;
 function jqLive(){const nt=$("jqnt");if(!nt||!JQ.cfg)return;nt.textContent=jqTm(JQ.drawAt);const st=$("jqst"),wt=$("jqwt"),lv=$("jqlive");
  lv.className="jq-live "+(JQ.rev?"rv":JQ.phase);wt.textContent=JQ.rev?"RESULT":"WAIT";
- st.textContent=JQ.rev?"declaring now":JQ.phase==="open"?"bets close "+jqTm(JQ.closeAt):"bets closed"}
+ st.textContent=JQ.rev?"declaring now":JQ.phase==="open"?"bets close "+jqTm(JQ.closeAt):"bets closed";
+ if(!JQ.rev&&JQ.cancelled){wt.textContent="CANCELLED";st.textContent="bets refunded";lv.className="jq-live closed"}
+ else if(!JQ.rev&&JQ.cfg.on===false){wt.textContent="PAUSED";st.textContent="betting is off";lv.className="jq-live closed"}}
 function jqResHtml(){if(!JQ.cfg||!JQ.hist.length)return"";const by={};JQ.hist.forEach(x=>{by[x.r]=x.c});
  const today=jqDay(jqNow()),cur=JQ.round,base=cur-((()=>{let k=0;while(k<24&&jqDay(jqRT(cur-k-1))===today)k++;return k})());
  // today's slots start at round "base" (first draw of the day) and run 24 rounds
@@ -1972,8 +1984,8 @@ function jqStatHtml(){const h=JQ.hist.slice(0,40);if(!h.length)return"";const n=
  return `<span>LAST ${h.length}</span><span class="r">RED ${n("red")}</span><span class="k">BLACK ${n("black")}</span><span>J ${n("rJ")}</span><span>Q ${n("rQ")}</span><span>K ${n("rK")}</span>`}
 async function jqLoad(pr){const r=await sb.rpc("jqk_state",pr!=null?{p_round:pr}:{});if(r.error)throw r.error;const d=r.data;
  JQ.off=jqT(d.now)-Date.now();JQ.round=+d.round;JQ.drawAt=jqT(d.draw_at);JQ.closeAt=jqT(d.close_at);const nc=JSON.stringify(d.cfg)!==JSON.stringify(JQ.cfg);JQ.cfg=d.cfg;JQ.err=null;
- if(nc&&$("jqboard"))$("jqboard").innerHTML=jqBoardHtml();return d}
-function jqPhaseNow(){const left=JQ.drawAt-jqNow();return left<=JQ.cfg.close*1000?"closed":"open"}
+ JQ.cancelled=!!d.cancelled;if(nc&&$("jqboard"))$("jqboard").innerHTML=jqBoardHtml();return d}
+function jqPhaseNow(){const left=JQ.drawAt-jqNow();return JQ.cancelled||JQ.cfg.on===false||left<=JQ.cfg.close*1000?"closed":"open"}
 async function jqView(){jqEnsureDefs();game="jqk";
  $("app").innerHTML=`<div class="rl jq"><div class="rl-top"><button class="cb sm" data-act="lobby" aria-label="Back to games">‹</button><div class="rl-logo"><b>JQK Cards</b><small>PLAYBOOK · LIVE CARD DRAW</small></div><span class="streak" id="strk">${streakHtml()}</span><button class="cb sm" data-act="rules" aria-label="How to play">?</button><button class="cb sm" id="rmu" data-act="mute" aria-label="Sound on or off">${mute?"🔇":"🔊"}</button><button class="cb sm" data-act="menu" aria-label="Menu">☰</button></div>
 ${S.maint?'<div class="card warn" style="margin:8px">Games are paused for maintenance.</div>':""}
@@ -2010,9 +2022,10 @@ function jqFlash(t){announce(t,false,"red");tone(200,.12,"square",.05);clearTime
 function jqTick(){if(view!=="jqk"||!$("jqlive")){jqStop();return}if(!JQ.cfg||!JQ.drawAt)return;
  const now=jqNow(),left=JQ.drawAt-now,cl=JQ.cfg.close*1000;
  if(JQ.phase==="open"&&!JQ.rev&&left<=cl+1500&&jqSum(JQ.pend)>0&&!JQ.sub)jqConfirm(true);
- if(JQ.phase==="open"&&!JQ.rev&&left<=cl){JQ.phase="closed";announce("BETS CLOSED · RESULT AT "+jqTm(JQ.drawAt),true,"red");SND.nomore();jqPaint()}
+ if(JQ.phase==="open"&&!JQ.rev&&left<=cl){JQ.phase="closed";announce("BETS CLOSED · RESULT AT "+jqTm(JQ.drawAt),true,"red");SND.nomore();dealerSay("No more bets");jqPaint()}
  if(!JQ.rev&&JQ.phase!=="wait"&&left<=0)jqReveal(JQ.round)}
 function jqPlace(k,el){if(JQ.err)return jqFlash("JQK isn't set up yet");if(S.maint)return jqFlash("Paused for maintenance");
+ if(JQ.cfg&&JQ.cfg.on===false)return jqFlash("JQK is paused right now");if(JQ.cancelled)return jqFlash("This draw was cancelled · bets refunded");
  if(JQ.rev||JQ.phase!=="open")return jqFlash(JQ.rev?"Wait for the next round":"No more bets · next round soon");
  const cap=+JQ.cfg.max,v=JQ.chip,used=jqSum(JQ.mine)+jqSum(JQ.pend);
  if(jqSum(JQ.pend)+v>me.coins)return jqFlash("Not enough coins");
@@ -2033,20 +2046,21 @@ async function jqConfirm(auto){if(JQ.sub)return;const b=Object.assign({},JQ.pend
  JQ.sub=true;jqTotals();let r;try{r=await sb.rpc("jqk_place",{p_bets:b})}catch(e){r={error:{message:String(e)}}}JQ.sub=false;
  if(view!=="jqk")return;
  if(r.error){const m=String(r.error.message);if(/closed/.test(m)){JQ.pend={};JQ.undo=[]}
-  jqFlash(/closed/.test(m)?"Too late · betting closed for this round":/round limit/.test(m)?"Max "+fmt(JQ.cfg.max)+" per round":/bad stake/.test(m)?"Not enough coins":/disabled/.test(m)?"JQK is switched off":friendly(m));jqPaint();return}
+  jqFlash(/closed/.test(m)?"Too late · betting closed for this round":/round limit/.test(m)?"Max "+fmt(JQ.cfg.max)+" per round":/bad stake/.test(m)?"Not enough coins":/cancelled/.test(m)?"This draw was cancelled · bets refunded":/disabled/.test(m)?"JQK is switched off":friendly(m));jqPaint();return}
  Object.keys(b).forEach(k=>{JQ.pend[k]-=b[k];if(JQ.pend[k]<=0)delete JQ.pend[k]});JQ.undo=[];
  JQ.mine=r.data.mine||{};me.coins=+r.data.balance;tweenBal(me.coins,400);chipSound(3);
- announce(auto?"CHIPS PLACED FOR YOU · GOOD LUCK":"BET PLACED · GOOD LUCK!",false,"gold");jqPaint()}
+ announce(auto?"CHIPS PLACED FOR YOU · GOOD LUCK":"BET PLACED · GOOD LUCK!",false,"gold");SND.chime();jqPaint()}
 function jqFanfare(){[784,988,1175,1568,1976].forEach((f,i)=>tone(f,.38,"triangle",.11,i*.075));tone(2637,1.3,"sine",.05,.42);tone(1319,1.3,"sine",.05,.42);noise(.9,2000,1,.05,.35,"highpass",5000)}
 async function jqReveal(r){JQ.rev=true;busy=true;const had=jqSum(JQ.mine);if(had)JQ.prev=Object.assign({},JQ.mine);JQ.pend={};JQ.undo=[];
- announce("DRAWING THE CARD…",true,"gold");jqPaint();scrollTo({top:0,behavior:RM?"auto":"smooth"});
+ announce("DRAWING THE CARD…",true,"gold");dealerSay("The card is coming");jqPaint();scrollTo({top:0,behavior:RM?"auto":"smooth"});
  let d=null;for(let i=0;i<25&&view==="jqk";i++){try{d=await jqLoad(r)}catch(e){}if(d&&d.last)break;await jqZz(i<4?700:1500)}
- try{if(d&&d.last&&view==="jqk")await jqShow(d.last,d)}catch(e){console.error(e)}
+ try{if(d&&d.last&&d.last.void&&view==="jqk"){announce("DRAW CANCELLED · BETS REFUNDED",true,"red");dealerSay("This draw is cancelled. All bets are refunded.");SND.nomore();await jqZz(2500)}
+  else if(d&&d.last&&view==="jqk")await jqShow(d.last,d)}catch(e){console.error(e)}
  busy=false;JQ.rev=false;if(view!=="jqk")return;
  if(d){JQ.hist=d.hist||JQ.hist;JQ.mine=d.mine||{};if(d.balance!=null){me.coins=+d.balance;tweenBal(me.coins,500)}}
  document.querySelectorAll("#jqboard .win,#jqboard .hit,#jqboard .spot").forEach(e=>e.classList.remove("win","hit","spot"));
  if($("jqname"))$("jqname").innerHTML="";if($("jqslot"))$("jqslot").classList.remove("glow");if($("jqflip"))$("jqflip").classList.remove("won");
- JQ.phase=jqPhaseNow();JQ.ls=-1;announce(JQ.phase==="open"?"PLACE YOUR BETS":"BETS CLOSED",true,JQ.phase==="open"?"":"red");if(JQ.phase==="open")SND.chime();jqPaint()}
+ JQ.phase=jqPhaseNow();JQ.ls=-1;announce(JQ.phase==="open"?"PLACE YOUR BETS":"BETS CLOSED",true,JQ.phase==="open"?"":"red");if(JQ.phase==="open"){SND.chime();setTimeout(()=>dealerSay("Place your bets"),600)}jqPaint()}
 async function jqShow(L,d){const card=L.card,cr=card[0],cs=card[1],slot=$("jqslot"),flip=$("jqflip"),front=$("jqfront");
  // a fresh card comes out of the shoe, face down
  flip.classList.remove("open","won");slot.classList.remove("glow");$("jqname").innerHTML="";await jqZz(250);
@@ -2062,7 +2076,7 @@ async function jqShow(L,d){const card=L.card,cr=card[0],cs=card[1],slot=$("jqslo
  SND.flip();SND.whoosh();flip.classList.add("open");await jqZz(420);
  SND.fanfare();flip.classList.add("won");slot.classList.add("glow");
  const sr=slot.getBoundingClientRect();burst(40,false,sr.left+sr.width/2,sr.top+sr.height/2);
- $("jqname").innerHTML=`<b>${JQRN[cr]} OF ${JQSN[cs]}</b>`;
+ $("jqname").innerHTML=`<b>${JQRN[cr]} OF ${JQSN[cs]}</b>`;dealerSay(`${JQRN[cr].toLowerCase()} of ${JQSN[cs].toLowerCase()}. ${jqRed(cs)?"Red":"Black"} wins.`);
  announce((jqRed(cs)?"RED":"BLACK")+" · "+JQSY[cs]+" "+JQSN[cs]+" · "+JQRN[cr],true,"gold");
  cards.forEach(c=>c.classList.remove("spot"));if(cards[ti])cards[ti].classList.add("hit");
  document.querySelectorAll("#jqboard [data-jq]").forEach(z=>{if(z.classList.contains("jq-z"))z.classList.toggle("win",jqWins(z.dataset.jq,card))});
@@ -2202,12 +2216,12 @@ async function skReveal(r){if(r.void||r.num==null)return;const m=skMkt(r.market_
  const myb=SK.bets.filter(b=>b.market_id===r.market_id&&b.draw_date===r.draw_date),won=myb.reduce((a,b)=>a+(b.status==="won"?+b.payout:0),0);
  const ov=document.createElement("div");ov.className="sk-rv";ov.innerHTML=`<div class="sk-rvb"><small>👑 RESULT DECLARED</small><h3>${esc(name)}</h3><div class="sk-rvd"><span><i id="rv1">0</i></span><span><i id="rv2">0</i></span></div><p id="rvp">Drawing…</p><button class="sk-btn" id="rvok">OK</button></div>`;
  document.body.appendChild(ov);let done=false;const close=()=>{if(done)return;done=true;ov.remove()};ov.querySelector("#rvok").onclick=close;ac();
- const dg=[Math.floor(r.num/10),r.num%10];SND.drumroll(2.4);
+ const dg=[Math.floor(r.num/10),r.num%10];SND.drumroll(2.4);setTimeout(()=>dealerSay(name+" result"),200);
  for(let k=0;k<2;k++){const el=ov.querySelector("#rv"+(k+1));if(!el)break;const t0=performance.now(),dur=(1300+k*600)*spd();let lt=0;
   await new Promise(res=>{const step=t=>{if(done)return res();const p=(t-t0)/dur;if(p>=1){el.textContent=dg[k];el.parentNode.classList.add("lock");tone(k?988:784,.18,"triangle",.14);sfx("thunk",.3,1.1);return res()}
    if(t-lt>60+p*120){lt=t;el.textContent=Math.floor(Math.random()*10);SND.tick()}requestAnimationFrame(step)};requestAnimationFrame(step)})}
  const p=ov.querySelector("#rvp");
- if(p){SND.fanfare();if(won>0){p.className="w";p.textContent="🏆 You won +"+fmt(won)+"!";setTimeout(()=>SND.big(),500);const rc=ov.querySelector(".sk-rvd").getBoundingClientRect();fireworks(rc.left+rc.width/2,rc.top);setTimeout(()=>fireworks(rc.left+20,rc.top+30),300);flyCoins&&flyCoins(ov.querySelector(".sk-rvd"),14)}
+ if(p){SND.fanfare();dealerSay(name+", "+dg[0]+" "+dg[1]+(won>0?". You win!":""));if(won>0){p.className="w";p.textContent="🏆 You won +"+fmt(won)+"!";setTimeout(()=>SND.big(),500);const rc=ov.querySelector(".sk-rvd").getBoundingClientRect();fireworks(rc.left+rc.width/2,rc.top);setTimeout(()=>fireworks(rc.left+20,rc.top+30),300);flyCoins&&flyCoins(ov.querySelector(".sk-rvd"),14)}
   else if(myb.length){p.textContent="No win this time · better luck next draw";SND.lose()}else p.textContent=name+" result: "+sk2(r.num)}
  if(myb.length){const pr=await sb.from("profiles").select("coins").eq("id",me.id).single();if(pr.data){me.coins=pr.data.coins;tweenBal(me.coins,900)}}
  await wait(4500);close()}
@@ -2265,7 +2279,9 @@ document.addEventListener("click",async e=>{
   else if(a==="r-clear")rClear();
   else if(a==="r-x2")rX2();
   else if(a==="r-rebet")await rRebet();
-  else if(a==="mute"){setMute(!mute);ac();SND.click()}
+  else if(a==="mute"){setMute(!mute);ac();SND.click();if($("sheet")&&!$("sheet").hidden&&me&&prof)openSheet(menuHtml())}
+  else if(a==="voice"){voiceOn=!voiceOn;try{localStorage.setItem("pbvoice",voiceOn?"1":"0")}catch(e){}SND.click();if(voiceOn)dealerSay("Dealer voice on");openSheet(menuHtml())}
+  else if(a==="testsnd"){unlockAudio();chipSound(3);setTimeout(()=>SND.chime(),300);setTimeout(()=>SND.fanfare(),900);setTimeout(()=>dealerSay("Welcome to Playbook. Place your bets."),1800)}
   else if(a==="menu"){if(me&&prof)openSheet(menuHtml())}
   else if(a==="x2"){if(stake<1)return flash("Add chips first");addStake(stake,t)}
   else if(a==="skip"){ff=true;t.hidden=true}

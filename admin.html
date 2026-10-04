@@ -45,7 +45,7 @@ select{padding:9px;border:1.5px solid var(--ln);border-radius:9px;background:var
 // 1) Paste your Supabase project values here (Project settings > API). The anon key is safe to ship.
 var CFG={url:"https://jmvvuitwjixgsmhrdapg.supabase.co",anon:"sb_publishable_VZRaBdHeQk0YAWzJammc1w_9NL6owyx"};
 var GAMES=[["cricket","Cricket"],["casino","Casino"],["roulette","Roulette"],["lucky7","Lucky 7"],["kingjack","King Jack"],["num","1–9"],["satta","Satta King"],["jqk","JQK Cards"]];
-var sb=null,me=null,S=null,MS=[],CS=[],LG=[],tab="",reveal=null,msg="",LCC=null,LCL=[],LCE=null,SKS=[],SKC=null,SKE=null;
+var sb=null,me=null,S=null,MS=[],CS=[],LG=[],tab="",reveal=null,msg="",LCC=null,LCL=[],LCE=null,SKS=[],SKC=null,SKE=null,JQS=null,JQE=null;
 function $(i){return document.getElementById(i)}
 function v(i){return $(i)?$(i).value.trim():""}
 function esc(s){return String(s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
@@ -54,7 +54,7 @@ function nn(i){var n=Math.floor(+v(i));return isFinite(n)?n:NaN}
 function emailFor(c){return c.toLowerCase()+"@id.playbook.example"}
 function app(h){$("app").innerHTML=h}
 function err(t){msg=t;render()}
-function tabs(){return me.role==="admin"?[["masters","Master IDs"],["customers","Customer IDs"],["control","Control panel"],["live","Live cricket"],["satta","Satta King"],["activity","Activity"],["account","Account"]]:[["customers","My customers"],["activity","Activity"],["account","Account"]]}
+function tabs(){return me.role==="admin"?[["masters","Master IDs"],["customers","Customer IDs"],["control","Control panel"],["live","Live cricket"],["satta","Satta King"],["jqk","JQK Cards"],["activity","Activity"],["account","Account"]]:[["customers","My customers"],["activity","Activity"],["account","Account"]]}
 async function callFn(b){
   var m={create:["admin_create",{p_name:b.name,p_coins:b.coins,p_max:b.max_customers==null?null:b.max_customers}],
     reset_password:["admin_reset",{p_code:b.code}],
@@ -71,7 +71,8 @@ async function load(){
   var s=await sb.from("settings").select("data").eq("id",1).single();S=s.data?s.data.data:null;
   var l=await sb.from("activity").select("*").order("at",{ascending:false}).limit(50);LG=l.data||[];
   if(me.role==="admin"){var g=await sb.rpc("lc_admin_get");if(g.error){LCE=g.error.message;LCC=null;LCL=[]}else{LCE=null;LCC=g.data;var li=await sb.rpc("lc_admin_list");LCL=li.data||[]}
-    var k=await sb.rpc("sk_admin_summary");if(k.error){SKE=k.error.message;SKS=[];SKC=null}else{SKE=null;SKS=k.data||[];var kc=await sb.from("sk_config").select("*").eq("id",1).single();SKC=kc.data||null}}}
+    var k=await sb.rpc("sk_admin_summary");if(k.error){SKE=k.error.message;SKS=[];SKC=null}else{SKE=null;SKS=k.data||[];var kc=await sb.from("sk_config").select("*").eq("id",1).single();SKC=kc.data||null}
+    var jq=await sb.rpc("jqk_admin_summary");if(jq.error){JQE=jq.error.message;JQS=null}else{JQE=null;JQS=jq.data}}}
 async function enter(){
   var u=(await sb.auth.getUser()).data.user,p=u?await sb.from("profiles").select("*").eq("id",u.id).single():{};
   var bad=null;
@@ -93,7 +94,7 @@ function render(){
   var h='<div class="tabs" role="tablist">'+tabs().map(function(t){return '<button role="tab" data-act="tab" data-t="'+t[0]+'" aria-selected="'+(t[0]===tab)+'">'+t[1]+'</button>'}).join("")+'</div>';
   if(msg)h+='<p class="msg" role="alert">'+esc(msg)+'</p>';
   if(reveal)h+='<div class="card reveal"><h2>'+esc(reveal.what)+'</h2><div class="meta">ID</div><div class="cred">'+esc(reveal.id)+'</div><div class="meta">Temporary password</div><div class="cred">'+esc(reveal.pw)+'</div><p class="meta">Shown once and not stored. Share it securely and ask the holder to change it.</p><button class="sm" data-act="dismiss">I have saved it</button></div>';
-  h+={masters:vMasters,customers:vCustomers,control:vControl,live:vLive,satta:vSatta,activity:vActivity,account:vAccount}[tab]();app(h)}
+  h+={masters:vMasters,customers:vCustomers,control:vControl,live:vLive,satta:vSatta,jqk:vJqk,activity:vActivity,account:vAccount}[tab]();app(h)}
 function login(){return '<div class="card narrow"><h2>Sign in</h2><label for="li">Admin or Master ID</label><input id="li" type="text" autocapitalize="characters" autocomplete="username"><label for="lp" style="margin-top:8px">Password</label><input id="lp" type="password" autocomplete="current-password">'+(msg?'<p class="msg" role="alert">'+esc(msg)+'</p>':'')+'<div class="row"><button class="btn" data-act="login">Sign in</button></div><p class="meta">Customer IDs sign in to the games app, not this panel.</p></div>'}
 function btn(a,c,l,cls){return '<button class="sm '+(cls||"")+'" data-act="'+a+'" data-id="'+c.code+'" data-on="'+(c.active?1:0)+'">'+l+'</button>'}
 function vMasters(){
@@ -144,6 +145,25 @@ function vMarkets(m){var id=esc(m.id),mk=m.markets||[],h='<div class="mkt"><h3 s
   '<div class="row"><input type="text" id="mn-'+id+'" placeholder="Name (custom only)" style="width:160px"><input type="number" step="0.01" id="m1-'+id+'" placeholder="Odds 1 / Yes" value="1.95"><input type="number" step="0.01" id="m2-'+id+'" placeholder="Odds 2 / No" value="1.95"></div>'+
   '<div class="row"><input type="number" id="mi-'+id+'" placeholder="Innings" value="1" aria-label="Innings (line)"><input type="number" step="0.1" id="mo-'+id+'" placeholder="Overs e.g. 10" aria-label="Overs (line)"><input type="number" step="0.5" id="ml-'+id+'" placeholder="Line e.g. 54.5" aria-label="Runs line"></div>'+
   '<div class="row"><button class="btn" data-act="mkAdd" data-id="'+id+'">Add market</button></div><p class="meta">Over line: players bet Under or Over the runs line after that many overs (odds field 1 is used for both). It settles itself when the live score reaches that over exactly; otherwise settle it here.</p></div>'}
+var JQSY={S:"♠",H:"♥",D:"♦",C:"♣"},JQRN={J:"Jack",Q:"Queen",K:"King"},JQSN={S:"Spades",H:"Hearts",D:"Diamonds",C:"Clubs"};
+function jqT(t){return new Date(t).toLocaleTimeString("en-US",{timeZone:"Asia/Kolkata",hour:"numeric",minute:"2-digit",hour12:true})}
+function jqD(t){return new Date(t).toLocaleDateString("en-IN",{timeZone:"Asia/Kolkata",day:"numeric",month:"short"})}
+function jqCardTxt(c){return c?'<b style="font-size:16px;color:'+(c[1]==="H"||c[1]==="D"?"#c8102e":"inherit")+'">'+c[0]+JQSY[c[1]]+'</b> <span class="meta">'+JQRN[c[0]]+' of '+JQSN[c[1]]+'</span>':'<b>—</b>'}
+function vJqk(){
+  if(JQE||!JQS)return '<div class="card"><h2>JQK Cards</h2><p class="msg">JQK Cards isn\'t installed or needs the latest update.</p><p class="meta">Run the latest JQK SQL in the Supabase SQL Editor, then tap Refresh.</p><div class="row"><button class="sm" data-act="jqRefresh">Refresh</button></div></div>';
+  var c=JQS.cfg,n=JQS.next,t=JQS.today,share=(+t.stake)-(+t.paid);
+  var h='<div class="card"><h2>JQK Cards · settings</h2><p class="meta">One card is drawn every hour at :59 (India time). The server picks every card at random and pays winners automatically. Your share comes from the payouts being a little below the true odds.</p>'+
+  '<div class="grid"><div><label for="q1">Colour (red / black) pays ×</label><input id="q1" type="number" step="0.05" min="1" value="'+c.color_x+'"></div><div><label for="q2">Suit pays ×</label><input id="q2" type="number" step="0.05" min="1" value="'+c.suit_x+'"></div><div><label for="q3">Jack / Queen / King pays ×</label><input id="q3" type="number" step="0.05" min="1" value="'+c.rank_x+'"></div><div><label for="q4">Exact card pays ×</label><input id="q4" type="number" step="0.5" min="1" value="'+c.card_x+'"></div><div><label for="q5">Close betting (minutes before result)</label><input id="q5" type="number" min="0" max="55" value="'+Math.round(c.close_sec/60)+'"></div><div><label for="q6">Max coins per player per draw</label><input id="q6" type="number" min="1" value="'+c.max_total+'"></div></div>'+
+  '<p class="meta">Fair odds for reference: colour 2×, suit 4×, Jack/Queen/King 3×, exact card 12×. Paying less than these is the owner\'s share; paying these or more means the owner earns nothing or loses over time.</p>'+
+  '<label class="chk"><input type="checkbox" id="q7"'+(c.enabled?" checked":"")+'>JQK betting on (untick to pause)</label><div class="row"><button class="btn" data-act="jqSave">Save JQK settings</button><button class="sm" data-act="jqRefresh">Refresh</button></div></div>';
+  h+='<div class="card"><div class="top"><div><h2 style="margin:0">Next draw · '+esc(jqT(JQS.draw_at))+'</h2><div class="meta">Betting closes at '+esc(jqT(JQS.close_at))+'</div></div><span class="pill '+(c.enabled?"on":"off")+'" style="white-space:nowrap;align-self:flex-start">'+(c.enabled?"OPEN":"PAUSED")+'</span></div>'+
+  '<div class="meta"><b>'+fmt(n.bets)+'</b> bets from <b>'+fmt(n.players)+'</b> player(s) · <b>'+fmt(n.stake)+'</b> coins</div>'+
+  '<div class="meta">Colour '+fmt(n.colour)+' · Suit '+fmt(n.suit)+' · J/Q/K '+fmt(n.rank)+' · Exact card '+fmt(n.card)+'</div>'+
+  '<div class="row"><button class="sm bad" data-act="jqVoid" data-r="'+JQS.round+'" data-c="cancel the '+esc(jqT(JQS.draw_at))+' draw and refund every bet on it">Cancel this draw &amp; refund</button></div></div>';
+  h+='<div class="card"><h2>Today (India time)</h2><div class="grid"><div><div class="meta">Coins bet</div><b style="font-size:20px">'+fmt(t.stake)+'</b></div><div><div class="meta">Paid to winners</div><b style="font-size:20px">'+fmt(t.paid)+'</b></div><div><div class="meta">Owner\'s share</div><b style="font-size:20px;color:'+(share>=0?"#15803d":"#b91c1c")+'">'+(share>=0?"+":"")+fmt(share)+'</b></div><div><div class="meta">Players</div><b style="font-size:20px">'+fmt(t.players)+'</b></div></div></div>';
+  h+='<div class="card"><h2>Recent draws</h2>'+(JQS.draws.length?JQS.draws.map(function(d){var net=(+d.stake)-(+d.paid);
+    return '<div class="top" style="padding:8px 0;border-top:1px solid rgba(127,127,127,.25)"><div><div>'+esc(jqD(d.draw_at))+' · '+esc(jqT(d.draw_at))+' &nbsp; '+(d.void?'<b>CANCELLED</b> <span class="meta">bets refunded</span>':jqCardTxt(d.card))+'</div><div class="meta">'+fmt(d.bets)+' bets · '+fmt(d.players)+' player(s) · bet '+fmt(d.stake)+' · paid '+fmt(d.paid)+'</div></div><b style="white-space:nowrap;color:'+(net>=0?"#15803d":"#b91c1c")+'">'+(d.void?"":(net>=0?"+":"")+fmt(net))+'</b></div>'}).join(""):'<p class="meta">No draws yet.</p>')+'</div>';
+  return h}
 function sk2(n){return n==null?"--":String(n).padStart(2,"0")}
 function vSatta(){
   if(SKE||!SKC)return '<div class="card"><h2>Satta King</h2><p class="msg">Satta King isn\'t installed yet.</p><p class="meta">Run the Satta King SQL in the Supabase SQL Editor, then tap Refresh.</p><div class="row"><button class="sm" data-act="skRefresh">Refresh</button></div></div>';
@@ -190,6 +210,12 @@ lcM:async function(t){if(t.dataset.c&&!confirm("Are you sure: "+t.dataset.c+"?")
   msg=r.data&&r.data.bets?("Settled "+r.data.bets+" bet(s)."):"";await load();render()},
 
 skRefresh:async function(){msg="";await load();render()},
+jqRefresh:async function(){msg="";await load();render()},
+jqSave:async function(){var a=+v("q1"),b=+v("q2"),c=+v("q3"),d=+v("q4"),cl=nn("q5"),mx=nn("q6");
+  if(!(a>=1&&b>=1&&c>=1&&d>=1))throw new Error("Payouts must be at least 1×.");if(!(cl>=0&&cl<=55))throw new Error("Closing minutes must be 0–55.");if(!(mx>=1))throw new Error("Max per draw must be at least 1.");
+  if((a>=2||b>=4||c>=3||d>=12)&&!confirm("One or more payouts are at or above the fair odds, so the owner would earn nothing or lose coins over time on those bets. Save anyway?"))return;
+  var r=await sb.rpc("jqk_admin_config",{p_color:a,p_suit:b,p_rank:c,p_card:d,p_close_min:cl,p_max:mx,p_enabled:$("q7").checked});if(r.error)throw new Error(r.error.message);msg="JQK settings saved.";await load();render()},
+jqVoid:async function(t){if(!confirm("Are you sure: "+t.dataset.c+"?"))return;var r=await sb.rpc("jqk_admin_void",{p_round:+t.dataset.r});if(r.error)throw new Error(r.error.message);msg="Draw cancelled. "+r.data+" player(s) refunded.";await load();render()},
 skSave:async function(){var j=+v("k1"),a=+v("k2"),b=+v("k3"),c=nn("k4"),mx=nn("k5");
   if(!(j>=1&&a>=1&&b>=1))throw new Error("Payouts must be at least 1×.");if(!(c>=0&&c<=180))throw new Error("Closing minutes must be 0–180.");if(!(mx>=1))throw new Error("Max per slip must be at least 1.");
   var r=await sb.rpc("sk_admin_config",{p_jodi:j,p_andar:a,p_bahar:b,p_close:c,p_max:mx,p_enabled:$("k6").checked});if(r.error)throw new Error(r.error.message);msg="Satta King settings saved.";await load();render()},
