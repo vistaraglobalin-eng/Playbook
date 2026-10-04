@@ -57,7 +57,7 @@ function nn(i){var n=Math.floor(+v(i));return isFinite(n)?n:NaN}
 function emailFor(c){return c.toLowerCase()+"@id.playbook.example"}
 function app(h){$("app").innerHTML=h}
 function err(t){msg=t;render()}
-function tabs(){return me.role==="admin"?[["results","🎯 Results"],["masters","Master IDs"],["customers","Customer IDs"],["control","Control panel"],["live","Live cricket"],["satta","Satta King"],["jqk","JQK Cards"],["activity","Activity"],["account","Account"]]:[["customers","My customers"],["activity","Activity"],["account","Account"]]}
+function tabs(){if(me.role==="admin")return [["masters","Master IDs"],["customers","Customer IDs"],["control","Control panel"],["live","Live cricket"],["satta","Satta King"],["jqk","JQK Cards"],["activity","Activity"],["account","Account"]];if(me.role==="master")return [["customers","My customers"],["live","Live cricket"],["activity","Activity"],["account","Account"]];return [["customers","My customers"],["activity","Activity"],["account","Account"]]}
 async function callFn(b){
   var m={create:["admin_create",{p_name:b.name,p_coins:b.coins,p_max:b.max_customers==null?null:b.max_customers}],
     reset_password:["admin_reset",{p_code:b.code}],
@@ -84,8 +84,9 @@ async function load(){
     var lt=await sb.rpc("admin_statement_list",{p_account:null,p_limit:100});
     window.PB_LEDGER=lt.error?[]:(lt.data||[]);
   }
-  if(me.role==="admin"){var g=await sb.rpc("lc_admin_get");if(g.error){LCE=g.error.message;LCC=null;LCL=[]}else{LCE=null;LCC=g.data;var li=await sb.rpc("lc_admin_list");LCL=li.data||[]}
-    var k=await sb.rpc("sk_admin_summary");if(k.error){SKE=k.error.message;SKS=[];SKC=null}else{SKE=null;SKS=Array.isArray(k.data)?k.data:[];var kc=await sb.from("sk_config").select("*").eq("id",1).single();SKC=kc.data||null}
+  if(me.role==="admin"||me.role==="master"){var g=await sb.rpc("lc_admin_get");if(g.error){LCE=g.error.message;LCC=null;LCL=[]}else{LCE=null;LCC=g.data;var li=await sb.rpc("lc_admin_list");LCL=li.data||[]}
+  }
+  if(me.role==="admin"){var k=await sb.rpc("sk_admin_summary");if(k.error){SKE=k.error.message;SKS=[];SKC=null}else{SKE=null;SKS=Array.isArray(k.data)?k.data:[];var kc=await sb.from("sk_config").select("*").eq("id",1).single();SKC=kc.data||null}
     var jq=await sb.rpc("jqk_admin_summary");if(jq.error){JQE=jq.error.message;JQS=null}else{JQE=null;JQS=jq.data||null}}}
 async function enter(){
   var u=(await sb.auth.getUser()).data.user,p=u?await sb.from("profiles").select("*").eq("id",u.id).single():{};
