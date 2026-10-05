@@ -197,6 +197,31 @@ tr:hover td{background:#f5faf7!important}
 @media(max-width:600px){.client-detail-head{align-items:flex-start;flex-direction:column}.client-detail-grid{grid-template-columns:1fr 1fr}.client-info{grid-template-columns:1fr}}
 </style>
 
+
+<style id="playbook-dashboard-v6">
+.pb-dashboard-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:12px 0}
+.pb-kpi{background:#fff;border:1px solid #d5e4dc;border-radius:14px;padding:15px;box-shadow:0 7px 20px rgba(18,60,45,.07);position:relative;overflow:hidden}
+.pb-kpi:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(#087443,#0b8a52)}
+.pb-kpi .label{font-size:10px;text-transform:uppercase;letter-spacing:.6px;color:#718079;font-weight:700}
+.pb-kpi .value{font-size:26px;font-weight:900;color:#124c38;margin-top:7px}
+.pb-kpi .hint{font-size:10px;color:#84918b;margin-top:4px}
+.pb-dashboard-two{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(300px,.65fr);gap:12px;margin:12px 0}
+.pb-panel{background:#fff;border:1px solid #d5e4dc;border-radius:14px;overflow:hidden;box-shadow:0 7px 20px rgba(18,60,45,.06)}
+.pb-panel-head{display:flex;align-items:center;justify-content:space-between;padding:13px 15px;background:linear-gradient(90deg,#edf7f2,#fff);border-bottom:1px solid #dce9e3}
+.pb-panel-head h3{margin:0;color:#124c38;font-size:15px}.pb-panel-head span{font-size:10px;color:#78867f}
+.pb-panel-body{padding:14px}
+.pb-market-row{display:grid;grid-template-columns:1.2fr .8fr .8fr 1fr;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid #edf2ef}
+.pb-market-row:last-child{border-bottom:0}
+.pb-market-name{font-weight:800;color:#214f3d;font-size:12px}.pb-market-meta{font-size:10px;color:#87928d;margin-top:2px}
+.pb-status{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:800}.pb-status i{width:7px;height:7px;border-radius:50%;background:#0b8a52}.pb-status.off i{background:#aab4af}
+.pb-progress{height:7px;background:#edf2ef;border-radius:99px;overflow:hidden}.pb-progress i{display:block;height:100%;background:linear-gradient(90deg,#087443,#18a66a);border-radius:99px}
+.pb-activity{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid #edf2ef}.pb-activity:last-child{border-bottom:0}.pb-dot{width:8px;height:8px;background:#d7a63a;border-radius:50%;margin-top:5px;flex:0 0 auto}.pb-activity .title{font-size:11px;font-weight:700;color:#2a4b3e}.pb-activity .time{font-size:9px;color:#8a968f;margin-top:3px}
+.pb-quick{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}.pb-quick button{min-height:54px;border:1px solid #d3e3da!important;background:#f8fbf9!important;color:#15553e!important;font-weight:800!important}.pb-quick button:hover{background:#eaf5ef!important}
+.pb-alert{padding:10px 12px;border-radius:9px;background:#f2f8f5;border:1px solid #d6e7df;color:#315e4c;font-size:10px;margin-top:10px}
+@media(max-width:900px){.pb-dashboard-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.pb-dashboard-two{grid-template-columns:1fr}}
+@media(max-width:600px){.pb-dashboard-grid{grid-template-columns:1fr 1fr}.pb-market-row{grid-template-columns:1fr 1fr}.pb-quick{grid-template-columns:1fr 1fr}}
+</style>
+
 </head>
 <body>
 <header class="kx-header"><div class="kx-brand"><i class="kx-chip" aria-hidden="true"></i><strong>KingXBet</strong><span>Admin</span></div><button class="kx-menu" id="menuBtn" aria-label="Menu">☰</button><div class="kx-user"><span id="who">Control panel</span><button class="kx-logout" id="out" hidden>Log out</button></div></header>
@@ -357,19 +382,61 @@ function vClientDetail(){
     '</div></div>';
 }
 
+
 function vDashboard(){
   var detail=vClientDetail();
   var active=CS.filter(function(c){return c.active}).length, inactive=CS.length-active;
-  var bal=CS.reduce(function(a,c){return a+(Number(c.coins)||0)},0), live=LCL.length;
+  var bal=CS.reduce(function(a,c){return a+(Number(c.coins)||0)},0);
+  var exposure=CS.reduce(function(a,c){return a+(Number(c.exposure)||0)},0);
+  var avail=bal-exposure;
+  var live=LCL.filter(function(m){return !["settled","void"].includes(m.status)}).length;
   var q=window.PB_CLIENT_FILTER.toLowerCase(), sf=window.PB_STATUS_FILTER;
-  var rows=CS.filter(function(c){var ok=!q||String(c.code+" "+c.name).toLowerCase().indexOf(q)>=0;var st=sf==="all"||(sf==="active"&&c.active)||(sf==="inactive"&&!c.active);return ok&&st}).slice(0,100);
-  return '<div class="dash-hero"><div><h1>Dashboard</h1><p>Market-style control centre · Supabase connected · virtual/demo environment</p></div><div class="dash-actions"><button data-route="customers">＋ Add Account</button><button data-route="live">Live Cricket</button><button data-route="reports">Reports</button></div></div>'+
-    '<div class="metric-grid"><div class="metric"><div class="n">'+CS.length+'</div><div class="l">Total Clients</div></div><div class="metric"><div class="n">'+active+'</div><div class="l">Active Users</div></div><div class="metric"><div class="n">'+fmt(bal)+'</div><div class="l">Virtual Balance</div></div><div class="metric"><div class="n">'+live+'</div><div class="l">Live Cricket Matches</div></div></div>'+
-    '<div class="card"><div class="top"><div><h2 style="margin:0">List of Clients</h2><div class="meta">Account overview with the requested market-style columns</div></div></div><div class="toolbar"><input id="clientSearch" type="text" placeholder="Search username / name" value="'+esc(window.PB_CLIENT_FILTER)+'"><button class="sm filter-btn '+(sf==="all"?"active":"")+'" data-filter="all">All</button><button class="sm filter-btn '+(sf==="active"?"active":"")+'" data-filter="active">Active Users</button><button class="sm filter-btn '+(sf==="inactive"?"active":"")+'" data-filter="inactive">Deactive Users</button><button class="btn" data-route="customers">Add Account</button><button class="sm" data-act="dashRefresh">Load</button><button class="sm" data-act="dashReset">Reset</button><button class="sm" data-act="exportClients">Excel/CSV</button></div>'+
-    '<div class="client-summary"><div class="mini"><div class="v">'+CS.length+'</div><div class="k">Total Clients</div></div><div class="mini"><div class="v">'+active+'</div><div class="k">Active</div></div><div class="mini"><div class="v">'+inactive+'</div><div class="k">Deactive</div></div><div class="mini"><div class="v">'+fmt(bal)+'</div><div class="k">Total Balance</div></div><div class="mini"><div class="v">'+fmt(rows.reduce(function(a,c){return a+(Number(c.coins)||0)},0))+'</div><div class="k">Filtered Balance</div></div></div>'+
-    '<div class="account-shell"><div class="table-title"><div><h2>List of Clients</h2><div class="sub">Account ledger · balances and exposure view · live Supabase data · tap View for full account details</div></div><span class="account-badge">'+rows.length+' shown</span></div><div class="account-scroll"><table class="kx-table account-table"><thead><tr><th>User Name</th><th>CR</th><th>Balance</th><th>Client (P/L)</th><th>Exposure</th><th>Available Balance</th><th>U st</th><th>B st</th><th>Exposure Limit</th><th>Default %</th><th>Account Type</th><th>Status</th><th>Action</th></tr></thead><tbody>'+ (rows.length?rows.map(function(c){var ex=Number(c.exposure)||0,cr=Number(c.cr)||0,baln=Number(c.coins)||0,avail=baln-ex;return '<tr><td class="usercell"><div class="username">'+esc(c.code)+'</div><div class="name">'+esc(c.name||"")+'</div></td><td class="num">'+fmt(cr)+'</td><td class="num"><b>'+fmt(baln)+'</b></td><td class="num positive">'+fmt(Number(c.client_pl)||0)+'</td><td class="num">'+fmt(ex)+'</td><td class="num positive"><b>'+fmt(avail)+'</b></td><td class="num dash">—</td><td class="num dash">—</td><td class="num">'+(c.exposure_limit!=null?fmt(c.exposure_limit):'—')+'</td><td class="num">'+(c.default_percent!=null?c.default_percent:'100')+'%</td><td><span class="account-badge">'+esc(c.role||"customer")+'</span></td><td><span class="account-status '+(c.active?"":"off")+'"><i></i>'+(c.active?"Active":"Deactive")+'</span></td><td><div class="action-group"><button class="action-view" data-act="viewAccount" data-id="'+esc(c.code)+'">View</button>'+btn("toggle",c,c.active?"Deactivate":"Activate")+btn("reset",c,"Reset")+'</div></td></tr>'}).join(""):'<tr><td colspan="13" class="empty">No clients match the current filters.</td></tr>')+'</tbody></table></div><div class="table-note">CR, P/L and exposure fields use available profile data where present; otherwise they remain zero/blank rather than inventing financial values. This is a virtual play-money dashboard.</div></div>'+
-    '<div class="card"><h2>Quick Access</h2><div class="grid" style="grid-template-columns:repeat(4,minmax(0,1fr))"><button class="btn" data-route="analysis">Market Analysis</button><button class="btn" data-route="live">Live Market</button><button class="btn" data-route="live">Live Cricket</button><button class="btn" data-route="reports">Reports</button></div></div>';
+  var rows=CS.filter(function(c){
+    var ok=!q||String((c.code||"")+" "+(c.name||"")).toLowerCase().indexOf(q)>=0;
+    var st=sf==="all"||(sf==="active"&&c.active)||(sf==="inactive"&&!c.active);
+    return ok&&st
+  }).slice(0,100);
+  var recent=(LG||[]).slice(0,5);
+  var markets=(LCL||[]).slice(0,6);
+  var maxBal=Math.max.apply(null,CS.map(function(c){return Number(c.coins)||0}).concat([1]));
+  return detail+
+    '<div class="dash-hero"><div><h1>Dashboard</h1><p>Premium market control centre · Supabase connected · virtual/demo environment</p></div><div class="dash-actions"><button data-route="customers">＋ Add Account</button><button data-route="live">Live Cricket</button><button data-route="reports">Reports</button></div></div>'+
+    '<div class="pb-dashboard-grid">'+
+      '<div class="pb-kpi"><div class="label">Total Clients</div><div class="value">'+CS.length+'</div><div class="hint">'+active+' active · '+inactive+' deactive</div></div>'+
+      '<div class="pb-kpi"><div class="label">Total Balance</div><div class="value">'+fmt(bal)+'</div><div class="hint">Virtual coins across clients</div></div>'+
+      '<div class="pb-kpi"><div class="label">Exposure</div><div class="value">'+fmt(exposure)+'</div><div class="hint">Available: '+fmt(avail)+'</div></div>'+
+      '<div class="pb-kpi"><div class="label">Live Markets</div><div class="value">'+live+'</div><div class="hint">Live Cricket feed records</div></div>'+
+    '</div>'+
+    '<div class="pb-dashboard-two">'+
+      '<div class="pb-panel"><div class="pb-panel-head"><h3>Market Overview</h3><span>Live database snapshot</span></div><div class="pb-panel-body">'+
+        (markets.length?markets.map(function(m){
+          var a=esc(m.team_a||m.home_team||m.name||"Match A"),b=esc(m.team_b||m.away_team||"Match B");
+          var status=m.status||"scheduled";
+          var pct=Math.max(8,Math.min(100,Math.round(((Number(m.progress)||0)*100))));
+          return '<div class="pb-market-row"><div><div class="pb-market-name">'+a+' vs '+b+'</div><div class="pb-market-meta">'+esc(m.league||m.competition||"Cricket")+'</div></div><div><span class="pb-status '+((status==="settled"||status==="void")?"off":"")+'"><i></i>'+esc(status)+'</span></div><div class="pb-market-meta">'+(m.start_at?esc(new Date(m.start_at).toLocaleString()):"Start time unavailable")+'</div><div><div class="pb-progress"><i style="width:'+pct+'%"></i></div></div></div>'
+        }).join(""):'<div class="client-empty">No live cricket markets are currently loaded.</div>')+
+        '<div class="pb-alert">Odds and score data appear here only when the configured Live Cricket backend has successfully populated the market tables.</div>'+
+      '</div></div>'+
+      '<div class="pb-panel"><div class="pb-panel-head"><h3>Recent Activity</h3><span>'+LG.length+' loaded</span></div><div class="pb-panel-body">'+
+        (recent.length?recent.map(function(r){return '<div class="pb-activity"><i class="pb-dot"></i><div><div class="title">'+esc(r.action||r.event||r.kind||"Account activity")+'</div><div class="time">'+(r.at?esc(new Date(r.at).toLocaleString()):"Recent")+'</div></div></div>'}).join(""):'<div class="client-empty">No recent activity.</div>')+
+      '</div></div>'+
+    '</div>'+
+    '<div class="pb-panel" style="margin-bottom:12px"><div class="pb-panel-head"><h3>Client Balance Distribution</h3><span>Top accounts by virtual balance</span></div><div class="pb-panel-body">'+
+      (CS.length?CS.slice().sort(function(a,b){return (Number(b.coins)||0)-(Number(a.coins)||0)}).slice(0,6).map(function(c){
+        var n=Number(c.coins)||0,p=Math.round(n/maxBal*100);
+        return '<div class="pb-market-row" style="grid-template-columns:1fr 2fr .45fr"><div><div class="pb-market-name">'+esc(c.code)+'</div><div class="pb-market-meta">'+esc(c.name||"")+'</div></div><div><div class="pb-progress"><i style="width:'+Math.max(3,p)+'%"></i></div></div><div class="pb-market-meta" style="text-align:right">'+fmt(n)+'</div></div>'
+      }).join(""):'<div class="client-empty">No client balances available.</div>')+
+    '</div>'+
+    '<div class="card"><div class="top"><div><h2 style="margin:0">List of Clients</h2><div class="meta">Reference-style account management table · use View for the complete account screen</div></div></div>'+
+      '<div class="toolbar"><input id="clientSearch" type="text" placeholder="Search username / name" value="'+esc(window.PB_CLIENT_FILTER)+'"><button class="sm filter-btn '+(sf==="all"?"active":"")+'" data-filter="all">All</button><button class="sm filter-btn '+(sf==="active"?"active":"")+'" data-filter="active">Active Users</button><button class="sm filter-btn '+(sf==="inactive"?"active":"")+'" data-filter="inactive">Deactive Users</button><button class="btn" data-route="customers">Add Account</button><button class="sm" data-act="dashRefresh">Load</button><button class="sm" data-act="dashReset">Reset</button><button class="sm" data-act="exportClients">Excel/CSV</button></div>'+
+      '<div class="client-summary"><div class="mini"><div class="v">'+CS.length+'</div><div class="k">Total Clients</div></div><div class="mini"><div class="v">'+active+'</div><div class="k">Active</div></div><div class="mini"><div class="v">'+inactive+'</div><div class="k">Deactive</div></div><div class="mini"><div class="v">'+fmt(bal)+'</div><div class="k">Total Balance</div></div><div class="mini"><div class="v">'+fmt(rows.reduce(function(a,c){return a+(Number(c.coins)||0)},0))+'</div><div class="k">Filtered Balance</div></div></div>'+
+      '<div class="account-shell"><div class="table-title"><div><h2>List of Clients</h2><div class="sub">Client Balance · Exposure · Available Balance · Account Type · Action</div></div><span class="account-badge">'+rows.length+' shown</span></div><div class="account-scroll"><table class="kx-table account-table"><thead><tr><th>User Name</th><th>CR</th><th>Balance</th><th>Client (P/L)</th><th>Exposure</th><th>Available Balance</th><th>U st</th><th>B st</th><th>Exposure Limit</th><th>Default %</th><th>Account Type</th><th>Status</th><th>Action</th></tr></thead><tbody>'+
+      (rows.length?rows.map(function(c){var ex=Number(c.exposure)||0,cr=Number(c.cr)||0,baln=Number(c.coins)||0,available=baln-ex;return '<tr><td class="usercell"><div class="username">'+esc(c.code)+'</div><div class="name">'+esc(c.name||"")+'</div></td><td class="num">'+fmt(cr)+'</td><td class="num"><b>'+fmt(baln)+'</b></td><td class="num positive">'+fmt(Number(c.client_pl)||0)+'</td><td class="num">'+fmt(ex)+'</td><td class="num positive"><b>'+fmt(available)+'</b></td><td class="num dash">—</td><td class="num dash">—</td><td class="num">'+(c.exposure_limit!=null?fmt(c.exposure_limit):"—")+'</td><td class="num">'+(c.default_percent!=null?c.default_percent:"100")+'%</td><td><span class="account-badge">'+esc(c.role||"customer")+'</span></td><td><span class="account-status '+(c.active?"":"off")+'"><i></i>'+(c.active?"Active":"Deactive")+'</span></td><td><div class="action-group"><button class="action-view" data-act="viewAccount" data-id="'+esc(c.code)+'">View</button>'+btn("toggle",c,c.active?"Deactivate":"Activate")+btn("reset",c,"Reset")+'</div></td></tr>'}).join(""):'<tr><td colspan="13" class="empty">No clients match the current filters.</td></tr>')+
+      '</tbody></table></div><div class="table-note">Only values available from the current Supabase profile data are displayed. Missing P/L/exposure fields remain blank/zero rather than being fabricated.</div></div>'+
+    '</div>'+
+    '<div class="card"><div class="top"><div><h2>Quick Access</h2><div class="meta">Open the most-used Playbook control areas</div></div></div><div class="pb-quick"><button data-route="customers">List of Clients</button><button data-route="analysis">Market Analysis</button><button data-route="live">Live Cricket</button><button data-route="activity">Activity & Reports</button></div></div>';
 }
+
 function vAssign(){return '<div class="card"><h2>Assign Agent</h2><p class="meta">Agent assignment workspace. Existing Supabase permissions remain unchanged; no unsupported backend mutation is performed here.</p><div class="grid"><div><label>Client</label><select><option>Select client</option>'+CS.map(function(c){return '<option>'+esc(c.code)+' · '+esc(c.name)+'</option>'}).join('')+'</select></div><div><label>Agent</label><input type="text" placeholder="Agent name / ID"></div></div><div class="row"><button class="btn" onclick="alert(\'Agent assignment UI ready; connect to your agent table/RPC when that backend is available.\')">Assign Agent</button></div></div>'}
 function vAnalysis(){return '<div class="card"><h2>Market Analysis</h2><div class="metric-grid"><div class="metric"><div class="n">'+CS.length+'</div><div class="l">Accounts</div></div><div class="metric"><div class="n">'+LCL.length+'</div><div class="l">Cricket Markets</div></div><div class="metric"><div class="n">'+MS.length+'</div><div class="l">Masters</div></div><div class="metric"><div class="n">'+LG.length+'</div><div class="l">Recent Activity</div></div></div><p class="meta">This panel is intentionally read-only until a matching analytics backend is available.</p></div>'}
 function vReports(){return '<div class="card"><h2>Reports</h2><p class="meta">Export the current client list or open the existing activity/statement reports.</p><div class="row"><button class="btn" data-act="exportClients">Export Clients CSV</button><button class="sm" data-route="activity">Activity Report</button><button class="sm" data-route="ledger">Statement Report</button></div></div>'}
