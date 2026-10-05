@@ -1,0 +1,30 @@
+{
+  "source": "https://raj-darbar.com/",
+  "updated_at": null,
+  "markets": {
+    "DELHI BAZAR": {
+      "id": 126,
+      "results": {}
+    },
+    "DESAWAR": {
+      "id": 116,
+      "results": {}
+    },
+    "FARIDABAD": {
+      "id": 117,
+      "results": {}
+    },
+    "GALI": {
+      "id": 120,
+      "results": {}
+    },
+    "GHAZIABAD": {
+      "id": 119,
+      "results": {}
+    },
+    "SHREE GANESH": {
+      "id": 127,
+      "results": {}
+    }
+  }
+}
