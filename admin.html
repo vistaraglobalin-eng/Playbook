@@ -302,6 +302,7 @@ tr:hover td{background:#f5faf7!important}
 @media(max-width:600px){.pb-control-grid{grid-template-columns:1fr}}
 </style>
 
+<!-- Playbook Master Dashboard V13 -->
 </head>
 <body>
 <header class="kx-header"><div class="kx-brand"><i class="kx-chip" aria-hidden="true"></i><strong>KingXBet</strong><span>Admin</span></div><button class="kx-menu" id="menuBtn" aria-label="Menu">☰</button><div class="kx-user"><span id="who">Control panel</span><button class="kx-logout" id="out" hidden>Log out</button></div></header>
@@ -366,6 +367,7 @@ async function enter(){
     else if(!p.data.active)bad="This ID is suspended. Contact the admin.";
     if(bad){await sb.auth.signOut();me=null;return err(bad)}
     me=p.data;msg="";
+    if(me.role==="master")tab="dashboard";
     await load();
     render();
   }catch(e){
