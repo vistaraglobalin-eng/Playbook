@@ -270,6 +270,22 @@ tr:hover td{background:#f5faf7!important}
 @media(max-width:800px){.pb-live-summary{grid-template-columns:1fr 1fr}.pb-live-wrap{overflow-x:auto}}
 </style>
 
+
+<style id="playbook-reports-v9">
+.pb-report-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:12px 0}
+.pb-report-card{background:#fff;border:1px solid #d5e4dc;border-radius:14px;padding:15px;box-shadow:0 7px 20px rgba(18,60,45,.06)}
+.pb-report-card .k{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:#75827c;font-weight:700}.pb-report-card .v{font-size:24px;font-weight:900;color:#075c38;margin-top:5px}.pb-report-card .s{font-size:10px;color:#87938d;margin-top:3px}
+.pb-report-panel{background:#fff;border:1px solid #d5e4dc;border-radius:14px;overflow:hidden;box-shadow:0 7px 20px rgba(18,60,45,.06);margin-bottom:12px}
+.pb-report-head{padding:14px 16px;background:linear-gradient(90deg,#edf7f2,#fff);border-bottom:1px solid #dce9e3;display:flex;justify-content:space-between;align-items:center;gap:10px}.pb-report-head h3{margin:0;color:#124c38;font-size:15px}.pb-report-head span{font-size:10px;color:#7b8982}
+.pb-report-body{padding:14px}.pb-report-filter{display:flex;gap:9px;align-items:end;flex-wrap:wrap}.pb-report-filter .f{display:flex;flex-direction:column;gap:4px}.pb-report-filter label{font-size:10px;color:#718079;font-weight:700}.pb-report-filter input,.pb-report-filter select{min-width:135px}
+.pb-report-table-wrap{overflow:auto}.pb-report-table{width:100%;border-collapse:collapse;min-width:900px;font-size:11px}.pb-report-table th{background:#edf6f1!important;color:#315b49!important;padding:9px;text-align:left;position:sticky;top:0}.pb-report-table td{padding:9px;border-bottom:1px solid #edf2ef}.pb-report-table .num{text-align:right}
+.pb-report-pos{color:#087443;font-weight:800}.pb-report-neg{color:#b43d2f;font-weight:800}
+.pb-report-actions{display:flex;gap:7px;flex-wrap:wrap}.pb-report-actions button{font-size:10px!important}
+.pb-report-note{padding:10px 12px;background:#f4f9f6;border:1px solid #dbe9e2;border-radius:9px;color:#5f7068;font-size:10px;margin-top:10px}
+@media(max-width:800px){.pb-report-summary{grid-template-columns:1fr 1fr}}
+@media(max-width:500px){.pb-report-summary{grid-template-columns:1fr 1fr}.pb-report-filter .f{width:100%}.pb-report-filter input,.pb-report-filter select{width:100%;box-sizing:border-box}}
+</style>
+
 </head>
 <body>
 <header class="kx-header"><div class="kx-brand"><i class="kx-chip" aria-hidden="true"></i><strong>KingXBet</strong><span>Admin</span></div><button class="kx-menu" id="menuBtn" aria-label="Menu">☰</button><div class="kx-user"><span id="who">Control panel</span><button class="kx-logout" id="out" hidden>Log out</button></div></header>
@@ -282,7 +298,7 @@ tr:hover td{background:#f5faf7!important}
 // 1) Paste your Supabase project values here (Project settings > API). The anon key is safe to ship.
 var CFG={url:"https://jmvvuitwjixgsmhrdapg.supabase.co",anon:"sb_publishable_VZRaBdHeQk0YAWzJammc1w_9NL6owyx"};
 var GAMES=[["cricket","Cricket"],["casino","Casino"],["roulette","Roulette"],["lucky7","Lucky 7"],["kingjack","King Jack"],["num","1–9"],["satta","Satta King"],["jqk","JQK Cards"]];
-var sb=null,me=null,S=null,MS=[],CS=[],LG=[],tab="dashboard",reveal=null,msg="",LCC=null,LCL=[],LCE=null,SKS=[],SKC=null,SKE=null,JQS=null,JQE=null;window.PB_LEDGER=[];window.PB_CLIENT_FILTER="";window.PB_STATUS_FILTER="all";window.PB_SELECTED_ACCOUNT=null;window.PB_SELECTED_STATEMENTS=[];window.PB_LIVE_Q="";window.PB_LIVE_STATUS="all";
+var sb=null,me=null,S=null,MS=[],CS=[],LG=[],tab="dashboard",reveal=null,msg="",LCC=null,LCL=[],LCE=null,SKS=[],SKC=null,SKE=null,JQS=null,JQE=null;window.PB_LEDGER=[];window.PB_CLIENT_FILTER="";window.PB_STATUS_FILTER="all";window.PB_SELECTED_ACCOUNT=null;window.PB_SELECTED_STATEMENTS=[];window.PB_LIVE_Q="";window.PB_LIVE_STATUS="all";window.PB_REPORT_Q="";window.PB_REPORT_STATUS="all";
 function $(i){return document.getElementById(i)}
 function v(i){return $(i)?$(i).value.trim():""}
 function esc(s){return String(s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
@@ -509,6 +525,46 @@ function vLiveMarket(){
       return '<tr><td><div class="pb-match-name">'+esc(m.team_a||m.home_team||"Team A")+' vs '+esc(m.team_b||m.away_team||"Team B")+'</div><div class="pb-match-sub">ID: '+esc(String(m.id||"—"))+'</div></td><td>'+esc(m.league||m.competition||"Cricket")+'</td><td>'+ (m.start_at?esc(new Date(m.start_at).toLocaleString()):"—")+'</td><td><span class="pb-live-status '+esc(st)+'"><i></i>'+esc(st)+'</span></td><td><b>'+esc(String(score))+'</b></td><td><div class="pb-odds"><span class="pb-odd"><small>A</small>'+ (isFinite(oa)&&oa>0?oa.toFixed(2):"—")+'</span><span class="pb-odd"><small>B</small>'+ (isFinite(ob)&&ob>0?ob.toFixed(2):"—")+'</span></div></td><td class="pb-exposure">'+fmt(ex)+'</td><td class="pb-available">'+fmt((Number(m.available_balance)||0))+'</td><td><div class="pb-live-actions"><button class="sm" data-act="liveViewMatch" data-id="'+esc(String(m.id||""))+'">View</button><button class="sm" data-act="livePause" data-id="'+esc(String(m.id||""))+'">Pause</button><button class="sm" data-act="liveSettle" data-id="'+esc(String(m.id||""))+'">Settle</button></div></td></tr>'
     }).join(""):'<tr><td colspan="9"><div class="pb-live-empty">No live market rows are currently available. Configure the Live Cricket feed/API and populate lc_matches to display markets here.</div></td></tr>')+
     '</tbody></table></div><div class="pb-live-note">This screen is connected to the existing Live Cricket data model. It does not create real-money bets or cash settlement.</div></div>';
+}
+
+
+function vReports(){
+  var clients=(CS||[]).slice();
+  var total=clients.reduce(function(a,c){return a+(Number(c.coins)||0)},0);
+  var exposure=clients.reduce(function(a,c){return a+(Number(c.exposure)||0)},0);
+  var pl=clients.reduce(function(a,c){return a+(Number(c.client_pl)||0)},0);
+  var available=total-exposure;
+  var active=clients.filter(function(c){return c.active}).length;
+  var q=(window.PB_REPORT_Q||"").toLowerCase();
+  var sf=window.PB_REPORT_STATUS||"all";
+  var rows=clients.filter(function(c){
+    var ok=!q||String((c.code||"")+" "+(c.name||"")).toLowerCase().indexOf(q)>=0;
+    var st=sf==="all"||(sf==="active"&&c.active)||(sf==="inactive"&&!c.active);
+    return ok&&st;
+  });
+  rows.sort(function(a,b){return (Number(b.coins)||0)-(Number(a.coins)||0)});
+  return '<div class="dash-hero"><div><h1>Reports</h1><p>Client balances, exposure, P/L and account activity · live Supabase data</p></div><div class="dash-actions"><button data-act="reportRefresh">↻ Refresh</button><button data-route="analysis">Market Analysis</button><button data-route="dashboard">Dashboard</button></div></div>'+
+    '<div class="pb-report-panel"><div class="pb-report-body"><div class="pb-report-filter">'+
+      '<div class="f"><label>Client Search</label><input id="reportSearch" placeholder="Username / name" value="'+esc(window.PB_REPORT_Q||"")+'"></div>'+
+      '<div class="f"><label>Status</label><select id="reportStatus"><option value="all" '+(sf==="all"?"selected":"")+'>All Clients</option><option value="active" '+(sf==="active"?"selected":"")+'>Active</option><option value="inactive" '+(sf==="inactive"?"selected":"")+'>Deactive</option></select></div>'+
+      '<div class="f"><label>Report Type</label><select id="reportType"><option>Client Summary</option><option>Balance & Exposure</option><option>P/L Report</option><option>Activity Report</option></select></div>'+
+      '<button class="btn" data-act="reportLoad">Load Report</button><button class="sm" data-act="reportReset">Reset</button>'+
+      '</div></div></div>'+
+    '<div class="pb-report-summary">'+
+      '<div class="pb-report-card"><div class="k">Total Balance</div><div class="v">'+fmt(total)+'</div><div class="s">'+rows.length+' filtered clients</div></div>'+
+      '<div class="pb-report-card"><div class="k">Exposure</div><div class="v">'+fmt(exposure)+'</div><div class="s">'+(total?Math.round(exposure/total*100):0)+'% utilization</div></div>'+
+      '<div class="pb-report-card"><div class="k">Available Balance</div><div class="v">'+fmt(available)+'</div><div class="s">Balance less exposure</div></div>'+
+      '<div class="pb-report-card"><div class="k">Client P/L</div><div class="v">'+fmt(pl)+'</div><div class="s">'+active+' active accounts</div></div>'+
+    '</div>'+
+    '<div class="pb-report-panel"><div class="pb-report-head"><h3>Client Financial Report</h3><span>'+rows.length+' accounts</span></div><div class="pb-report-body"><div class="pb-report-actions"><button class="sm" data-act="reportExport">Export CSV</button><button class="sm" data-act="reportPrint">Print Report</button></div><div class="pb-report-table-wrap" style="margin-top:10px"><table class="pb-report-table"><thead><tr><th>User Name</th><th>Account Type</th><th>Status</th><th class="num">Balance</th><th class="num">Exposure</th><th class="num">Available</th><th class="num">Client P/L</th><th class="num">CR</th><th>Default %</th><th>Action</th></tr></thead><tbody>'+
+      (rows.length?rows.map(function(c){
+        var b=Number(c.coins)||0,e=Number(c.exposure)||0,a=b-e,p=Number(c.client_pl)||0;
+        return '<tr><td><b>'+esc(c.code)+'</b><div class="meta">'+esc(c.name||"")+'</div></td><td>'+esc(c.role||"customer")+'</td><td>'+(c.active?"Active":"Deactive")+'</td><td class="num">'+fmt(b)+'</td><td class="num">'+fmt(e)+'</td><td class="num pb-report-pos">'+fmt(a)+'</td><td class="num '+(p>=0?"pb-report-pos":"pb-report-neg")+'">'+fmt(p)+'</td><td class="num">'+fmt(Number(c.cr)||0)+'</td><td class="num">'+(c.default_percent!=null?c.default_percent:"100")+'%</td><td><button class="sm" data-act="viewAccount" data-id="'+esc(c.code)+'">View</button></td></tr>';
+      }).join(""):'<tr><td colspan="10" class="pb-empty">No report rows available.</td></tr>')+
+    '</tbody></table></div><div class="pb-report-note">Report values are based only on the current Supabase client/profile data. Missing values are not fabricated. This environment uses virtual/demo points only.</div></div></div>'+
+    '<div class="pb-report-panel"><div class="pb-report-head"><h3>Activity Report</h3><span>Recent loaded activity</span></div><div class="pb-report-body">'+
+      ((LG||[]).length?'<div class="pb-report-table-wrap"><table class="pb-report-table" style="min-width:650px"><thead><tr><th>Time</th><th>Action</th><th>Details</th></tr></thead><tbody>'+LG.slice(0,50).map(function(r){return '<tr><td>'+(r.at?esc(new Date(r.at).toLocaleString()):"—")+'</td><td>'+esc(r.action||r.event||r.kind||"Activity")+'</td><td>'+esc(r.detail||r.message||"—")+'</td></tr>'}).join("")+'</tbody></table></div>':'<div class="pb-empty">No recent activity is available.</div>')+
+    '</div></div>';
 }
 
 function vAssign(){return '<div class="card"><h2>Assign Agent</h2><p class="meta">Agent assignment workspace. Existing Supabase permissions remain unchanged; no unsupported backend mutation is performed here.</p><div class="grid"><div><label>Client</label><select><option>Select client</option>'+CS.map(function(c){return '<option>'+esc(c.code)+' · '+esc(c.name)+'</option>'}).join('')+'</select></div><div><label>Agent</label><input type="text" placeholder="Agent name / ID"></div></div><div class="row"><button class="btn" onclick="alert(\'Agent assignment UI ready; connect to your agent table/RPC when that backend is available.\')">Assign Agent</button></div></div>'}
