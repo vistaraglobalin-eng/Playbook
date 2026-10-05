@@ -1995,12 +1995,7 @@ function jqStatHtml(){const h=JQ.hist.slice(0,40);if(!h.length)return"";const n=
  return `<span>LAST ${h.length}</span><span class="r">RED ${n("red")}</span><span class="k">BLACK ${n("black")}</span><span>J ${n("rJ")}</span><span>Q ${n("rQ")}</span><span>K ${n("rK")}</span>`}
 async function jqLoad(pr){const r=await sb.rpc("jqk_state",pr!=null?{p_round:pr}:{});if(r.error)throw r.error;const d=r.data;
  JQ.off=jqT(d.now)-Date.now();JQ.round=+d.round;JQ.drawAt=jqT(d.draw_at);JQ.closeAt=jqT(d.close_at);const nc=JSON.stringify(d.cfg)!==JSON.stringify(JQ.cfg);JQ.cfg=d.cfg;JQ.err=null;
- JQ.cancelled=!!d.cancelled;
- const mr=await sb.from("jqk_manual_results").select("round,card").order("round",{ascending:false}).limit(60);
- const mh=(mr.error?[]:(mr.data||[])).map(function(x){return {r:+x.round,c:x.card}});d.hist=mh;
- const cur=mh.find(function(x){return x.r===JQ.round});
- d.last=cur?{round:JQ.round,card:cur.c,void:false,stake:0,payout:0,bets:{}}:null;
- if(nc&&$("jqboard"))$("jqboard").innerHTML=jqBoardHtml();return d}
+ JQ.cancelled=!!d.cancelled;if(nc&&$("jqboard"))$("jqboard").innerHTML=jqBoardHtml();return d}
 function jqPhaseNow(){const left=JQ.drawAt-jqNow();return JQ.cancelled||JQ.cfg.on===false||left<=JQ.cfg.close*1000?"closed":"open"}
 async function jqView(){jqEnsureDefs();game="jqk";
  $("app").innerHTML=`<div class="rl jq"><div class="rl-top"><button class="cb sm" data-act="lobby" aria-label="Back to games">‹</button><div class="rl-logo"><b>JQK Cards</b><small>KINGXBET · LIVE CARD DRAW</small></div><span class="streak" id="strk">${streakHtml()}</span><button class="cb sm" data-act="rules" aria-label="How to play">?</button><button class="cb sm" id="rmu" data-act="mute" aria-label="Sound on or off">${mute?"🔇":"🔊"}</button><button class="cb sm" data-act="menu" aria-label="Menu">☰</button></div>
@@ -2016,7 +2011,7 @@ ${S.maint?'<div class="card warn" style="margin:8px">Games are paused for mainte
 <div class="jq-act"><button class="cb" data-jqa="rebet" aria-label="Repeat last round's bets">↻</button><button class="cb tx" data-jqa="x2" aria-label="Double my chips">2X</button><button class="jq-go" id="jqgo" data-jqa="confirm">PLACE BET<small id="jqgos">pick chips first</small></button><button class="cb" data-jqa="undo" aria-label="Undo last chip">↶</button><button class="cb" data-jqa="clear" aria-label="Clear chips not yet placed">✕</button></div>
 <div class="jq-chips">${JQCH.map(v=>`<button class="cp${v===JQ.chip?" sel":""}" data-jqc="${v}" style="--cc:${JQCC[v]}" aria-label="Chip ${v}">${jqShort(v)}</button>`).join("")}</div>
 <div class="jq-res" id="jqres"></div>
-<p class="rl-note">Play money only · coins have no cash value · the admin declares one card manually; no result is generated automatically</p></div>
+<p class="rl-note">Play money only · coins have no cash value · the server draws one card at random every hour</p></div>
 <div class="rl-bar"><div><small>BALANCE</small><b id="rbal">${fmt(shown)}</b></div><div><small>BET</small><b id="rbet">0</b></div><div><small>WIN</small><b id="rwin">0</b></div></div>`;
  JQ.pend={};JQ.undo=[];JQ.phase="wait";JQ.rev=false;jqStop();JQ.iv=setInterval(jqTick,200);
  try{const d=await jqLoad();JQ.hist=d.hist||[];JQ.mine=d.mine||{};if(d.balance!=null){me.coins=+d.balance;setBal(me.coins)}
@@ -2114,12 +2109,12 @@ async function jqShow(L,d){const card=L.card,cr=card[0],cs=card[1],slot=$("jqslo
   await jqZz(1600)}
  else await jqZz(2200)}
 function jqRulesHtml(){const c=JQ.cfg||{color:1.95,suit:3.8,rank:2.85,card:11,close:15,round:60,max:20000};
- return `<h3>🃏 How to play JQK Cards</h3><p>One result every hour at minute 59 India time (12:59, 1:59, 2:59 …), like a Satta King market. Pick a chip, tap the boxes or cards you want to back, then tap <b>PLACE BET</b>. Chips still on the table are placed for you just before betting closes. Betting closes ${Math.round(c.close/60)} minutes before each result and opens again right after it.</p><p>At the result time, the player page shows the card only after the admin declares it manually. Until then the result remains WAIT.</p>
+ return `<h3>🃏 How to play JQK Cards</h3><p>One result every hour at minute 59 India time (12:59, 1:59, 2:59 …), like a Satta King market. Pick a chip, tap the boxes or cards you want to back, then tap <b>PLACE BET</b>. Chips still on the table are placed for you just before betting closes. Betting closes ${Math.round(c.close/60)} minutes before each result and opens again right after it.</p><p>At the result time the server draws one of the 12 cards (Jack, Queen or King in any of the 4 suits) at random and it's turned over on the table. Winnings are added to your balance straight away.</p>
  <ul class="pays"><li><span>Colour · Red (♥ ♦) or Black (♠ ♣)</span><b>${jqX(c.color)}</b></li><li><span>Suit · ♠ ♥ ♦ or ♣</span><b>${jqX(c.suit)}</b></li><li><span>Rank · any Jack, Queen or King</span><b>${jqX(c.rank)}</b></li><li><span>One exact card, e.g. King of Hearts</span><b>${jqX(c.card)}</b></li></ul>
  <p class="meta">Up to ${fmt(c.max)} coins per round. Placed bets can't be taken back. Play money only: coins have no cash value.</p>`}
 
 /* ---------------- Satta King ---------------- */
-const SK={st:null,res:[],bets:[],page:"home",mk:null,tab:"jodi",amt:10,slip:{},cA:[],cB:[],cut:false,btab:"open",off:0,chan:null,iv:null,poll:null,err:null,seen:{},busy:false,last:0};
+const SK={st:null,res:[],ref:null,refLoaded:false,refErr:null,bets:[],page:"home",mk:null,tab:"jodi",amt:10,slip:{},cA:[],cB:[],cut:false,btab:"open",off:0,chan:null,iv:null,poll:null,err:null,seen:{},busy:false,last:0};
 const SKAMT=[10,50,100,500,1000];
 const sk2=n=>n==null?"--":String(n).padStart(2,"0");
 const skNow=()=>Date.now()+SK.off;
@@ -2128,15 +2123,17 @@ function skDay(d,n){const x=new Date(d+"T00:00:00Z");x.setUTCDate(x.getUTCDate()
 function skDate(d){if(!SK.st)return d;if(d===SK.st.today)return"Today";if(d===skDay(SK.st.today,1))return"Tomorrow";if(d===skDay(SK.st.today,-1))return"Yesterday";return new Date(d+"T00:00:00Z").toLocaleDateString("en-IN",{weekday:"short",day:"numeric",month:"short",timeZone:"UTC"})}
 function skCd(ms){if(ms<=0)return"00:00:00";const s=Math.floor(ms/1000);return[Math.floor(s/3600),Math.floor(s%3600/60),s%60].map(v=>String(v).padStart(2,"0")).join(":")}
 function skStop(){if(SK.chan){try{sb.removeChannel(SK.chan)}catch(e){}SK.chan=null}clearInterval(SK.iv);clearInterval(SK.poll);SK.iv=SK.poll=null}
+async function skRefLoad(){try{const r=await fetch("./data/rajdarbar-reference.json?"+Date.now(),{cache:"no-store"});if(!r.ok)throw new Error("reference feed "+r.status);SK.ref=await r.json();SK.refLoaded=true;SK.refErr=null}catch(e){SK.refErr=e.message;SK.refLoaded=true}}
 async function skLoad(){const s=await sb.rpc("sk_state");
  if(s.error||!s.data){SK.err=s.error?s.error.message:"no data";return}
  SK.err=null;SK.st=s.data;SK.off=Date.parse(s.data.now)-Date.now();
  const r=await sb.from("sk_manual_results").select("*").gte("draw_date",skDay(s.data.today,-20)).order("draw_date",{ascending:false});if(!r.error)SK.res=(r.data||[]).map(function(x){return {market_id:x.market_id,draw_date:x.draw_date,num:x.num,void:false,drawn_at:x.updated_at||x.created_at}});
- const b=await sb.from("sk_bets").select("*").order("created_at",{ascending:false}).limit(300);if(!b.error)SK.bets=b.data||[]}
+ const b=await sb.from("sk_bets").select("*").order("created_at",{ascending:false}).limit(300);if(!b.error)SK.bets=b.data||[];
+ if(!SK.refLoaded)await skRefLoad()}
 const skKey=r=>r.market_id+"|"+r.draw_date;
 function skNewRes(){const n=SK.res.filter(r=>!SK.seen[skKey(r)]);n.forEach(r=>SK.seen[skKey(r)]=1);return n}
 function skStart(){skStop();
- try{SK.chan=sb.channel("sk-manual").on("postgres_changes",{event:"*",schema:"public",table:"sk_manual_results"},()=>skRefresh()).on("postgres_changes",{event:"*",schema:"public",table:"sk_markets"},()=>skRefresh()).subscribe()}catch(e){}
+ try{SK.chan=sb.channel("sk-x").on("postgres_changes",{event:"*",schema:"public",table:"sk_results"},()=>skRefresh()).on("postgres_changes",{event:"*",schema:"public",table:"sk_markets"},()=>skRefresh()).subscribe()}catch(e){}
  SK.iv=setInterval(skTick,1000);SK.poll=setInterval(skRefresh,20000)}
 async function skRefresh(){if(SK.busy||view!=="satta")return;SK.busy=true;SK.last=Date.now();
  try{await skLoad();const nw=skNewRes();skRender();for(const r of nw)await skReveal(r)}catch(e){console.error(e)}finally{SK.busy=false}}
@@ -2144,9 +2141,9 @@ function skStatus(m){const now=skNow();if(!m.active||!SK.st.cfg.on)return"off";i
 function skTick(){if(view!=="satta"||!$("skbody")){skStop();return}const now=skNow();
  document.querySelectorAll("[data-cd]").forEach(e=>{const t=+e.dataset.cd;e.textContent=skCd(t-now);e.classList.toggle("hot",t-now<600000)});
  const dt=$("skdt");if(dt)dt.textContent=skDT();const ck=$("skclock");if(ck)ck.textContent=new Date(now).toLocaleTimeString("en-IN",{timeZone:"Asia/Kolkata",hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false});
- if(!SK.st)return;let chg=false;
- SK.st.markets.forEach(m=>{const st=skStatus(m);if(m._s&&m._s!==st)chg=true;m._s=st});
- if(chg)skRender()}
+ if(!SK.st)return;let need=false,chg=false;
+ SK.st.markets.forEach(m=>{const st=skStatus(m);if(m._s&&m._s!==st)chg=true;m._s=st;if(st==="drawing"&&Date.now()-SK.last>5000)need=true});
+ if(chg)skRender();if(need)skRefresh()}
 function skMkt(id){return SK.st&&SK.st.markets.find(m=>m.id===id)}
 function skResOf(id,d){return SK.res.find(r=>r.market_id===id&&r.draw_date===d)}
 function skResHtml(r,big){if(!r)return big?'<span class="sk-wait">WAIT</span>':"–";if(r.void)return'<span class="sk-void">VOID</span>';return big?`<span class="sk-num">${sk2(r.num)}</span>`:sk2(r.num)}
@@ -2164,7 +2161,7 @@ function skHome(){if(SK.err&&!SK.st)return `<div class="lempty">Satta King isn't
   const pl=st==="open"?`▶ PLAY · closes ${skTT(c)}`:st==="closed"?`🔒 CLOSED · result ${skT(m.time)}`:st==="drawing"?"⏳ RESULT COMING…":"PAUSED";
   return `<button class="skc-b${full[i]?" f":""}" data-sk="m:${m.id}"><b>${esc(m.name.toUpperCase())}</b><span class="skt">( ${skT(m.time)} )</span><div class="skr">{ ${y?(y.void?"✕":sk2(y.num)):"--"} } <em>➜</em> [ <i>${t?(t.void?"✕":sk2(t.num)):"&nbsp;&nbsp;"}</i> ]</div><span class="skp ${st}">${pl}</span></button>`}).join("")}</div>
  <p class="skc-hint">Tap any market to play · betting closes <b>${SK.st.cfg.close} min</b> before each result<br>Jodi ${SK.st.cfg.jodi}× · Andar/Bahar ${SK.st.cfg.andar}×</p>
- <button class="skc-ref" data-sk="refresh">⟳ Refresh</button>`}
+ <button class="skc-ref" data-sk="refresh">⟳ Refresh</button>`+skRajDarbarChart(cm)}
 const skTT=ms=>new Date(ms).toLocaleTimeString("en-US",{timeZone:"Asia/Kolkata",hour:"numeric",minute:"2-digit",hour12:true});
 function skDT(){const d=new Date(skNow()),o={timeZone:"Asia/Kolkata"};return d.toLocaleDateString("en-GB",Object.assign({day:"2-digit",month:"long",year:"numeric"},o))+" "+d.toLocaleTimeString("en-US",Object.assign({hour:"2-digit",minute:"2-digit",hour12:true},o))}
 function skCross(){const out=[],a=SK.cA.slice().sort(),b=SK.cB.slice().sort();a.forEach(x=>b.forEach(y=>{if(SK.cut&&x===y)return;out.push(""+x+y)}));return out}
@@ -2198,6 +2195,9 @@ function skMarket(){const m=skMkt(SK.mk);if(!m){SK.page="home";return skHome()}
 async function skChartLoad(){const t=SK.st?SK.st.today:new Date().toISOString().slice(0,10);if(!SK.cm)SK.cm={y:+t.slice(0,4),m:+t.slice(5,7)};
  const y=SK.cm.y,m=SK.cm.m,first=y+"-"+String(m).padStart(2,"0")+"-01",last=skDay(new Date(Date.UTC(y,m,1)).toISOString().slice(0,10),-1);
  const r=await sb.from("sk_results").select("*").gte("draw_date",first).lte("draw_date",last);SK.cres=r.error?[]:(r.data||[]);SK.cload=first}
+function skRefRows(){const r=SK.ref&&SK.ref.markets||{};return Object.keys(r).map(function(name){const x=r[name]||{};return {name:name,vals:x.results||{}}})}
+function skRefVal(name,ds){const m=SK.ref&&SK.ref.markets&&SK.ref.markets[name];return m&&m.results&&m.results[ds]?m.results[ds]:"--"}
+function skRajDarbarChart(cm){const ref=skRefRows();if(!ref.length)return `<div class="card" style="margin-top:12px"><b>Raj Darbar reference chart</b><p class="meta">Reference feed is waiting for its first sync.${SK.refErr?" "+esc(SK.refErr):""}</p></div>`;const days=new Date(Date.UTC(cm.y,cm.m,0)).getUTCDate();let h=`<div class="card" style="margin-top:12px"><div class="top"><div><h3 style="margin:0">Raj Darbar Reference Chart ${cm.y}</h3><div class="meta">Display-only reference data. It does not control Playbook results or settlements.</div></div><span class="pill">REFERENCE</span></div><div style="overflow:auto"><table class="skc-t"><thead><tr><th>DATE</th>${ref.map(x=>`<th>${esc(x.name)}</th>`).join("")}</tr></thead><tbody>`;for(let d=1;d<=days;d++){const ds=cm.y+"-"+String(cm.m).padStart(2,"0")+"-"+String(d).padStart(2,"0");h+=`<tr><th>${String(d).padStart(2,"0")}-${String(cm.m).padStart(2,"0")}</th>${ref.map(x=>`<td>${esc(skRefVal(x.name,ds))}</td>`).join("")}</tr>`}return h+`</tbody></table></div><div class="meta" style="margin-top:8px">Source: raj-darbar.com · last sync: ${esc(SK.ref&&SK.ref.updated_at||"—")}</div></div>`}
 function skChart(){if(!SK.st)return skHome();const ms=SK.st.markets.slice().sort((x,y)=>x.time<y.time?-1:1),cm=SK.cm||{y:+SK.st.today.slice(0,4),m:+SK.st.today.slice(5,7)};
  const MN=["January","February","March","April","May","June","July","August","September","October","November","December"],ty=+SK.st.today.slice(0,4);
  const days=new Date(Date.UTC(cm.y,cm.m,0)).getUTCDate(),res=SK.cres||[];let rows="";
@@ -2243,7 +2243,7 @@ async function skReveal(r){if(r.void||r.num==null)return;const m=skMkt(r.market_
  await wait(4500);close()}
 async function skView(){
  $("app").innerHTML=`<div class="skv"><div class="skh"><button class="skhb" data-act="lobby" aria-label="Back to games">‹</button><div class="sklogo"><b>SATTA KING</b><small>KINGXBET</small></div><button class="skhb" data-act="rules" aria-label="How to play">?</button><div class="skbal"><small>BALANCE</small><b id="rbal">${fmt(shown)}</b></div></div>
-<div id="skbody"><div class="lempty">Loading markets…</div></div><p class="sknote">Play money only · coins have no cash value · results are entered manually by the admin</p></div>
+<div id="skbody"><div class="lempty">Loading markets…</div></div><p class="sknote">Play money only · coins have no cash value · results are drawn at random by the server</p></div>
 <div class="sknav"><button data-sk="nav:home" class="on"><span>🏠</span>Markets</button><button data-sk="nav:chart"><span>📊</span>Chart</button><button data-sk="nav:bets"><span>🎟️</span>My Bets<i id="sknb"></i></button><button data-act="lobby"><span>🎰</span>Casino</button><button data-act="menu"><span>☰</span>Menu</button></div>`;
  SK.busy=true;try{await skLoad()}finally{SK.busy=false}SK.res.forEach(r=>SK.seen[skKey(r)]=1);skRender();skStart()}
 function skAct(a){const i=a.indexOf(":"),k=i<0?a:a.slice(0,i),v=i<0?"":a.slice(i+1);
@@ -2266,7 +2266,7 @@ function skAct(a){const i=a.indexOf(":"),k=i<0?a:a.slice(0,i),v=i<0?"":a.slice(i
   const add=ns.filter(n=>!SK.slip["j"+n]).length;if(Object.keys(SK.slip).length+add>120)return skMsg("Too many numbers (max 120 in one slip)");
   ns.forEach(n=>SK.slip["j"+n]=(SK.slip["j"+n]||0)+SK.amt);chipSound(4);SK.cA=[];SK.cB=[];SK.tab="jodi";skRender();return skMsg(ns.length+" Jodi numbers added to your slip")}}
 function skRulesHtml(){const c=(SK.st&&SK.st.cfg)||{jodi:90,andar:9,bahar:9,close:10};
- return `<h3>👑 How to play Satta King</h3><p>Every market displays one admin-entered number from <b>00 to 99</b> once a day at its fixed time (India time). Betting closes ${c.close} minutes before the draw. Results are entered manually in the admin panel.</p><ul class="pays"><li><span>Jodi · exact number (e.g. 47)</span><b>${c.jodi}×</b></li><li><span>Andar · first digit (the 4 in 47)</span><b>${c.andar}×</b></li><li><span>Bahar · second digit (the 7 in 47)</span><b>${c.bahar}×</b></li></ul><p class="meta">Crossing: pick some Andar digits and some Bahar digits, and every combination is added as a Jodi bet. "Without doubles" leaves out 00, 11, 22… Winnings are added to your balance as soon as the result is declared. Coins are play-money only.</p><button class="btn wide" data-act="close">GOT IT</button>`}
+ return `<h3>👑 How to play Satta King</h3><p>Every market draws one number from <b>00 to 99</b> once a day at its fixed time (India time). Betting closes ${c.close} minutes before the draw. The server picks every result at random.</p><ul class="pays"><li><span>Jodi · exact number (e.g. 47)</span><b>${c.jodi}×</b></li><li><span>Andar · first digit (the 4 in 47)</span><b>${c.andar}×</b></li><li><span>Bahar · second digit (the 7 in 47)</span><b>${c.bahar}×</b></li></ul><p class="meta">Crossing: pick some Andar digits and some Bahar digits, and every combination is added as a Jodi bet. "Without doubles" leaves out 00, 11, 22… Winnings are added to your balance as soon as the result is declared. Coins are play-money only.</p><button class="btn wide" data-act="close">GOT IT</button>`}
 document.addEventListener("click",async e=>{
  if(e.target.id==="sheet")return closeSheet();
  const t=e.target.closest("[data-p],[data-g],[data-s],[data-act],[data-t],[data-b],[data-rc],[data-xo],[data-xm],[data-xk],[data-xnav],[data-xt],[data-xbt],[data-sk],[data-jq],[data-jqa],[data-jqc]");if(!t||t.disabled)return;
