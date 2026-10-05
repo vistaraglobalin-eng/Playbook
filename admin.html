@@ -59,6 +59,126 @@ main{max-width:1200px;margin:0 auto;padding:18px;background:#fff;min-height:calc
 .kx-header{position:sticky;top:0;z-index:20}.kx-mainnav{position:sticky;top:66px;z-index:19}.kx-mainnav span{cursor:pointer;padding:12px 2px;transition:opacity .2s,transform .2s}.kx-mainnav span:hover{transform:translateY(-1px);opacity:1}.kx-mainnav span.active{font-weight:700;text-decoration:underline;text-underline-offset:5px}.dash-hero{display:flex;align-items:center;justify-content:space-between;gap:14px;background:linear-gradient(135deg,#2f78ad,#4d9bd0);color:#fff;padding:20px;border-radius:5px;margin-bottom:14px;box-shadow:0 8px 22px rgba(46,120,174,.18);animation:fadeUp .35s ease}.dash-hero h1{margin:0 0 5px;font-size:24px}.dash-hero p{margin:0;opacity:.9;font-size:13px}.dash-actions{display:flex;gap:8px;flex-wrap:wrap}.dash-actions button{border:1px solid rgba(255,255,255,.6);background:rgba(255,255,255,.12);color:#fff;border-radius:3px;padding:9px 12px;font-weight:700}.metric-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:14px}.metric{background:#fff;border:1px solid var(--kx-border);padding:15px;border-radius:4px;box-shadow:0 2px 6px rgba(0,0,0,.04);animation:fadeUp .4s ease}.metric .n{font-size:24px;font-weight:700;color:var(--kx-blue2)}.metric .l{font-size:12px;color:#707980;margin-top:4px}.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}.toolbar input{min-width:220px}.filter-btn.active{background:var(--kx-blue);color:#fff;border-color:var(--kx-blue)}.account-table td,.account-table th{white-space:nowrap}.status-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;background:#28a745}.status-dot.off{background:#c33}.toast{position:fixed;right:16px;bottom:16px;z-index:50;background:#263746;color:#fff;padding:11px 14px;border-radius:4px;box-shadow:0 8px 25px rgba(0,0,0,.2);animation:fadeUp .2s ease}.skeleton{background:linear-gradient(90deg,#eee,#f7f7f7,#eee);background-size:200% 100%;animation:shine 1.2s infinite}.nav-drawer{position:fixed;left:0;top:0;bottom:0;width:280px;max-width:82vw;background:#fff;z-index:40;box-shadow:8px 0 30px rgba(0,0,0,.18);transform:translateX(-105%);transition:transform .25s ease;padding:70px 16px 16px}.nav-drawer.open{transform:translateX(0)}.nav-drawer button{display:block;width:100%;text-align:left;border:0;background:#fff;padding:12px;border-bottom:1px solid #eee;color:#334;font-weight:600}.nav-mask{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:39;display:none}.nav-mask.open{display:block}@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}@keyframes shine{to{background-position:-200% 0}}
 @media(max-width:900px){.metric-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.kx-mainnav{top:58px}}@media(max-width:560px){.metric-grid{grid-template-columns:1fr 1fr}.dash-hero{display:block}.dash-actions{margin-top:14px}.toolbar input{min-width:0;width:100%}}
 </style>
+
+<style id="playbook-premium-green-theme">
+/* Playbook Premium Emerald-Green Theme — UI only, backend unchanged */
+:root{
+  --kx-green:#087443;
+  --kx-green2:#055a35;
+  --kx-green3:#0b8a52;
+  --kx-deep:#123c2d;
+  --kx-gold:#D7A63A;
+  --kx-gold2:#F1CC70;
+  --kx-border:#d7e2dc;
+  --kx-bg:#f3f7f5;
+}
+html,body{background:var(--kx-bg)!important;color:#183229!important}
+body{font-family:Arial,Helvetica,sans-serif!important}
+
+/* Header */
+.kx-header{
+  background:linear-gradient(135deg,var(--kx-green2),var(--kx-green))!important;
+  color:#fff!important;
+  box-shadow:0 2px 10px rgba(5,90,53,.22)!important;
+}
+.kx-brand strong{color:#fff!important;text-shadow:0 1px 1px rgba(0,0,0,.18)}
+.kx-brand span{color:#e8f5ef!important}
+.kx-menu{color:#fff!important}
+
+/* Main navigation */
+.kx-mainnav{
+  background:var(--kx-green)!important;
+  border-top:1px solid rgba(255,255,255,.15)!important;
+  box-shadow:0 2px 7px rgba(5,90,53,.14)!important;
+}
+.kx-mainnav a,.kx-mainnav button{color:#fff!important}
+.kx-mainnav a:hover,.kx-mainnav button:hover{background:rgba(255,255,255,.10)!important}
+.kx-mainnav .active,.kx-mainnav [aria-current="page"]{
+  background:rgba(255,255,255,.16)!important;
+  box-shadow:inset 0 -3px 0 var(--kx-gold2)!important;
+}
+
+/* Demo banner */
+.banner,.kx-banner{
+  background:linear-gradient(90deg,var(--kx-deep),#1d5b43)!important;
+  color:#fff!important;
+}
+
+/* Cards / panels */
+.card,.kx-card,.panel,.box{
+  background:#fff!important;
+  border-color:var(--kx-border)!important;
+  box-shadow:0 5px 18px rgba(18,60,45,.07)!important;
+}
+.card h2,.card h3,.kx-card h2,.kx-card h3{color:#123c2d}
+
+/* Buttons */
+button,.btn{
+  border-radius:7px;
+}
+button.primary,.btn.primary,.kx-btn-primary,
+button[data-primary="true"]{
+  background:linear-gradient(135deg,var(--kx-green),var(--kx-green2))!important;
+  color:#fff!important;
+  border-color:var(--kx-green2)!important;
+}
+button.primary:hover,.btn.primary:hover,.kx-btn-primary:hover{
+  background:var(--kx-green3)!important;
+}
+.kx-add,.add-account,.success{
+  background:var(--kx-green)!important;
+  color:#fff!important;
+}
+
+/* Active tabs / pills */
+.tabs button[aria-selected=true],
+.kx-tabs .active,
+.kx-pill.active{
+  background:var(--kx-green)!important;
+  color:#fff!important;
+  border-color:var(--kx-green)!important;
+}
+.kx-pill{
+  border-color:var(--kx-border)!important;
+}
+
+/* Inputs */
+input,select,textarea{
+  border-color:#cbdad2!important;
+}
+input:focus,select:focus,textarea:focus{
+  border-color:var(--kx-green)!important;
+  box-shadow:0 0 0 3px rgba(8,116,67,.12)!important;
+  outline:none!important;
+}
+
+/* Tables */
+table{border-color:var(--kx-border)!important}
+th{
+  background:#e8f2ed!important;
+  color:#174f39!important;
+}
+tr:hover td{background:#f5faf7!important}
+
+/* Gold premium accents */
+.kx-brand span::first-letter{color:var(--kx-gold2)}
+.kx-section-title,.section-title{color:#0b6540!important}
+.kx-accent,.premium-accent{color:var(--kx-gold)!important}
+
+/* Status */
+.ok,.success-text,.status-ok{color:#087443!important}
+.bad,.error-text,.status-bad{color:#b33b2b!important}
+
+/* Mobile polish */
+@media(max-width:700px){
+  .kx-header{height:72px;padding:0 14px}
+  .kx-brand strong{font-size:26px}
+  .kx-mainnav{overflow-x:auto;white-space:nowrap}
+  .kx-mainnav::-webkit-scrollbar{display:none}
+  .card,.kx-card{border-radius:12px}
+}
+</style>
+
 </head>
 <body>
 <header class="kx-header"><div class="kx-brand"><i class="kx-chip" aria-hidden="true"></i><strong>KingXBet</strong><span>Admin</span></div><button class="kx-menu" id="menuBtn" aria-label="Menu">☰</button><div class="kx-user"><span id="who">Control panel</span><button class="kx-logout" id="out" hidden>Log out</button></div></header>
