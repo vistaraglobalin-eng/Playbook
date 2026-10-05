@@ -222,6 +222,29 @@ tr:hover td{background:#f5faf7!important}
 @media(max-width:600px){.pb-dashboard-grid{grid-template-columns:1fr 1fr}.pb-market-row{grid-template-columns:1fr 1fr}.pb-quick{grid-template-columns:1fr 1fr}}
 </style>
 
+
+<style id="playbook-market-analysis-v7">
+.pb-analysis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:12px 0}
+.pb-analysis-card{background:#fff;border:1px solid #d5e4dc;border-radius:14px;padding:15px;box-shadow:0 7px 20px rgba(18,60,45,.06)}
+.pb-analysis-card .a-label{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:#75827c;font-weight:700}
+.pb-analysis-card .a-value{font-size:25px;font-weight:900;color:#075c38;margin-top:6px}
+.pb-analysis-card .a-note{font-size:10px;color:#8a958f;margin-top:4px}
+.pb-analysis-grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(300px,.75fr);gap:12px}
+.pb-analysis-panel{background:#fff;border:1px solid #d5e4dc;border-radius:14px;overflow:hidden;box-shadow:0 7px 20px rgba(18,60,45,.06);margin-bottom:12px}
+.pb-analysis-head{padding:13px 15px;background:linear-gradient(90deg,#edf7f2,#fff);border-bottom:1px solid #dce9e3;display:flex;justify-content:space-between;align-items:center}
+.pb-analysis-head h3{margin:0;color:#124c38;font-size:15px}.pb-analysis-head span{font-size:10px;color:#7b8982}
+.pb-analysis-body{padding:14px}
+.pb-bar-row{display:grid;grid-template-columns:110px 1fr 75px;gap:10px;align-items:center;margin:10px 0}
+.pb-bar-label{font-size:11px;font-weight:700;color:#355848;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pb-bar{height:10px;background:#edf2ef;border-radius:99px;overflow:hidden}.pb-bar i{display:block;height:100%;background:linear-gradient(90deg,#087443,#18a66a);border-radius:99px}
+.pb-analysis-table{width:100%;border-collapse:collapse;font-size:11px}.pb-analysis-table th{background:#eef6f2!important;color:#426052!important;padding:9px;text-align:left;position:sticky;top:0}.pb-analysis-table td{padding:9px;border-bottom:1px solid #edf2ef}.pb-analysis-table .num{text-align:right}
+.pb-filter{display:flex;gap:8px;flex-wrap:wrap;align-items:end;margin-bottom:12px}.pb-filter label{font-size:10px;color:#718079;font-weight:700}.pb-filter input,.pb-filter select{min-width:130px}
+.pb-mini-positive{color:#087443;font-weight:800}.pb-mini-negative{color:#b43d2f;font-weight:800}.pb-empty{padding:20px;text-align:center;color:#87938d;font-size:11px}
+.pb-exposure-meter{height:14px;background:#edf2ef;border-radius:99px;overflow:hidden}.pb-exposure-meter i{display:block;height:100%;background:linear-gradient(90deg,#d7a63a,#087443)}
+@media(max-width:900px){.pb-analysis{grid-template-columns:repeat(2,minmax(0,1fr))}.pb-analysis-grid{grid-template-columns:1fr}}
+@media(max-width:600px){.pb-analysis{grid-template-columns:1fr 1fr}.pb-bar-row{grid-template-columns:80px 1fr 60px}}
+</style>
+
 </head>
 <body>
 <header class="kx-header"><div class="kx-brand"><i class="kx-chip" aria-hidden="true"></i><strong>KingXBet</strong><span>Admin</span></div><button class="kx-menu" id="menuBtn" aria-label="Menu">☰</button><div class="kx-user"><span id="who">Control panel</span><button class="kx-logout" id="out" hidden>Log out</button></div></header>
@@ -438,7 +461,54 @@ function vDashboard(){
 }
 
 function vAssign(){return '<div class="card"><h2>Assign Agent</h2><p class="meta">Agent assignment workspace. Existing Supabase permissions remain unchanged; no unsupported backend mutation is performed here.</p><div class="grid"><div><label>Client</label><select><option>Select client</option>'+CS.map(function(c){return '<option>'+esc(c.code)+' · '+esc(c.name)+'</option>'}).join('')+'</select></div><div><label>Agent</label><input type="text" placeholder="Agent name / ID"></div></div><div class="row"><button class="btn" onclick="alert(\'Agent assignment UI ready; connect to your agent table/RPC when that backend is available.\')">Assign Agent</button></div></div>'}
-function vAnalysis(){return '<div class="card"><h2>Market Analysis</h2><div class="metric-grid"><div class="metric"><div class="n">'+CS.length+'</div><div class="l">Accounts</div></div><div class="metric"><div class="n">'+LCL.length+'</div><div class="l">Cricket Markets</div></div><div class="metric"><div class="n">'+MS.length+'</div><div class="l">Masters</div></div><div class="metric"><div class="n">'+LG.length+'</div><div class="l">Recent Activity</div></div></div><p class="meta">This panel is intentionally read-only until a matching analytics backend is available.</p></div>'}
+
+function vAnalysis(){
+  var clients=CS||[];
+  var total=clients.reduce(function(a,c){return a+(Number(c.coins)||0)},0);
+  var exp=clients.reduce(function(a,c){return a+(Number(c.exposure)||0)},0);
+  var pl=clients.reduce(function(a,c){return a+(Number(c.client_pl)||0)},0);
+  var available=total-exp;
+  var active=clients.filter(function(c){return c.active}).length;
+  var ranked=clients.slice().sort(function(a,b){return Math.abs(Number(b.client_pl)||0)-Math.abs(Number(a.client_pl)||0)});
+  var topBal=clients.slice().sort(function(a,b){return (Number(b.coins)||0)-(Number(a.coins)||0)}).slice(0,8);
+  var topExp=clients.slice().sort(function(a,b){return (Number(b.exposure)||0)-(Number(a.exposure)||0)}).slice(0,8);
+  var maxBal=Math.max.apply(null,topBal.map(function(c){return Number(c.coins)||0}).concat([1]));
+  var maxExp=Math.max.apply(null,topExp.map(function(c){return Number(c.exposure)||0}).concat([1]));
+  var live=(LCL||[]).filter(function(m){return !["settled","void"].includes(m.status)});
+  return '<div class="dash-hero"><div><h1>Market Analysis</h1><p>Client performance, balance and exposure overview · live Supabase data</p></div><div class="dash-actions"><button data-route="customers">Client List</button><button data-route="live">Live Cricket</button><button data-route="dashboard">Dashboard</button></div></div>'+
+  '<div class="pb-filter"><div><label>View</label><select id="analysisScope"><option value="all">All Clients</option><option value="active">Active Clients</option><option value="inactive">Deactive Clients</option></select></div><div><label>Sort</label><select id="analysisSort"><option value="balance">Balance</option><option value="exposure">Exposure</option><option value="pl">Client P/L</option></select></div><button class="sm" data-act="analysisRefresh">Refresh</button></div>'+
+  '<div class="pb-analysis">'+
+    '<div class="pb-analysis-card"><div class="a-label">Total Balance</div><div class="a-value">'+fmt(total)+'</div><div class="a-note">'+clients.length+' client accounts</div></div>'+
+    '<div class="pb-analysis-card"><div class="a-label">Total Exposure</div><div class="a-value">'+fmt(exp)+'</div><div class="a-note">'+(total?Math.round(exp/total*100):0)+'% of total balance</div></div>'+
+    '<div class="pb-analysis-card"><div class="a-label">Available Balance</div><div class="a-value">'+fmt(available)+'</div><div class="a-note">Balance less exposure</div></div>'+
+    '<div class="pb-analysis-card"><div class="a-label">Client P/L</div><div class="a-value">'+fmt(pl)+'</div><div class="a-note">'+active+' active clients</div></div>'+
+  '</div>'+
+  '<div class="pb-analysis-grid">'+
+    '<div>'+
+      '<div class="pb-analysis-panel"><div class="pb-analysis-head"><h3>Balance Distribution</h3><span>Top 8 clients</span></div><div class="pb-analysis-body">'+
+        (topBal.length?topBal.map(function(c){var n=Number(c.coins)||0;return '<div class="pb-bar-row"><div class="pb-bar-label">'+esc(c.code)+'</div><div class="pb-bar"><i style="width:'+Math.max(2,Math.round(n/maxBal*100))+'%"></i></div><div class="num">'+fmt(n)+'</div></div>'}).join(""):'<div class="pb-empty">No client balances available.</div>')+
+      '</div></div>'+
+      '<div class="pb-analysis-panel"><div class="pb-analysis-head"><h3>Client Performance</h3><span>Highest P/L impact</span></div><div class="pb-analysis-body"><div style="overflow:auto;max-height:330px"><table class="pb-analysis-table"><thead><tr><th>Client</th><th class="num">Balance</th><th class="num">Exposure</th><th class="num">Client P/L</th><th>Status</th></tr></thead><tbody>'+
+        (ranked.length?ranked.slice(0,30).map(function(c){var p=Number(c.client_pl)||0;return '<tr><td><b>'+esc(c.code)+'</b><div class="meta">'+esc(c.name||"")+'</div></td><td class="num">'+fmt(Number(c.coins)||0)+'</td><td class="num">'+fmt(Number(c.exposure)||0)+'</td><td class="num '+(p>=0?"pb-mini-positive":"pb-mini-negative")+'">'+fmt(p)+'</td><td>'+(c.active?"Active":"Deactive")+'</td></tr>'}).join(""):'<tr><td colspan="5" class="pb-empty">No client data.</td></tr>')+
+      '</tbody></table></div></div></div>'+
+    '</div>'+
+    '<div>'+
+      '<div class="pb-analysis-panel"><div class="pb-analysis-head"><h3>Exposure Concentration</h3><span>Top exposure accounts</span></div><div class="pb-analysis-body">'+
+        (topExp.length?topExp.map(function(c){var n=Number(c.exposure)||0;return '<div class="pb-bar-row"><div class="pb-bar-label">'+esc(c.code)+'</div><div class="pb-bar"><i style="width:'+Math.max(2,Math.round(n/maxExp*100))+'%"></i></div><div class="num">'+fmt(n)+'</div></div>'}).join(""):'<div class="pb-empty">No exposure data available.</div>')+
+        '<div style="margin-top:14px"><div class="meta">Overall exposure ratio</div><div class="pb-exposure-meter" style="margin-top:6px"><i style="width:'+Math.min(100,total?Math.round(exp/total*100):0)+'%"></i></div><div class="meta" style="margin-top:5px">'+(total?Math.round(exp/total*100):0)+'% utilized</div></div>'+
+      '</div></div>'+
+      '<div class="pb-analysis-panel"><div class="pb-analysis-head"><h3>Live Market Snapshot</h3><span>'+live.length+' active</span></div><div class="pb-analysis-body">'+
+        (live.length?live.slice(0,8).map(function(m){return '<div style="padding:9px 0;border-bottom:1px solid #edf2ef"><b style="font-size:11px;color:#315b49">'+esc(m.team_a||m.home_team||"Team A")+' vs '+esc(m.team_b||m.away_team||"Team B")+'</b><div class="meta">'+esc(m.status||"scheduled")+(m.league?" · "+esc(m.league):"")+'</div></div>'}).join(""):'<div class="pb-empty">No active live markets. Configure Live Cricket to populate this panel.</div>')+
+      '</div></div>'+
+    '</div>'+
+  '</div>'+
+  '<div class="pb-analysis-panel"><div class="pb-analysis-head"><h3>Analysis Notes</h3><span>Data integrity</span></div><div class="pb-analysis-body">'+
+    '<div class="meta">• P/L, exposure and balance figures are calculated only from fields present in the current client dataset.</div>'+
+    '<div class="meta" style="margin-top:6px">• No missing financial values are estimated or fabricated.</div>'+
+    '<div class="meta" style="margin-top:6px">• This Playbook environment uses virtual/demo points only.</div>'+
+  '</div></div>';
+}
+
 function vReports(){return '<div class="card"><h2>Reports</h2><p class="meta">Export the current client list or open the existing activity/statement reports.</p><div class="row"><button class="btn" data-act="exportClients">Export Clients CSV</button><button class="sm" data-route="activity">Activity Report</button><button class="sm" data-route="ledger">Statement Report</button></div></div>'}
 function vMasters(){
   var h='<div class="card"><h2>Create a Master ID</h2><div class="grid"><div><label for="mn">Master name</label><input id="mn" type="text"></div><div><label for="mp">Virtual coin pool</label><input id="mp" type="number" min="0" value="10000"></div><div><label for="mm">Max customers</label><input id="mm" type="number" min="1" value="50"></div></div><div class="row"><button class="btn" data-act="addMaster">Create Master ID</button></div></div>';
