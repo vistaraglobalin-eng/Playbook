@@ -394,7 +394,7 @@ function render(){
   var h='<div class="tabs" role="tablist">'+tabs().map(function(t){return '<button role="tab" data-act="tab" data-t="'+t[0]+'" aria-selected="'+(t[0]===tab)+'">'+t[1]+'</button>'}).join("")+'</div>';
   if(msg)h+='<p class="msg" role="alert">'+esc(msg)+'</p>';
   if(reveal)h+='<div class="card reveal"><h2>'+esc(reveal.what)+'</h2><div class="meta">ID</div><div class="cred">'+esc(reveal.id)+'</div><div class="meta">Temporary password</div><div class="cred">'+esc(reveal.pw)+'</div><p class="meta">Shown once and not stored. Share it securely and ask the holder to change it.</p><button class="sm" data-act="dismiss">I have saved it</button></div>';
-  var views={dashboard:vDashboard,results:vResults,masters:vMasters,customers:vCustomers,control:vControl,live:vLive,satta:vSatta,jqk:vJqk,activity:vActivity,ledger:vLedger,account:vAccount,assign:vAssign,analysis:vAnalysis,reports:vReports};
+  var views={dashboard:vDashboard,results:vResults,masters:vMasters,customers:vCustomers,control:vControl,live:vLive,satta:vSatta,jqk:vJqk,activity:vActivity,ledger:vLedger,account:vAccount,assign:vAssign,analysis:vAnalysis,reports:vReports,controlCenter:vControlCenter};
   h+=(views[tab]||vDashboard)();app(h);updateNav();}
 function login(){return '<div class="card narrow"><h2>Sign in</h2><label for="li">Admin or Master ID</label><input id="li" type="text" autocapitalize="characters" autocomplete="username"><label for="lp" style="margin-top:8px">Password</label><input id="lp" type="password" autocomplete="current-password">'+(msg?'<p class="msg" role="alert">'+esc(msg)+'</p>':'')+'<div class="row"><button class="btn" data-act="login">Sign in</button></div><p class="meta">Customer IDs sign in to the games app, not this panel.</p></div>'}
 function btn(a,c,l,cls){return '<button class="sm '+(cls||"")+'" data-act="'+a+'" data-id="'+c.code+'" data-on="'+(c.active?1:0)+'">'+l+'</button>'}
@@ -406,6 +406,7 @@ function navTo(route){window.PB_SELECTED_ACCOUNT=null;window.PB_SELECTED_STATEME
   else if(route==="reports")tab="activity";
   else if(route==="account")tab="account";
   else if(route==="assign")tab="assign";
+  else if(route==="controlCenter")tab="controlCenter";
   else if(route==="analysis")tab="analysis";
   else tab=route;
   msg="";render();window.scrollTo({top:0,behavior:"smooth"});closeDrawer();
@@ -904,6 +905,10 @@ chpw:async function(){var n=$("a1").value;
   if(ok.error)throw new Error("Current password is incorrect.");if(n.length<8)throw new Error("Use at least 8 characters.");if(n!==$("a2").value)throw new Error("The two new passwords don't match.");
   var r=await sb.auth.updateUser({password:n});if(r.error)throw new Error(r.error.message);msg="Password updated.";render()}
 };
+A.assignAgent=function(){var c=v("agentClient"),m=v("agentMaster");if(!c||!m)throw new Error("Select both a client and an agent/master.");msg="Assignment UI validated. No backend assignment RPC is configured, so no database change was made.";render()};
+A.clearAgentForm=function(){if($("agentClient"))$("agentClient").value="";if($("agentMaster"))$("agentMaster").value=""};
+A.multiLoginAction=function(){var c=v("multiAccount");if(!c)throw new Error("Select an account.");msg="Multi Login control is security-protected. No backend multi-session RPC is configured, so no database change was made.";render()};
+A.saveAccountSettings=function(){var c=v("settingsAccount");if(!c)throw new Error("Select an account.");msg="Account settings form validated. No unsupported backend mutation was made.";render()};
 A.dashRefresh=async function(){playUiSound();await load();msg="Dashboard refreshed.";render()};
 A.dashReset=function(){window.PB_CLIENT_FILTER="";window.PB_STATUS_FILTER="all";render()};
 A.exportClients=function(){var data=[["User Name","CR","Balance","Client P/L","Exposure","Available Balance","U st","B st","Exposure Limit","Default %","Account Type","Status"]].concat(CS.map(function(c){return [c.code,c.cr||0,c.coins||0,0,0,c.coins||0,"","","","100%",c.role,c.active?"Active":"Deactive"]}));var csv=data.map(function(r){return r.map(function(x){x=String(x==null?"":x).replace(/"/g,'""');return '"'+x+'"'}).join(',')}).join('\n');var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='playbook-clients.csv';a.click();setTimeout(function(){URL.revokeObjectURL(a.href)},500);playUiSound()};
