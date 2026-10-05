@@ -1,0 +1,138 @@
+name: Raj Darbar reference sync
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "*/15 * * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          python -m pip install requests beautifulsoup4
+
+      - name: Sync Raj Darbar reference chart
+        run: |
+          python <<'PY'
+          import json
+          import re
+          from datetime import datetime, timezone
+          import requests
+          from bs4 import BeautifulSoup
+
+          FILE = "data/rajdarbar-reference.json"
+
+          markets = {
+              "DELHI BAZAR": 126,
+              "DESAWAR": 116,
+              "FARIDABAD": 117,
+              "GALI": 120,
+              "GHAZIABAD": 119,
+              "SHREE GANESH": 127
+          }
+
+          try:
+              with open(FILE, "r", encoding="utf-8") as f:
+                  feed = json.load(f)
+          except Exception:
+              feed = {
+                  "source": "https://raj-darbar.com/",
+                  "updated_at": None,
+                  "markets": {}
+              }
+
+          changed = False
+
+          for name, market_id in markets.items():
+              url = (
+                  f"https://raj-darbar.com/"
+                  f"satta-record-chart.php?id={market_id}&year=2026"
+              )
+
+              try:
+                  r = requests.get(
+                      url,
+                      timeout=20,
+                      headers={
+                          "User-Agent":
+                          "Mozilla/5.0 Playbook reference sync"
+                      }
+                  )
+                  r.raise_for_status()
+
+                  soup = BeautifulSoup(r.text, "html.parser")
+                  results = {}
+
+                  for tr in soup.find_all("tr"):
+                      cells = [
+                          x.get_text(" ", strip=True)
+                          for x in tr.find_all(["td", "th"])
+                      ]
+
+                      if not cells:
+                          continue
+
+                      text = " ".join(cells)
+
+                      # Look for date + two-digit result patterns.
+                      dates = re.findall(
+                          r"\b(20\d{2})[-/](\d{1,2})[-/](\d{1,2})\b",
+                          text
+                      )
+                      nums = re.findall(r"\b\d{2}\b", text)
+
+                      for y, m, d in dates:
+                          if nums:
+                              results[
+                                  f"{y}-{int(m):02d}-{int(d):02d}"
+                              ] = nums[-1]
+
+                  if results:
+                      feed.setdefault("markets", {})
+                      feed["markets"].setdefault(
+                          name,
+                          {"id": market_id, "results": {}}
+                      )
+                      feed["markets"][name]["id"] = market_id
+                      feed["markets"][name]["results"] = results
+                      changed = True
+
+              except Exception as e:
+                  print(f"{name}: sync failed: {e}")
+
+          if changed:
+              feed["source"] = "https://raj-darbar.com/"
+              feed["updated_at"] = datetime.now(
+                  timezone.utc
+              ).isoformat()
+
+              with open(FILE, "w", encoding="utf-8") as f:
+                  json.dump(feed, f, indent=2, ensure_ascii=False)
+
+          else:
+              print("No source data was successfully parsed.")
+              print("Keeping previous reference feed.")
+          PY
+
+      - name: Commit updated reference data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add data/rajdarbar-reference.json
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Update Raj Darbar reference data"
+            git push
+          fi
