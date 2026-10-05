@@ -439,6 +439,92 @@ input:focus,select:focus,textarea:focus{border-color:#2f8f73!important;box-shado
 .status-active,.success,.positive{color:#087443!important}
 .badge-active{background:#edf6f1!important;color:#075c38!important;border-color:#b8ddca!important}
 </style>
+
+<style id="playbook-v20-client-professional">
+/* V20 — Professional client-management UI: dark green / emerald / mint only */
+:root{
+  --client-deep:#063b2a;
+  --client-dark:#075c38;
+  --client-green:#087443;
+  --client-emerald:#0b8a52;
+  --client-mint:#63b894;
+  --client-pale:#eef8f3;
+  --client-line:#d8e9e1;
+  --client-text:#173d30;
+  --client-muted:#6d7d76;
+}
+/* Client page cards */
+.card{
+  border:1px solid var(--client-line)!important;
+  border-radius:16px!important;
+  box-shadow:0 5px 18px rgba(6,59,42,.07)!important;
+  background:#fff!important;
+}
+.card h2,.card h3{color:var(--client-deep)!important;letter-spacing:-.2px}
+.card .meta{color:var(--client-muted)!important}
+.card .top{border-bottom:1px solid #e5eee9;padding-bottom:12px;margin-bottom:10px}
+.card .id{color:var(--client-dark)!important;font-weight:800;letter-spacing:.3px}
+/* Create customer section */
+.card:has(#cn){
+  background:linear-gradient(145deg,#f9fcfa 0%,#eef8f3 100%)!important;
+  border-color:#cfe4d9!important;
+  position:relative;
+  overflow:hidden;
+}
+.card:has(#cn)::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:5px;
+  background:linear-gradient(180deg,var(--client-emerald),var(--client-mint));
+}
+.card:has(#cn) h2{font-size:23px!important;margin-bottom:8px}
+.card:has(#cn) .meta{background:#fff;border:1px solid #dcece4;border-radius:10px;padding:9px 11px;display:inline-block}
+/* Inputs */
+.card input,.toolbar input,.card select{
+  border:1px solid #cbded5!important;
+  border-radius:10px!important;
+  background:#fff!important;
+  color:var(--client-text)!important;
+  min-height:44px;
+}
+.card input:focus,.toolbar input:focus,.card select:focus{
+  border-color:var(--client-emerald)!important;
+  box-shadow:0 0 0 3px rgba(11,138,82,.12)!important;
+}
+/* All client-page action buttons */
+.card button,.toolbar button,.filter-btn{
+  border-radius:10px!important;
+  font-weight:700!important;
+  transition:transform .15s ease,background .15s ease,box-shadow .15s ease!important;
+}
+.card button:not(.bad),.toolbar button:not(.bad),.filter-btn:not(.active){
+  background:#f3f8f5!important;
+  color:var(--client-dark)!important;
+  border:1px solid #c9ddd3!important;
+}
+.card button:hover,.toolbar button:hover{transform:translateY(-1px);box-shadow:0 4px 10px rgba(6,59,42,.10)!important}
+.card .btn,.card button[data-act="addCust"],.card button[data-act="coins"],.toolbar .active,.filter-btn.active{
+  background:linear-gradient(135deg,var(--client-dark),var(--client-green))!important;
+  color:#fff!important;
+  border:1px solid var(--client-green)!important;
+  box-shadow:0 4px 12px rgba(7,92,56,.18)!important;
+}
+.card .btn:hover,.card button[data-act="addCust"]:hover,.card button[data-act="coins"]:hover{
+  background:linear-gradient(135deg,var(--client-green),var(--client-emerald))!important;
+}
+.card button.bad{background:#fff7f6!important;color:#a94438!important;border:1px solid #e4c2bd!important}
+/* Status pill */
+.pill.on{background:#e9f7ef!important;color:var(--client-dark)!important;border:1px solid #b9ddc9!important}
+.pill.off{background:#f2f4f3!important;color:#66736e!important;border:1px solid #d5dfdb!important}
+/* Client balance line */
+.card .meta strong{color:var(--client-dark)!important}
+/* Mobile polish */
+@media(max-width:600px){
+  .card{border-radius:14px!important;padding:16px!important}
+  .card:has(#cn) .grid{grid-template-columns:1fr!important}
+  .card .row{gap:8px!important}
+  .card .row button{min-height:42px}
+  .card .row input{min-width:120px}
+}
+</style>
 </head>
 <body>
 <header class="kx-header"><div class="kx-brand"><i class="kx-chip" aria-hidden="true"></i><strong>KingXBet</strong><span>Admin</span></div><button class="kx-menu" id="menuBtn" aria-label="Menu">☰</button><div class="kx-user"><span id="who">Control panel</span><button class="kx-logout" id="out" hidden>Log out</button></div></header>
