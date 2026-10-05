@@ -305,8 +305,8 @@ tr:hover td{background:#f5faf7!important}
 </head>
 <body>
 <header class="kx-header"><div class="kx-brand"><i class="kx-chip" aria-hidden="true"></i><strong>KingXBet</strong><span>Admin</span></div><button class="kx-menu" id="menuBtn" aria-label="Menu">☰</button><div class="kx-user"><span id="who">Control panel</span><button class="kx-logout" id="out" hidden>Log out</button></div></header>
-<div class="kx-mainnav" id="mainNav"><span data-route="dashboard">Dashboard</span><span data-route="customers">List of Clients</span><span data-route="assign">Assign Agent</span><span data-route="analysis">Market Analysis</span><span data-route="live">Live Market ▾</span><span data-route="live">Live Virtual Market ▾</span><span data-route="reports">Reports ▾</span><span data-route="customers">Multi Login</span></div>
-<div class="nav-mask" id="navMask"></div><aside class="nav-drawer" id="navDrawer"><h3 style="margin:0 0 12px;color:#2f4052">Playbook Admin</h3><button data-route="dashboard">Dashboard</button><button data-route="customers">List of Clients</button><button data-route="assign">Assign Agent</button><button data-route="analysis">Market Analysis</button><button data-route="live">Live Market / Live Cricket</button><button data-route="reports">Reports</button><button data-route="account">Account</button></aside>
+<div class="kx-mainnav" id="mainNav"><span data-route="dashboard">Dashboard</span><span data-route="customers">List of Clients</span><span data-route="assign" data-admin-only="1">Assign Agent</span><span data-route="analysis">Market Analysis</span><span data-route="live">Live Market ▾</span><span data-route="live">Live Virtual Market ▾</span><span data-route="reports">Reports ▾</span><span data-route="customers" data-admin-only="1">Multi Login</span></div>
+<div class="nav-mask" id="navMask"></div><aside class="nav-drawer" id="navDrawer"><h3 style="margin:0 0 12px;color:#2f4052">Playbook Admin</h3><button data-route="dashboard">Dashboard</button><button data-route="customers">List of Clients</button><button data-route="assign" data-admin-only="1">Assign Agent</button><button data-route="analysis">Market Analysis</button><button data-route="live">Live Market / Live Cricket</button><button data-route="reports">Reports</button><button data-route="account">Account</button></aside>
 <div class="banner">Play-money demo · Coins are virtual · No deposits, withdrawals or payments.</div>
 <main id="app"></main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
@@ -323,7 +323,7 @@ function nn(i){var n=Math.floor(+v(i));return isFinite(n)?n:NaN}
 function emailFor(c){return c.toLowerCase()+"@id.playbook.example"}
 function app(h){$("app").innerHTML=h}
 function err(t){msg=t;render()}
-function tabs(){if(me.role==="admin")return [["masters","Master IDs"],["customers","Customer IDs"],["control","Control panel"],["live","Live cricket"],["satta","Satta King"],["jqk","JQK Cards"],["activity","Activity"],["account","Account"]];if(me.role==="master")return [["customers","My customers"],["live","Live cricket"],["activity","Activity"],["account","Account"]];return [["customers","My customers"],["activity","Activity"],["account","Account"]]}
+function tabs(){if(me.role==="admin")return [["masters","Master IDs"],["customers","Customer IDs"],["control","Control panel"],["live","Live cricket"],["satta","Satta King"],["jqk","JQK Cards"],["activity","Activity"],["account","Account"]];if(me.role==="master")return [["dashboard","Dashboard"],["customers","List of Clients"],["analysis","Market Analysis"],["live","Live cricket"],["activity","Activity"],["account","Account"]];return [["customers","My customers"],["activity","Activity"],["account","Account"]]}
 async function callFn(b){
   var m={create:["admin_create",{p_name:b.name,p_coins:b.coins,p_max:b.max_customers==null?null:b.max_customers}],
     reset_password:["admin_reset",{p_code:b.code}],
@@ -400,6 +400,7 @@ function login(){return '<div class="card narrow"><h2>Sign in</h2><label for="li
 function btn(a,c,l,cls){return '<button class="sm '+(cls||"")+'" data-act="'+a+'" data-id="'+c.code+'" data-on="'+(c.active?1:0)+'">'+l+'</button>'}
 function navTo(route){window.PB_SELECTED_ACCOUNT=null;window.PB_SELECTED_STATEMENTS=[];
   if(!me)return;
+  if(me.role!=="admin" && (route==="assign" || route==="controlCenter" || route==="masters"))return;
   if(route==="dashboard")tab="dashboard";
   else if(route==="customers")tab="customers";
   else if(route==="live")tab="live";
@@ -411,7 +412,7 @@ function navTo(route){window.PB_SELECTED_ACCOUNT=null;window.PB_SELECTED_STATEME
   else tab=route;
   msg="";render();window.scrollTo({top:0,behavior:"smooth"});closeDrawer();
 }
-function updateNav(){document.querySelectorAll("#mainNav [data-route]").forEach(function(x){x.classList.toggle("active",x.dataset.route===tab||(tab==="activity"&&x.dataset.route==="reports"))})}
+function updateNav(){document.querySelectorAll("#mainNav [data-route]").forEach(function(x){x.hidden=x.dataset.adminOnly==="1"&&me&&me.role!=="admin";x.classList.toggle("active",x.dataset.route===tab||(tab==="activity"&&x.dataset.route==="reports"))});document.querySelectorAll("#navDrawer [data-admin-only]").forEach(function(x){x.hidden=me&&me.role!=="admin"})}
 function openDrawer(){if($("navDrawer")){$("navDrawer").classList.add("open");$("navMask").classList.add("open")}}
 function closeDrawer(){if($("navDrawer")){$("navDrawer").classList.remove("open");$("navMask").classList.remove("open")}}
 function playUiSound(){try{var C=window.AudioContext||window.webkitAudioContext;if(!C)return;var c=new C(),o=c.createOscillator(),g=c.createGain();o.frequency.value=520;o.type="sine";g.gain.value=.025;o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+.045)}catch(e){}}
