@@ -286,6 +286,22 @@ tr:hover td{background:#f5faf7!important}
 @media(max-width:500px){.pb-report-summary{grid-template-columns:1fr 1fr}.pb-report-filter .f{width:100%}.pb-report-filter input,.pb-report-filter select{width:100%;box-sizing:border-box}}
 </style>
 
+
+<style id="playbook-control-center-v10">
+.pb-control-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:12px 0}
+.pb-control-card{background:#fff;border:1px solid #d5e4dc;border-radius:14px;overflow:hidden;box-shadow:0 7px 20px rgba(18,60,45,.06)}
+.pb-control-head{padding:13px 15px;background:linear-gradient(90deg,#edf7f2,#fff);border-bottom:1px solid #dce9e3}
+.pb-control-head h3{margin:0;color:#124c38;font-size:15px}.pb-control-head p{margin:4px 0 0;color:#7c8983;font-size:10px}
+.pb-control-body{padding:14px}.pb-control-body label{display:block;font-size:10px;font-weight:700;color:#718079;margin:9px 0 4px}
+.pb-control-body input,.pb-control-body select{width:100%;box-sizing:border-box}.pb-control-row{display:flex;gap:7px;flex-wrap:wrap;margin-top:11px}
+.pb-control-row button{font-size:10px!important}
+.pb-agent-table,.pb-login-table{width:100%;border-collapse:collapse;font-size:11px}.pb-agent-table th,.pb-login-table th{background:#edf6f1!important;color:#315b49!important;padding:8px;text-align:left}.pb-agent-table td,.pb-login-table td{padding:8px;border-bottom:1px solid #edf2ef}
+.pb-control-status{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:800}.pb-control-status i{width:7px;height:7px;border-radius:50%;background:#0b8a52}.pb-control-status.off i{background:#aab4ae}
+.pb-security{padding:10px 12px;border-radius:9px;background:#f4f9f6;border:1px solid #dbe9e2;color:#5f7068;font-size:10px;margin-top:10px}
+@media(max-width:900px){.pb-control-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.pb-control-grid{grid-template-columns:1fr}}
+</style>
+
 </head>
 <body>
 <header class="kx-header"><div class="kx-brand"><i class="kx-chip" aria-hidden="true"></i><strong>KingXBet</strong><span>Admin</span></div><button class="kx-menu" id="menuBtn" aria-label="Menu">☰</button><div class="kx-user"><span id="who">Control panel</span><button class="kx-logout" id="out" hidden>Log out</button></div></header>
@@ -498,7 +514,7 @@ function vDashboard(){
       (rows.length?rows.map(function(c){var ex=Number(c.exposure)||0,cr=Number(c.cr)||0,baln=Number(c.coins)||0,available=baln-ex;return '<tr><td class="usercell"><div class="username">'+esc(c.code)+'</div><div class="name">'+esc(c.name||"")+'</div></td><td class="num">'+fmt(cr)+'</td><td class="num"><b>'+fmt(baln)+'</b></td><td class="num positive">'+fmt(Number(c.client_pl)||0)+'</td><td class="num">'+fmt(ex)+'</td><td class="num positive"><b>'+fmt(available)+'</b></td><td class="num dash">—</td><td class="num dash">—</td><td class="num">'+(c.exposure_limit!=null?fmt(c.exposure_limit):"—")+'</td><td class="num">'+(c.default_percent!=null?c.default_percent:"100")+'%</td><td><span class="account-badge">'+esc(c.role||"customer")+'</span></td><td><span class="account-status '+(c.active?"":"off")+'"><i></i>'+(c.active?"Active":"Deactive")+'</span></td><td><div class="action-group"><button class="action-view" data-act="viewAccount" data-id="'+esc(c.code)+'">View</button>'+btn("toggle",c,c.active?"Deactivate":"Activate")+btn("reset",c,"Reset")+'</div></td></tr>'}).join(""):'<tr><td colspan="13" class="empty">No clients match the current filters.</td></tr>')+
       '</tbody></table></div><div class="table-note">Only values available from the current Supabase profile data are displayed. Missing P/L/exposure fields remain blank/zero rather than being fabricated.</div></div>'+
     '</div>'+
-    '<div class="card"><div class="top"><div><h2>Quick Access</h2><div class="meta">Open the most-used Playbook control areas</div></div></div><div class="pb-quick"><button data-route="customers">List of Clients</button><button data-route="analysis">Market Analysis</button><button data-route="live">Live Cricket</button><button data-route="activity">Activity & Reports</button></div></div>';
+    '<div class="card"><div class="top"><div><h2>Quick Access</h2><div class="meta">Open the most-used Playbook control areas</div></div></div><div class="pb-quick"><button data-route="customers">List of Clients</button><button data-route="analysis">Market Analysis</button><button data-route="live">Live Cricket</button><button data-route="reports">Reports</button><button data-route="controlCenter">Control Center</button></div></div>';
 }
 
 
@@ -565,6 +581,45 @@ function vReports(){
     '<div class="pb-report-panel"><div class="pb-report-head"><h3>Activity Report</h3><span>Recent loaded activity</span></div><div class="pb-report-body">'+
       ((LG||[]).length?'<div class="pb-report-table-wrap"><table class="pb-report-table" style="min-width:650px"><thead><tr><th>Time</th><th>Action</th><th>Details</th></tr></thead><tbody>'+LG.slice(0,50).map(function(r){return '<tr><td>'+(r.at?esc(new Date(r.at).toLocaleString()):"—")+'</td><td>'+esc(r.action||r.event||r.kind||"Activity")+'</td><td>'+esc(r.detail||r.message||"—")+'</td></tr>'}).join("")+'</tbody></table></div>':'<div class="pb-empty">No recent activity is available.</div>')+
     '</div></div>';
+}
+
+
+function vControlCenter(){
+  var clients=(CS||[]), masters=(MS||[]);
+  var active=clients.filter(function(c){return c.active}).length;
+  var masterCount=masters.length;
+  return '<div class="dash-hero"><div><h1>Control Center</h1><p>Assign Agent · Multi Login · Account Settings · secure admin controls</p></div><div class="dash-actions"><button data-route="customers">Client List</button><button data-route="dashboard">Dashboard</button></div></div>'+
+  '<div class="pb-control-grid">'+
+    '<div class="pb-control-card"><div class="pb-control-head"><h3>Assign Agent</h3><p>Manage master/agent ownership of client accounts</p></div><div class="pb-control-body">'+
+      '<label>Client</label><select id="agentClient"><option value="">Select client</option>'+clients.map(function(c){return '<option value="'+esc(c.id||c.code)+'">'+esc(c.code)+' — '+esc(c.name||"")+'</option>'}).join("")+'</select>'+
+      '<label>Agent / Master</label><select id="agentMaster"><option value="">Select agent</option>'+masters.map(function(m){return '<option value="'+esc(m.id||m.code)+'">'+esc(m.code)+' — '+esc(m.name||"")+'</option>'}).join("")+'</select>'+
+      '<div class="pb-control-row"><button class="btn" data-act="assignAgent">Assign</button><button class="sm" data-act="clearAgentForm">Clear</button></div>'+
+      '<div class="pb-security">Assignments use your existing Supabase account hierarchy. No credentials are exposed in the browser.</div>'+
+    '</div></div>'+
+    '<div class="pb-control-card"><div class="pb-control-head"><h3>Multi Login</h3><p>Session and account access controls</p></div><div class="pb-control-body">'+
+      '<label>Account</label><select id="multiAccount"><option value="">Select account</option>'+clients.map(function(c){return '<option value="'+esc(c.id||c.code)+'">'+esc(c.code)+'</option>'}).join("")+'</select>'+
+      '<label>Session Action</label><select id="multiAction"><option value="view">View Access</option><option value="enable">Enable Multi Login</option><option value="disable">Disable Multi Login</option></select>'+
+      '<div class="pb-control-row"><button class="btn" data-act="multiLoginAction">Apply</button></div>'+
+      '<div class="pb-security">This panel only exposes an admin control surface. It does not bypass authentication or create hidden sessions.</div>'+
+    '</div></div>'+
+    '<div class="pb-control-card"><div class="pb-control-head"><h3>Account Settings</h3><p>Selected account profile controls</p></div><div class="pb-control-body">'+
+      '<label>Account</label><select id="settingsAccount"><option value="">Select account</option>'+clients.map(function(c){return '<option value="'+esc(c.code)+'">'+esc(c.code)+' — '+esc(c.name||"")+'</option>'}).join("")+'</select>'+
+      '<label>Account Type</label><select id="settingsType"><option value="customer">Customer</option><option value="master">Master</option><option value="admin">Admin</option></select>'+
+      '<label>Default %</label><input id="settingsDefault" type="number" min="0" max="100" placeholder="100">'+
+      '<label>Exposure Limit</label><input id="settingsExposure" type="number" min="0" placeholder="Optional">'+
+      '<div class="pb-control-row"><button class="btn" data-act="saveAccountSettings">Save Settings</button></div>'+
+      '<div class="pb-security">Role changes should be authorized through the existing backend RPC/RLS rules.</div>'+
+    '</div></div>'+
+  '</div>'+
+  '<div class="pb-report-panel"><div class="pb-report-head"><h3>Client Assignment Overview</h3><span>'+clients.length+' clients · '+masterCount+' agents/masters</span></div><div class="pb-report-body"><div style="overflow:auto"><table class="pb-agent-table"><thead><tr><th>Client</th><th>Account Type</th><th>Master / Agent</th><th>Status</th><th>Balance</th><th>Action</th></tr></thead><tbody>'+
+    (clients.length?clients.slice(0,100).map(function(c){
+      var m=masters.filter(function(x){return x.id===c.parent||x.id===c.master_id||x.code===c.parent_code})[0];
+      return '<tr><td><b>'+esc(c.code)+'</b><div class="meta">'+esc(c.name||"")+'</div></td><td>'+esc(c.role||"customer")+'</td><td>'+(m?esc(m.code):"—")+'</td><td><span class="pb-control-status '+(c.active?"":"off")+'"><i></i>'+(c.active?"Active":"Deactive")+'</span></td><td>'+fmt(Number(c.coins)||0)+'</td><td><button class="sm" data-act="viewAccount" data-id="'+esc(c.code)+'">View</button></td></tr>';
+    }).join(""):'<tr><td colspan="6" class="pb-empty">No client accounts found.</td></tr>')+
+  '</tbody></table></div></div></div>'+
+  '<div class="pb-report-panel"><div class="pb-report-head"><h3>Security & Access</h3><span>Admin-only controls</span></div><div class="pb-report-body">'+
+    '<div class="pb-security">• Existing Supabase authentication and RLS remain authoritative.<br>• This UI does not reveal API keys or service-role secrets.<br>• Account actions remain subject to the RPC permissions already configured in Playbook.<br>• Virtual/demo points only; no cash deposits, withdrawals or real-money settlement.</div>'+
+  '</div></div>';
 }
 
 function vAssign(){return '<div class="card"><h2>Assign Agent</h2><p class="meta">Agent assignment workspace. Existing Supabase permissions remain unchanged; no unsupported backend mutation is performed here.</p><div class="grid"><div><label>Client</label><select><option>Select client</option>'+CS.map(function(c){return '<option>'+esc(c.code)+' · '+esc(c.name)+'</option>'}).join('')+'</select></div><div><label>Agent</label><input type="text" placeholder="Agent name / ID"></div></div><div class="row"><button class="btn" onclick="alert(\'Agent assignment UI ready; connect to your agent table/RPC when that backend is available.\')">Assign Agent</button></div></div>'}
