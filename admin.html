@@ -54,11 +54,16 @@ main{max-width:1200px;margin:0 auto;padding:18px;background:#fff;min-height:calc
 /* account-list style tables/cards */
 .kx-table-wrap{overflow-x:auto}.kx-table{width:100%;border-collapse:collapse;font-size:13px}.kx-table th{background:#f3f5f7;color:#3d4b57;text-align:left;padding:10px;border:1px solid #ddd;font-weight:700}.kx-table td{padding:10px;border:1px solid #e2e2e2;background:#fff}.kx-table tr:hover td{background:#fafafa}.kx-actions{display:flex;gap:5px;flex-wrap:wrap}.kx-bluebtn{background:#3d8bc6;color:#fff;border:0;border-radius:3px;padding:8px 12px;font-weight:600}.kx-graybtn{background:#7d8791;color:#fff;border:0;border-radius:3px;padding:8px 12px}
 @media(max-width:700px){.kx-header{height:58px;padding:0 12px}.kx-brand strong{font-size:23px}.kx-mainnav{gap:17px;font-size:12px;padding:0 12px}.banner{font-size:11px}.kx-user span{display:none}main{padding:12px}.tabs{margin:-12px -12px 14px;padding:0 12px}.tabs button{padding:12px 14px}.card{padding:14px}.kx-table{min-width:850px}}
+
+/* v2 premium interaction layer */
+.kx-header{position:sticky;top:0;z-index:20}.kx-mainnav{position:sticky;top:66px;z-index:19}.kx-mainnav span{cursor:pointer;padding:12px 2px;transition:opacity .2s,transform .2s}.kx-mainnav span:hover{transform:translateY(-1px);opacity:1}.kx-mainnav span.active{font-weight:700;text-decoration:underline;text-underline-offset:5px}.dash-hero{display:flex;align-items:center;justify-content:space-between;gap:14px;background:linear-gradient(135deg,#2f78ad,#4d9bd0);color:#fff;padding:20px;border-radius:5px;margin-bottom:14px;box-shadow:0 8px 22px rgba(46,120,174,.18);animation:fadeUp .35s ease}.dash-hero h1{margin:0 0 5px;font-size:24px}.dash-hero p{margin:0;opacity:.9;font-size:13px}.dash-actions{display:flex;gap:8px;flex-wrap:wrap}.dash-actions button{border:1px solid rgba(255,255,255,.6);background:rgba(255,255,255,.12);color:#fff;border-radius:3px;padding:9px 12px;font-weight:700}.metric-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:14px}.metric{background:#fff;border:1px solid var(--kx-border);padding:15px;border-radius:4px;box-shadow:0 2px 6px rgba(0,0,0,.04);animation:fadeUp .4s ease}.metric .n{font-size:24px;font-weight:700;color:var(--kx-blue2)}.metric .l{font-size:12px;color:#707980;margin-top:4px}.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}.toolbar input{min-width:220px}.filter-btn.active{background:var(--kx-blue);color:#fff;border-color:var(--kx-blue)}.account-table td,.account-table th{white-space:nowrap}.status-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;background:#28a745}.status-dot.off{background:#c33}.toast{position:fixed;right:16px;bottom:16px;z-index:50;background:#263746;color:#fff;padding:11px 14px;border-radius:4px;box-shadow:0 8px 25px rgba(0,0,0,.2);animation:fadeUp .2s ease}.skeleton{background:linear-gradient(90deg,#eee,#f7f7f7,#eee);background-size:200% 100%;animation:shine 1.2s infinite}.nav-drawer{position:fixed;left:0;top:0;bottom:0;width:280px;max-width:82vw;background:#fff;z-index:40;box-shadow:8px 0 30px rgba(0,0,0,.18);transform:translateX(-105%);transition:transform .25s ease;padding:70px 16px 16px}.nav-drawer.open{transform:translateX(0)}.nav-drawer button{display:block;width:100%;text-align:left;border:0;background:#fff;padding:12px;border-bottom:1px solid #eee;color:#334;font-weight:600}.nav-mask{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:39;display:none}.nav-mask.open{display:block}@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}@keyframes shine{to{background-position:-200% 0}}
+@media(max-width:900px){.metric-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.kx-mainnav{top:58px}}@media(max-width:560px){.metric-grid{grid-template-columns:1fr 1fr}.dash-hero{display:block}.dash-actions{margin-top:14px}.toolbar input{min-width:0;width:100%}}
 </style>
 </head>
 <body>
-<header class="kx-header"><div class="kx-brand"><i class="kx-chip" aria-hidden="true"></i><strong>KingXBet</strong><span>Admin</span></div><button class="kx-menu" aria-label="Menu">☰</button><div class="kx-user"><span id="who">Control panel</span><button class="kx-logout" id="out" hidden>Log out</button></div></header>
-<div class="kx-mainnav"><span>Dashboard</span><span>List of Clients</span><span>Assign Agent</span><span>Market Analysis</span><span>Live Market ▾</span><span>Live Virtual Market ▾</span><span>Reports ▾</span><span>Multi Login</span></div>
+<header class="kx-header"><div class="kx-brand"><i class="kx-chip" aria-hidden="true"></i><strong>KingXBet</strong><span>Admin</span></div><button class="kx-menu" id="menuBtn" aria-label="Menu">☰</button><div class="kx-user"><span id="who">Control panel</span><button class="kx-logout" id="out" hidden>Log out</button></div></header>
+<div class="kx-mainnav" id="mainNav"><span data-route="dashboard">Dashboard</span><span data-route="customers">List of Clients</span><span data-route="assign">Assign Agent</span><span data-route="analysis">Market Analysis</span><span data-route="live">Live Market ▾</span><span data-route="live">Live Virtual Market ▾</span><span data-route="reports">Reports ▾</span><span data-route="customers">Multi Login</span></div>
+<div class="nav-mask" id="navMask"></div><aside class="nav-drawer" id="navDrawer"><h3 style="margin:0 0 12px;color:#2f4052">Playbook Admin</h3><button data-route="dashboard">Dashboard</button><button data-route="customers">List of Clients</button><button data-route="assign">Assign Agent</button><button data-route="analysis">Market Analysis</button><button data-route="live">Live Market / Live Cricket</button><button data-route="reports">Reports</button><button data-route="account">Account</button></aside>
 <div class="banner">Play-money demo · Coins are virtual · No deposits, withdrawals or payments.</div>
 <main id="app"></main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
@@ -66,7 +71,7 @@ main{max-width:1200px;margin:0 auto;padding:18px;background:#fff;min-height:calc
 // 1) Paste your Supabase project values here (Project settings > API). The anon key is safe to ship.
 var CFG={url:"https://jmvvuitwjixgsmhrdapg.supabase.co",anon:"sb_publishable_VZRaBdHeQk0YAWzJammc1w_9NL6owyx"};
 var GAMES=[["cricket","Cricket"],["casino","Casino"],["roulette","Roulette"],["lucky7","Lucky 7"],["kingjack","King Jack"],["num","1–9"],["satta","Satta King"],["jqk","JQK Cards"]];
-var sb=null,me=null,S=null,MS=[],CS=[],LG=[],tab="",reveal=null,msg="",LCC=null,LCL=[],LCE=null,SKS=[],SKC=null,SKE=null,JQS=null,JQE=null;window.PB_LEDGER=[];
+var sb=null,me=null,S=null,MS=[],CS=[],LG=[],tab="dashboard",reveal=null,msg="",LCC=null,LCL=[],LCE=null,SKS=[],SKC=null,SKE=null,JQS=null,JQE=null;window.PB_LEDGER=[];window.PB_CLIENT_FILTER="";window.PB_STATUS_FILTER="all";
 function $(i){return document.getElementById(i)}
 function v(i){return $(i)?$(i).value.trim():""}
 function esc(s){return String(s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
@@ -96,30 +101,48 @@ async function load(){
   if(s.error&&s.error.code!=="PGRST116")throw new Error("Could not load settings: "+s.error.message);
   S=s.data?s.data.data:null;
   var l=await sb.from("activity").select("*").order("at",{ascending:false}).limit(50);
-  if(l.error)throw new Error("Could not load activity: "+l.error.message);
-  LG=l.data||[];
+  LG=l.error?[]:(l.data||[]);
   if(me.role==="admin"){
     var lt=await sb.rpc("admin_statement_list",{p_account:null,p_limit:100});
     window.PB_LEDGER=lt.error?[]:(lt.data||[]);
   }
-  if(me.role==="admin"){var g=await sb.rpc("lc_admin_get");if(g.error){LCE=g.error.message;LCC=null;LCL=[]}else{LCE=null;LCC=g.data;var li=await sb.rpc("lc_admin_list");LCL=li.data||[]}
-  } else if(me.role==="master"){var g=await sb.rpc("lc_master_get");if(g.error){LCE=g.error.message;LCC=null;LCL=[]}else{LCE=null;LCC=g.data;var li=await sb.rpc("lc_master_list");LCL=li.data||[]}
-  }
-  if(me.role==="admin"){var k=await sb.rpc("sk_admin_summary");if(k.error){SKE=k.error.message;SKS=[];SKC=null}else{SKE=null;SKS=Array.isArray(k.data)?k.data:[];var kc=await sb.from("sk_config").select("*").eq("id",1).single();SKC=kc.data||null}
-    var jq=await sb.rpc("jqk_admin_summary");if(jq.error){JQE=jq.error.message;JQS=null}else{JQE=null;JQS=jq.data||null}}}
+  try{
+    if(me.role==="admin"){var g=await sb.rpc("lc_admin_get");if(g.error){LCE=g.error.message;LCC=null;LCL=[]}else{LCE=null;LCC=g.data;var li=await sb.rpc("lc_admin_list");LCL=li.error?[]:(li.data||[])}}
+    else if(me.role==="master"){var g=await sb.rpc("lc_master_get");if(g.error){LCE=g.error.message;LCC=null;LCL=[]}else{LCE=null;LCC=g.data;var li=await sb.rpc("lc_master_list");LCL=li.error?[]:(li.data||[])}}
+  }catch(e){LCE=e.message;LCC=null;LCL=[]}
+  if(me.role==="admin"){
+    try{var k=await sb.rpc("sk_admin_summary");if(k.error){SKE=k.error.message;SKS=[];SKC=null}else{SKE=null;SKS=Array.isArray(k.data)?k.data:[];var kc=await sb.from("sk_config").select("*").eq("id",1).single();SKC=kc.data||null}}catch(e){SKE=e.message;SKS=[];SKC=null}
+    try{var jq=await sb.rpc("jqk_admin_summary");if(jq.error){JQE=jq.error.message;JQS=null}else{JQE=null;JQS=jq.data||null}}catch(e){JQE=e.message;JQS=null}
+  }}
 async function enter(){
-  var u=(await sb.auth.getUser()).data.user,p=u?await sb.from("profiles").select("*").eq("id",u.id).single():{};
-  var bad=null;
-  if(!p.data)bad="Could not load this account.";
-  else if(p.data.role==="customer")bad="Customer IDs sign in to the games app, not this panel.";
-  else if(!p.data.active)bad="This ID is suspended. Contact the admin.";
-  if(bad){await sb.auth.signOut();me=null;return err(bad)}
-  me=p.data;msg="";await load();render()}
+  try{
+    var u=(await sb.auth.getUser()).data.user,p=u?await sb.from("profiles").select("*").eq("id",u.id).single():{};
+    var bad=null;
+    if(!p.data)bad="Could not load this account.";
+    else if(p.data.role==="customer")bad="Customer IDs sign in to the games app, not this panel.";
+    else if(!p.data.active)bad="This ID is suspended. Contact the admin.";
+    if(bad){await sb.auth.signOut();me=null;return err(bad)}
+    me=p.data;msg="";
+    await load();
+    render();
+  }catch(e){
+    me=null;
+    msg="Backend load warning: "+(e&&e.message?e.message:String(e));
+    render();
+  }
+}
 async function boot(){
-  if(CFG.url.indexOf("YOUR_")===0){app('<div class="card narrow"><h2>Connect your backend</h2><p class="meta">Open this file, set <b>CFG.url</b> and <b>CFG.anon</b> at the top of the script, then reload. See backend README for the setup steps.</p></div>');return}
-  sb=supabase.createClient(CFG.url,CFG.anon);
-  app('<div class="empty">Loading…</div>');
-  var s=await sb.auth.getSession();if(s.data.session)await enter();else render()}
+  try{
+    if(CFG.url.indexOf("YOUR_")===0){app('<div class="card narrow"><h2>Connect your backend</h2><p class="meta">Set CFG.url and CFG.anon in the script, then reload.</p></div>');return}
+    sb=supabase.createClient(CFG.url,CFG.anon);
+    app('<div class="card"><h2>Loading Playbook Admin…</h2><div class="skeleton" style="height:70px"></div></div>');
+    var s=await sb.auth.getSession();
+    if(s.data.session)await enter();else render();
+  }catch(e){
+    msg="Startup error: "+(e&&e.message?e.message:String(e));
+    render();
+  }
+}
 
 function render(){
   $("who").textContent=me?(me.role==="admin"?"Admin":"Master")+" · "+me.code:"Control panel";$("out").hidden=!me;
@@ -128,9 +151,40 @@ function render(){
   var h='<div class="tabs" role="tablist">'+tabs().map(function(t){return '<button role="tab" data-act="tab" data-t="'+t[0]+'" aria-selected="'+(t[0]===tab)+'">'+t[1]+'</button>'}).join("")+'</div>';
   if(msg)h+='<p class="msg" role="alert">'+esc(msg)+'</p>';
   if(reveal)h+='<div class="card reveal"><h2>'+esc(reveal.what)+'</h2><div class="meta">ID</div><div class="cred">'+esc(reveal.id)+'</div><div class="meta">Temporary password</div><div class="cred">'+esc(reveal.pw)+'</div><p class="meta">Shown once and not stored. Share it securely and ask the holder to change it.</p><button class="sm" data-act="dismiss">I have saved it</button></div>';
-  h+={results:vResults,masters:vMasters,customers:vCustomers,control:vControl,live:vLive,satta:vSatta,jqk:vJqk,activity:vActivity,ledger:vLedger,account:vAccount}[tab]();app(h)}
+  var views={dashboard:vDashboard,results:vResults,masters:vMasters,customers:vCustomers,control:vControl,live:vLive,satta:vSatta,jqk:vJqk,activity:vActivity,ledger:vLedger,account:vAccount,assign:vAssign,analysis:vAnalysis,reports:vReports};
+  h+=(views[tab]||vDashboard)();app(h);updateNav();}
 function login(){return '<div class="card narrow"><h2>Sign in</h2><label for="li">Admin or Master ID</label><input id="li" type="text" autocapitalize="characters" autocomplete="username"><label for="lp" style="margin-top:8px">Password</label><input id="lp" type="password" autocomplete="current-password">'+(msg?'<p class="msg" role="alert">'+esc(msg)+'</p>':'')+'<div class="row"><button class="btn" data-act="login">Sign in</button></div><p class="meta">Customer IDs sign in to the games app, not this panel.</p></div>'}
 function btn(a,c,l,cls){return '<button class="sm '+(cls||"")+'" data-act="'+a+'" data-id="'+c.code+'" data-on="'+(c.active?1:0)+'">'+l+'</button>'}
+function navTo(route){
+  if(!me)return;
+  if(route==="dashboard")tab="dashboard";
+  else if(route==="customers")tab="customers";
+  else if(route==="live")tab="live";
+  else if(route==="reports")tab="activity";
+  else if(route==="account")tab="account";
+  else if(route==="assign")tab="assign";
+  else if(route==="analysis")tab="analysis";
+  else tab=route;
+  msg="";render();window.scrollTo({top:0,behavior:"smooth"});closeDrawer();
+}
+function updateNav(){document.querySelectorAll("#mainNav [data-route]").forEach(function(x){x.classList.toggle("active",x.dataset.route===tab||(tab==="activity"&&x.dataset.route==="reports"))})}
+function openDrawer(){if($("navDrawer")){$("navDrawer").classList.add("open");$("navMask").classList.add("open")}}
+function closeDrawer(){if($("navDrawer")){$("navDrawer").classList.remove("open");$("navMask").classList.remove("open")}}
+function playUiSound(){try{var C=window.AudioContext||window.webkitAudioContext;if(!C)return;var c=new C(),o=c.createOscillator(),g=c.createGain();o.frequency.value=520;o.type="sine";g.gain.value=.025;o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+.045)}catch(e){}}
+function vDashboard(){
+  var active=CS.filter(function(c){return c.active}).length, inactive=CS.length-active;
+  var bal=CS.reduce(function(a,c){return a+(Number(c.coins)||0)},0), live=LCL.length;
+  var q=window.PB_CLIENT_FILTER.toLowerCase(), sf=window.PB_STATUS_FILTER;
+  var rows=CS.filter(function(c){var ok=!q||String(c.code+" "+c.name).toLowerCase().indexOf(q)>=0;var st=sf==="all"||(sf==="active"&&c.active)||(sf==="inactive"&&!c.active);return ok&&st}).slice(0,100);
+  return '<div class="dash-hero"><div><h1>Dashboard</h1><p>Market-style control centre · Supabase connected · virtual/demo environment</p></div><div class="dash-actions"><button data-route="customers">＋ Add Account</button><button data-route="live">Live Cricket</button><button data-route="reports">Reports</button></div></div>'+
+    '<div class="metric-grid"><div class="metric"><div class="n">'+CS.length+'</div><div class="l">Total Clients</div></div><div class="metric"><div class="n">'+active+'</div><div class="l">Active Users</div></div><div class="metric"><div class="n">'+fmt(bal)+'</div><div class="l">Virtual Balance</div></div><div class="metric"><div class="n">'+live+'</div><div class="l">Live Cricket Matches</div></div></div>'+
+    '<div class="card"><div class="top"><div><h2 style="margin:0">List of Clients</h2><div class="meta">Account overview with the requested market-style columns</div></div></div><div class="toolbar"><input id="clientSearch" type="text" placeholder="Search username / name" value="'+esc(window.PB_CLIENT_FILTER)+'"><button class="sm filter-btn '+(sf==="all"?"active":"")+'" data-filter="all">All</button><button class="sm filter-btn '+(sf==="active"?"active":"")+'" data-filter="active">Active Users</button><button class="sm filter-btn '+(sf==="inactive"?"active":"")+'" data-filter="inactive">Deactive Users</button><button class="btn" data-route="customers">Add Account</button><button class="sm" data-act="dashRefresh">Load</button><button class="sm" data-act="dashReset">Reset</button><button class="sm" data-act="exportClients">Excel/CSV</button></div>'+
+    '<div class="kx-table-wrap"><table class="kx-table account-table"><thead><tr><th>User Name</th><th>CR</th><th>Balance</th><th>Client (P/L)</th><th>Exposure</th><th>Available Balance</th><th>U st</th><th>B st</th><th>Exposure Limit</th><th>Default %</th><th>Account Type</th><th>Status</th><th>Action</th></tr></thead><tbody>'+ (rows.length?rows.map(function(c){var ex=0,cr=0;return '<tr><td><b>'+esc(c.code)+'</b><br><span class="meta">'+esc(c.name||"")+'</span></td><td>'+cr+'</td><td>'+fmt(c.coins||0)+'</td><td>0</td><td>'+ex+'</td><td>'+fmt(c.coins||0)+'</td><td>—</td><td>—</td><td>—</td><td>100%</td><td>'+esc(c.role||"customer")+'</td><td><span class="status-dot '+(c.active?"":"off")+'"></span>'+(c.active?"Active":"Deactive")+'</td><td><div class="kx-actions">'+btn("toggle",c,c.active?"Deactivate":"Activate")+btn("reset",c,"Reset")+'</div></td></tr>'}).join(""):'<tr><td colspan="13" class="empty">No clients match the current filters.</td></tr>')+'</tbody></table></div></div>'+
+    '<div class="card"><h2>Quick Access</h2><div class="grid" style="grid-template-columns:repeat(4,minmax(0,1fr))"><button class="btn" data-route="analysis">Market Analysis</button><button class="btn" data-route="live">Live Market</button><button class="btn" data-route="live">Live Cricket</button><button class="btn" data-route="reports">Reports</button></div></div>';
+}
+function vAssign(){return '<div class="card"><h2>Assign Agent</h2><p class="meta">Agent assignment workspace. Existing Supabase permissions remain unchanged; no unsupported backend mutation is performed here.</p><div class="grid"><div><label>Client</label><select><option>Select client</option>'+CS.map(function(c){return '<option>'+esc(c.code)+' · '+esc(c.name)+'</option>'}).join('')+'</select></div><div><label>Agent</label><input type="text" placeholder="Agent name / ID"></div></div><div class="row"><button class="btn" onclick="alert(\'Agent assignment UI ready; connect to your agent table/RPC when that backend is available.\')">Assign Agent</button></div></div>'}
+function vAnalysis(){return '<div class="card"><h2>Market Analysis</h2><div class="metric-grid"><div class="metric"><div class="n">'+CS.length+'</div><div class="l">Accounts</div></div><div class="metric"><div class="n">'+LCL.length+'</div><div class="l">Cricket Markets</div></div><div class="metric"><div class="n">'+MS.length+'</div><div class="l">Masters</div></div><div class="metric"><div class="n">'+LG.length+'</div><div class="l">Recent Activity</div></div></div><p class="meta">This panel is intentionally read-only until a matching analytics backend is available.</p></div>'}
+function vReports(){return '<div class="card"><h2>Reports</h2><p class="meta">Export the current client list or open the existing activity/statement reports.</p><div class="row"><button class="btn" data-act="exportClients">Export Clients CSV</button><button class="sm" data-route="activity">Activity Report</button><button class="sm" data-route="ledger">Statement Report</button></div></div>'}
 function vMasters(){
   var h='<div class="card"><h2>Create a Master ID</h2><div class="grid"><div><label for="mn">Master name</label><input id="mn" type="text"></div><div><label for="mp">Virtual coin pool</label><input id="mp" type="number" min="0" value="10000"></div><div><label for="mm">Max customers</label><input id="mm" type="number" min="1" value="50"></div></div><div class="row"><button class="btn" data-act="addMaster">Create Master ID</button></div></div>';
   if(!MS.length)return h+'<div class="empty">No Master IDs yet.</div>';
@@ -314,8 +368,13 @@ chpw:async function(){var n=$("a1").value;
   if(ok.error)throw new Error("Current password is incorrect.");if(n.length<8)throw new Error("Use at least 8 characters.");if(n!==$("a2").value)throw new Error("The two new passwords don't match.");
   var r=await sb.auth.updateUser({password:n});if(r.error)throw new Error(r.error.message);msg="Password updated.";render()}
 };
-$("app").addEventListener("click",async function(e){var t=e.target.closest("[data-act]");if(!t||!A[t.dataset.act])return;try{await A[t.dataset.act](t)}catch(x){err(x.message)}});
-$("app").addEventListener("keydown",function(e){if(e.key==="Enter"&&(e.target.id==="lp"||e.target.id==="li"))A.login().catch(function(x){err(x.message)})});
+A.dashRefresh=async function(){playUiSound();await load();msg="Dashboard refreshed.";render()};
+A.dashReset=function(){window.PB_CLIENT_FILTER="";window.PB_STATUS_FILTER="all";render()};
+A.exportClients=function(){var data=[["User Name","CR","Balance","Client P/L","Exposure","Available Balance","U st","B st","Exposure Limit","Default %","Account Type","Status"]].concat(CS.map(function(c){return [c.code,c.cr||0,c.coins||0,0,0,c.coins||0,"","","","100%",c.role,c.active?"Active":"Deactive"]}));var csv=data.map(function(r){return r.map(function(x){x=String(x==null?"":x).replace(/"/g,'""');return '"'+x+'"'}).join(',')}).join('\n');var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='playbook-clients.csv';a.click();setTimeout(function(){URL.revokeObjectURL(a.href)},500);playUiSound()};
+document.addEventListener("click",async function(e){var route=e.target.closest("[data-route]");if(route){e.preventDefault();navTo(route.dataset.route);playUiSound();return}var f=e.target.closest("[data-filter]");if(f){window.PB_STATUS_FILTER=f.dataset.filter;render();return}var t=e.target.closest("[data-act]");if(!t||!A[t.dataset.act])return;try{await A[t.dataset.act](t)}catch(x){err(x.message)}});
+$("menuBtn").onclick=function(){playUiSound();openDrawer()};$("navMask").onclick=closeDrawer;
+document.addEventListener("input",function(e){if(e.target&&e.target.id==="clientSearch"){window.PB_CLIENT_FILTER=e.target.value;var b=e.target.selectionStart;render();var n=$("clientSearch");if(n){n.focus();try{n.setSelectionRange(b,b)}catch(_){} }}});
+$("app").addEventListener("keydown",function(e){if(e.key==="Enter"&&(e.target.id==="lp"||e.target.id==="li"))A.login().catch(function(x){err(x.message)})});document.addEventListener("keydown",function(e){if(e.key==="Escape")closeDrawer()});
 $("out").onclick=async function(){await sb.auth.signOut();me=null;reveal=null;msg="";tab="";render()};
 boot();
 </script>
