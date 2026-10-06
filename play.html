@@ -2285,7 +2285,7 @@ document.addEventListener("click",async e=>{
   if(t.dataset.b)return rPlace(t.dataset.b,t);
   if(t.dataset.rc){rchip=+t.dataset.rc;document.querySelectorAll(".crack .cp").forEach(x=>x.classList.toggle("sel",x===t));chipSound(1);return}
   if(t.dataset.p!==undefined)return choose(t.dataset.p,t);
-  if(t.dataset.g){if(busy)return;game=t.dataset.g;view="game";pick=null;stake=0;msg="";RB={};RBundo=[];RBlast=lastB2[game]||null;SND.click();ac();render();scrollTo(0,0);return}
+  if(t.dataset.g){if(busy)return;if(t.dataset.g==="aviator"){SND.click();window.location.href="frontend/index.html";return}game=t.dataset.g;view="game";pick=null;stake=0;msg="";RB={};RBundo=[];RBlast=lastB2[game]||null;SND.click();ac();render();scrollTo(0,0);return}
   if(t.dataset.s)return addStake(t.dataset.s==="max"?"max":+t.dataset.s,t);
   const a=t.dataset.act;
   if(a==="play")await play();
