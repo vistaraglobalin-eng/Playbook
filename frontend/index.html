@@ -1,12 +1,81 @@
-✈AVIATOR3D FLIGHT PRACTICE
-PRACTICE MODE
-1.00x
-Aircraft systems ready
-CAMERA · CINEMATIC FOLLOW
-NEXT FLIGHT
-3
-VIRTUAL CREDITS
-10,000
-START FLIGHT  RESET
-FLIGHT HISTORY
-—
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#07110d" />
+    <title>Aviator 3D Practice</title>
+  </head>
+
+  <body>
+    <div id="app">
+      <header class="topbar">
+        <div>
+          <div class="brand">AVIATOR <span>3D</span></div>
+          <div class="subtitle">Practice Mode</div>
+        </div>
+
+        <div class="status-pill">
+          <span class="status-dot"></span>
+          SUPABASE
+        </div>
+      </header>
+
+      <main class="game-shell">
+        <section class="scene-card">
+          <canvas id="scene"></canvas>
+
+          <div class="hud">
+            <div class="round-label">
+              ROUND <span id="roundNumber">1</span>
+            </div>
+
+            <div id="multiplier">1.00x</div>
+
+            <div id="roundStatus">READY</div>
+          </div>
+
+          <div class="loading" id="loading">
+            Loading practice rounds...
+          </div>
+        </section>
+
+        <section class="controls">
+          <button id="startButton" class="primary-button">
+            START PRACTICE ROUND
+          </button>
+
+          <button id="nextButton" class="secondary-button" disabled>
+            NEXT ROUND
+          </button>
+
+          <div class="info-grid">
+            <div class="info-card">
+              <span>Database</span>
+              <strong id="databaseStatus">Checking...</strong>
+            </div>
+
+            <div class="info-card">
+              <span>Rounds Loaded</span>
+              <strong id="roundsLoaded">0</strong>
+            </div>
+
+            <div class="info-card">
+              <span>Mode</span>
+              <strong>Virtual Credits</strong>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer>
+        Practice/demo simulation only — no real-money wagering or payouts.
+      </footer>
+    </div>
+
+    <script type="module" src="/main.js"></script>
+  </body>
+</html>
