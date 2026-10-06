@@ -1,81 +1,114 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-    />
-    <meta name="theme-color" content="#07110d" />
-    <title>Aviator 3D Practice</title>
-  </head>
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  />
+  <meta name="theme-color" content="#05090d" />
+  <title>Aviator 3D Practice</title>
+</head>
 
-  <body>
-    <div id="app">
-      <header class="topbar">
-        <div>
-          <div class="brand">AVIATOR <span>3D</span></div>
-          <div class="subtitle">Practice Mode</div>
+<body>
+  <div id="app">
+
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark">✈</span>
+
+        <span>
+          <b>AVIATOR</b>
+          <small>3D FLIGHT PRACTICE</small>
+        </span>
+      </div>
+
+      <div class="mode">
+        PRACTICE MODE
+      </div>
+    </header>
+
+    <main>
+
+      <section class="stage-wrap">
+
+        <div id="stage"></div>
+
+        <div class="hud">
+          <div>
+            <div id="multiplier">
+              1.00<span>x</span>
+            </div>
+
+            <div id="status">
+              Aircraft systems ready
+            </div>
+          </div>
+
+          <div class="camera">
+            CAMERA · CINEMATIC FOLLOW
+          </div>
         </div>
 
-        <div class="status-pill">
-          <span class="status-dot"></span>
-          SUPABASE
+        <div id="transition" class="transition hidden">
+          <div class="transition-title">
+            NEXT FLIGHT
+          </div>
+
+          <div id="countdown">
+            3
+          </div>
         </div>
-      </header>
 
-      <main class="game-shell">
-        <section class="scene-card">
-          <canvas id="scene"></canvas>
+      </section>
 
-          <div class="hud">
-            <div class="round-label">
-              ROUND <span id="roundNumber">1</span>
-            </div>
+      <section class="controls">
 
-            <div id="multiplier">1.00x</div>
+        <div class="panel">
 
-            <div id="roundStatus">READY</div>
+          <div class="label">
+            VIRTUAL CREDITS
           </div>
 
-          <div class="loading" id="loading">
-            Loading practice rounds...
+          <div id="balance" class="balance">
+            10,000
           </div>
-        </section>
 
-        <section class="controls">
-          <button id="startButton" class="primary-button">
-            START PRACTICE ROUND
+          <button id="start" class="primary">
+            START FLIGHT
           </button>
 
-          <button id="nextButton" class="secondary-button" disabled>
-            NEXT ROUND
+          <button id="reset" class="secondary">
+            RESET
           </button>
 
-          <div class="info-grid">
-            <div class="info-card">
-              <span>Database</span>
-              <strong id="databaseStatus">Checking...</strong>
-            </div>
+        </div>
 
-            <div class="info-card">
-              <span>Rounds Loaded</span>
-              <strong id="roundsLoaded">0</strong>
-            </div>
+        <div class="panel">
 
-            <div class="info-card">
-              <span>Mode</span>
-              <strong>Virtual Credits</strong>
-            </div>
+          <div class="label">
+            FLIGHT HISTORY
           </div>
-        </section>
-      </main>
 
-      <footer>
-        Practice/demo simulation only — no real-money wagering or payouts.
-      </footer>
-    </div>
+          <div id="history" class="history">
+            <span>—</span>
+          </div>
 
-    <script type="module" src="/main.js"></script>
-  </body>
+          <p>
+            This is a visual practice simulation. It has no
+            deposits, withdrawals, wagers, cash-out, payouts,
+            or settlement.
+          </p>
+
+        </div>
+
+      </section>
+
+    </main>
+
+  </div>
+
+  <script type="module" src="/main.js"></script>
+
+</body>
 </html>
