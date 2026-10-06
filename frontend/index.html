@@ -2,113 +2,60 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-  />
-  <meta name="theme-color" content="#05090d" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Aviator 3D Practice</title>
 </head>
-
 <body>
   <div id="app">
-
     <header class="topbar">
       <div class="brand">
         <span class="brand-mark">✈</span>
-
         <span>
           <b>AVIATOR</b>
           <small>3D FLIGHT PRACTICE</small>
         </span>
       </div>
-
-      <div class="mode">
-        PRACTICE MODE
-      </div>
+      <div class="mode">PRACTICE MODE</div>
     </header>
 
     <main>
-
       <section class="stage-wrap">
-
         <div id="stage"></div>
 
         <div class="hud">
           <div>
-            <div id="multiplier">
-              1.00<span>x</span>
-            </div>
-
-            <div id="status">
-              Aircraft systems ready
-            </div>
+            <div id="multiplier">1.00<span>x</span></div>
+            <div id="status">Aircraft systems ready</div>
           </div>
-
-          <div class="camera">
-            CAMERA · CINEMATIC FOLLOW
-          </div>
+          <div class="camera">CAMERA · CINEMATIC FOLLOW</div>
         </div>
 
         <div id="transition" class="transition hidden">
-          <div class="transition-title">
-            NEXT FLIGHT
-          </div>
-
-          <div id="countdown">
-            3
-          </div>
+          <div class="transition-title">NEXT FLIGHT</div>
+          <div id="countdown">3</div>
         </div>
-
       </section>
 
       <section class="controls">
-
         <div class="panel">
-
-          <div class="label">
-            VIRTUAL CREDITS
-          </div>
-
-          <div id="balance" class="balance">
-            10,000
-          </div>
-
-          <button id="start" class="primary">
-            START FLIGHT
-          </button>
-
-          <button id="reset" class="secondary">
-            RESET
-          </button>
-
+          <div class="label">VIRTUAL CREDITS</div>
+          <div id="balance" class="balance">10,000</div>
+          <button id="start" class="primary">START FLIGHT</button>
+          <button id="reset" class="secondary">RESET</button>
         </div>
 
         <div class="panel">
-
-          <div class="label">
-            FLIGHT HISTORY
-          </div>
-
-          <div id="history" class="history">
-            <span>—</span>
-          </div>
-
+          <div class="label">FLIGHT HISTORY</div>
+          <div id="history" class="history"><span>—</span></div>
           <p>
-            This is a visual practice simulation. It has no
-            deposits, withdrawals, wagers, cash-out, payouts,
-            or settlement.
+            This is a visual practice simulation. It has no deposits,
+            withdrawals, wagers, cash-out, payouts, or settlement.
           </p>
-
         </div>
-
       </section>
-
     </main>
-
   </div>
 
-  <script type="module" src="/main.js"></script>
-
+  <script type="module" src="./main.js"></script>
 </body>
 </html>
