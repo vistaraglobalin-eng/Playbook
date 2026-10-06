@@ -1,17 +1,30 @@
 import * as THREE from 'three';
 import './style.css';
 
+import {
+  loadPracticeRounds,
+  supabaseConfigured
+} from './supabase.js';
+
 const stage = document.querySelector('#stage');
 const multiplierEl = document.querySelector('#multiplier');
 const statusEl = document.querySelector('#status');
 const startBtn = document.querySelector('#start');
 const resetBtn = document.querySelector('#reset');
 const historyEl = document.querySelector('#history');
+const transition = document.querySelector('#transition');
+const countdownEl = document.querySelector('#countdown');
 
 const scene = new THREE.Scene();
 scene.fog = new THREE.FogExp2(0x10232e, 0.012);
 
-const camera = new THREE.PerspectiveCamera(48, 1, 0.1, 500);
+const camera = new THREE.PerspectiveCamera(
+  48,
+  1,
+  0.1,
+  500
+);
+
 camera.position.set(0, 3.4, 11);
 
 const renderer = new THREE.WebGLRenderer({
@@ -24,12 +37,13 @@ renderer.setPixelRatio(
 );
 
 renderer.shadowMap.enabled = true;
-renderer.shadowMap.type =
-  THREE.PCFSoftShadowMap;
-
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.setClearColor(0x17364a);
 
 stage.appendChild(renderer.domElement);
+
+
+/* ---------- LIGHTING ---------- */
 
 const hemi = new THREE.HemisphereLight(
   0xaed5e5,
@@ -41,7 +55,7 @@ scene.add(hemi);
 
 const sun = new THREE.DirectionalLight(
   0xffe2bd,
-  4.0
+  4
 );
 
 sun.position.set(-8, 13, 8);
@@ -49,10 +63,12 @@ sun.castShadow = true;
 
 scene.add(sun);
 
+
+/* ---------- WORLD ---------- */
+
 const world = new THREE.Group();
 scene.add(world);
 
-// Ground
 const ground = new THREE.Mesh(
   new THREE.PlaneGeometry(180, 180),
   new THREE.MeshStandardMaterial({
@@ -67,7 +83,9 @@ ground.receiveShadow = true;
 
 world.add(ground);
 
-// Runway
+
+/* ---------- RUNWAY ---------- */
+
 const runway = new THREE.Mesh(
   new THREE.PlaneGeometry(12, 100),
   new THREE.MeshStandardMaterial({
@@ -81,7 +99,6 @@ runway.position.set(0, -3.02, -25);
 
 world.add(runway);
 
-// Runway center line
 const lane = new THREE.Mesh(
   new THREE.PlaneGeometry(0.35, 90),
   new THREE.MeshStandardMaterial({
@@ -94,11 +111,14 @@ lane.position.set(0, -2.98, -25);
 
 world.add(lane);
 
-// Clouds
-function makeCloud(x, y, z, scale) {
-  const g = new THREE.Group();
 
-  const mat =
+/* ---------- CLOUDS ---------- */
+
+function makeCloud(x, y, z, scale) {
+
+  const group = new THREE.Group();
+
+  const material =
     new THREE.MeshStandardMaterial({
       color: 0xf3fbff,
       transparent: true,
@@ -107,32 +127,33 @@ function makeCloud(x, y, z, scale) {
     });
 
   for (let i = 0; i < 6; i++) {
-    const s = new THREE.Mesh(
+
+    const cloud = new THREE.Mesh(
       new THREE.SphereGeometry(1, 16, 12),
-      mat
+      material
     );
 
-    s.scale.set(
+    cloud.scale.set(
       1.4 + Math.random() * 1.3,
       0.65 + Math.random() * 0.45,
       0.75 + Math.random() * 0.5
     );
 
-    s.position.set(
+    cloud.position.set(
       (i - 2.5) * 1.25,
       Math.random() * 0.6,
       (Math.random() - 0.5) * 0.8
     );
 
-    g.add(s);
+    group.add(cloud);
   }
 
-  g.position.set(x, y, z);
-  g.scale.setScalar(scale);
+  group.position.set(x, y, z);
+  group.scale.setScalar(scale);
 
-  world.add(g);
+  world.add(group);
 
-  return g;
+  return group;
 }
 
 const clouds = [
@@ -142,9 +163,12 @@ const clouds = [
   makeCloud(13, 8, -58, 1.4)
 ];
 
-// Aircraft
+
+/* ---------- AIRCRAFT ---------- */
+
 function makePlane() {
-  const g = new THREE.Group();
+
+  const group = new THREE.Group();
 
   const red =
     new THREE.MeshStandardMaterial({
@@ -169,7 +193,9 @@ function makePlane() {
       opacity: 0.8
     });
 
-  // Fuselage
+
+  /* Fuselage */
+
   const fuselage = new THREE.Mesh(
     new THREE.CapsuleGeometry(
       0.48,
@@ -180,183 +206,126 @@ function makePlane() {
     red
   );
 
-  fuselage.rotation.z =
-    Math.PI / 2;
-
+  fuselage.rotation.z = Math.PI / 2;
   fuselage.castShadow = true;
 
-  g.add(fuselage);
+  group.add(fuselage);
 
-  // Wings
+
+  /* Wings */
+
   const wing = new THREE.Mesh(
-    new THREE.BoxGeometry(
-      3.6,
-      0.13,
-      0.72
-    ),
+    new THREE.BoxGeometry(3.6, 0.13, 0.72),
     red
   );
 
-  wing.position.set(0, 0, 0.05);
   wing.rotation.x = -0.06;
   wing.castShadow = true;
 
-  g.add(wing);
+  group.add(wing);
 
-  // Tail
+
+  /* Tail */
+
   const tail = new THREE.Mesh(
-    new THREE.BoxGeometry(
-      1.5,
-      0.12,
-      0.5
-    ),
+    new THREE.BoxGeometry(1.5, 0.12, 0.5),
     red
   );
 
-  tail.position.set(
-    -1.25,
-    0.55,
-    0.02
-  );
-
+  tail.position.set(-1.25, 0.55, 0);
   tail.rotation.z = 0.25;
 
-  g.add(tail);
+  group.add(tail);
 
-  // Tail fin
+
+  /* Tail fin */
+
   const fin = new THREE.Mesh(
-    new THREE.ConeGeometry(
-      0.55,
-      1.2,
-      4
-    ),
+    new THREE.ConeGeometry(0.55, 1.2, 4),
     red
   );
 
-  fin.scale.set(
-    0.7,
-    0.8,
-    0.22
-  );
+  fin.scale.set(0.7, 0.8, 0.22);
+  fin.position.set(-1.05, 0.55, 0);
+  fin.rotation.z = Math.PI / 2;
 
-  fin.position.set(
-    -1.05,
-    0.55,
-    0
-  );
+  group.add(fin);
 
-  fin.rotation.z =
-    Math.PI / 2;
 
-  g.add(fin);
+  /* Cockpit */
 
-  // Cockpit
   const cockpit = new THREE.Mesh(
-    new THREE.SphereGeometry(
-      0.5,
-      20,
-      12
-    ),
+    new THREE.SphereGeometry(0.5, 20, 12),
     glass
   );
 
-  cockpit.scale.set(
-    1.15,
-    0.55,
-    0.7
-  );
+  cockpit.scale.set(1.15, 0.55, 0.7);
+  cockpit.position.set(0.7, 0.42, 0);
 
-  cockpit.position.set(
-    0.7,
-    0.42,
-    0
-  );
+  group.add(cockpit);
 
-  g.add(cockpit);
 
-  // Propeller
-  const propGroup =
-    new THREE.Group();
+  /* Propeller */
 
-  propGroup.position.set(
-    1.65,
-    0,
-    0
-  );
+  const propeller = new THREE.Group();
+
+  propeller.position.set(1.65, 0, 0);
 
   const hub = new THREE.Mesh(
-    new THREE.SphereGeometry(
-      0.12,
-      12,
-      8
-    ),
+    new THREE.SphereGeometry(0.12, 12, 8),
     dark
   );
 
-  propGroup.add(hub);
+  propeller.add(hub);
 
   for (let i = 0; i < 3; i++) {
+
     const blade = new THREE.Mesh(
-      new THREE.BoxGeometry(
-        0.1,
-        1.15,
-        0.08
-      ),
+      new THREE.BoxGeometry(0.1, 1.15, 0.08),
       dark
     );
 
     blade.position.y = 0.55;
+    blade.rotation.z = i * 2.094;
 
-    blade.rotation.z =
-      i * 2.094;
-
-    propGroup.add(blade);
+    propeller.add(blade);
   }
 
-  g.add(propGroup);
+  group.add(propeller);
 
-  // Engine glow
-  const engineGlow =
-    new THREE.PointLight(
-      0xff6a44,
-      1.7,
-      4
-    );
 
-  engineGlow.position.set(
-    -1.6,
-    0,
-    0
+  /* Engine glow */
+
+  const engineGlow = new THREE.PointLight(
+    0xff6a44,
+    1.7,
+    4
   );
 
-  g.add(engineGlow);
+  engineGlow.position.set(-1.6, 0, 0);
 
-  g.userData.prop =
-    propGroup;
+  group.add(engineGlow);
 
-  g.userData.engineGlow =
-    engineGlow;
+  group.userData.propeller = propeller;
+  group.userData.engineGlow = engineGlow;
 
-  return g;
+  return group;
 }
 
 const plane = makePlane();
 
-plane.position.set(
-  -6,
-  0.1,
-  0
-);
-
+plane.position.set(-6, 0.1, 0);
 plane.rotation.z = -0.12;
 plane.rotation.y = -0.1;
 
 scene.add(plane);
 
-// Flight trail
+
+/* ---------- EXHAUST TRAIL ---------- */
+
 const trail = [];
 
-const trailMat =
+const trailMaterial =
   new THREE.MeshBasicMaterial({
     color: 0xff3d4e,
     transparent: true,
@@ -364,31 +333,33 @@ const trailMat =
   });
 
 for (let i = 0; i < 22; i++) {
-  const p = new THREE.Mesh(
+
+  const particle = new THREE.Mesh(
     new THREE.SphereGeometry(
       0.045 + i * 0.002,
       8,
       8
     ),
-    trailMat
+    trailMaterial
   );
 
-  p.visible = false;
+  particle.visible = false;
 
-  scene.add(p);
-
-  trail.push(p);
+  scene.add(particle);
+  trail.push(particle);
 }
 
-// Exhaust particles
-const particleGeo =
+
+/* ---------- PARTICLES ---------- */
+
+const particleGeometry =
   new THREE.SphereGeometry(
     0.035,
     6,
     6
   );
 
-const particleMat =
+const particleMaterial =
   new THREE.MeshBasicMaterial({
     color: 0xffc0b7
   });
@@ -396,47 +367,50 @@ const particleMat =
 const particles = [];
 
 for (let i = 0; i < 90; i++) {
-  const p = new THREE.Mesh(
-    particleGeo,
-    particleMat
+
+  const particle = new THREE.Mesh(
+    particleGeometry,
+    particleMaterial
   );
 
-  p.visible = false;
+  particle.visible = false;
 
-  scene.add(p);
-
-  particles.push(p);
+  scene.add(particle);
+  particles.push(particle);
 }
+
+
+/* ---------- GAME STATE ---------- */
 
 let running = false;
 let crashed = false;
 
-let t0 = 0;
-
+let startTime = 0;
 let crashAt = 2.5;
 
 let round = 0;
 
-let raf = 0;
+let animationFrame = 0;
 
 let history = [];
 
-// Resize
+let practiceRounds = [];
+let practiceRoundIndex = 0;
+
+
+/* ---------- RESIZE ---------- */
+
 function resize() {
-  const w =
-    stage.clientWidth;
 
-  const h =
-    stage.clientHeight;
+  const width = stage.clientWidth;
+  const height = stage.clientHeight;
 
-  camera.aspect =
-    w / h;
-
+  camera.aspect = width / height;
   camera.updateProjectionMatrix();
 
   renderer.setSize(
-    w,
-    h,
+    width,
+    height,
     false
   );
 }
@@ -448,38 +422,47 @@ window.addEventListener(
 
 resize();
 
-// Multiplier
-function setMultiplier(v) {
+
+/* ---------- MULTIPLIER ---------- */
+
+function setMultiplier(value) {
+
   multiplierEl.innerHTML =
-    `${v.toFixed(2)}<span>x</span>`;
+    `${value.toFixed(2)}<span>x</span>`;
 }
 
-// Flight positioning
-function positionFlight(v) {
-  const q =
+
+/* ---------- AIRCRAFT POSITION ---------- */
+
+function positionFlight(value) {
+
+  const denominator =
+    Math.max(crashAt - 1, 0.01);
+
+  const progress =
     Math.min(
       1,
       Math.max(
         0,
-        (v - 1) /
-          (crashAt - 1)
+        (value - 1) / denominator
       )
     );
 
   plane.position.x =
-    -6 + q * 11.5;
+    -6 + progress * 11.5;
 
   plane.position.y =
-    0.1 + q * 7.5;
+    0.1 + progress * 7.5;
 
   plane.position.z =
-    -q * 8;
+    -progress * 8;
 
   plane.rotation.z =
-    -0.12 - q * 0.36;
+    -0.12 - progress * 0.36;
 
   plane.rotation.y =
-    -0.1 + q * 0.22;
+    -0.1 + progress * 0.22;
+
 
   camera.position.x +=
     (
@@ -489,13 +472,13 @@ function positionFlight(v) {
 
   camera.position.y +=
     (
-      3.4 + q * 1.4 -
+      3.4 + progress * 1.4 -
       camera.position.y
     ) * 0.035;
 
   camera.position.z +=
     (
-      11 - q * 2.2 -
+      11 - progress * 2.2 -
       camera.position.z
     ) * 0.035;
 
@@ -505,188 +488,178 @@ function positionFlight(v) {
     plane.position.z - 5
   );
 
-  trail.forEach(
-    (p, i) => {
-      const tq =
-        Math.max(
-          0,
-          q - i * 0.018
-        );
 
-      p.visible =
-        tq > 0;
+  trail.forEach((particle, index) => {
 
-      p.position.set(
-        -6 + tq * 11.5,
-        0.1 +
-          tq * 7.5 -
-          0.08,
-        -tq * 8 +
-          0.3
+    const trailProgress =
+      Math.max(
+        0,
+        progress - index * 0.018
       );
 
-      p.scale.setScalar(
-        Math.max(
-          0.3,
-          1 - i * 0.035
-        )
-      );
-    }
-  );
+    particle.visible =
+      trailProgress > 0;
+
+    particle.position.set(
+      -6 + trailProgress * 11.5,
+      0.1 + trailProgress * 7.5 - 0.08,
+      -trailProgress * 8 + 0.3
+    );
+
+    particle.scale.setScalar(
+      Math.max(
+        0.3,
+        1 - index * 0.035
+      )
+    );
+  });
 }
 
-// Exhaust
+
+/* ---------- EXHAUST ---------- */
+
 function spawnExhaust(
   amount = 2,
   crashMode = false
 ) {
-  for (
-    let k = 0;
-    k < amount;
-    k++
-  ) {
-    const p =
+
+  for (let i = 0; i < amount; i++) {
+
+    const particle =
       particles[
         Math.floor(
           Math.random() *
-            particles.length
+          particles.length
         )
       ];
 
-    p.visible = true;
+    particle.visible = true;
 
-    p.position.copy(
+    particle.position.copy(
       plane.position
     );
 
-    p.position.x -=
-      0.9 +
-      Math.random() * 0.4;
+    particle.position.x -=
+      0.9 + Math.random() * 0.4;
 
-    p.position.y +=
-      (Math.random() - 0.5) *
-      0.25;
+    particle.position.y +=
+      (Math.random() - 0.5) * 0.25;
 
-    p.position.z +=
-      (Math.random() - 0.5) *
-      0.25;
+    particle.position.z +=
+      (Math.random() - 0.5) * 0.25;
 
-    p.userData.v =
+    particle.userData.velocity =
       new THREE.Vector3(
-        -(
-          1 +
-          Math.random() * 2
-        ),
-        (
-          Math.random() - 0.3
-        ) *
+        -(1 + Math.random() * 2),
+        (Math.random() - 0.3) *
           (crashMode ? 4 : 1),
-        (
-          Math.random() - 0.5
-        ) *
+        (Math.random() - 0.5) *
           (crashMode ? 4 : 1)
       );
 
-    p.userData.life =
+    particle.userData.life =
       crashMode
-        ? 0.8 +
-          Math.random() *
-            0.8
-        : 0.35 +
-          Math.random() *
-            0.3;
+        ? 0.8 + Math.random() * 0.8
+        : 0.35 + Math.random() * 0.3;
   }
 }
 
-// Crash sequence
-function crashSequence() {
-  running = false;
 
+/* ---------- CRASH ---------- */
+
+function crashSequence() {
+
+  running = false;
   crashed = true;
 
-  setMultiplier(
-    crashAt
-  );
+  setMultiplier(crashAt);
 
   statusEl.textContent =
     'FLIGHT ENDED · CRASH SEQUENCE';
 
-  stage.classList.add(
-    'shake'
-  );
+  stage.classList.add('shake');
 
-  setTimeout(
-    () =>
-      stage.classList.remove(
-        'shake'
-      ),
-    800
-  );
+  setTimeout(() => {
+    stage.classList.remove('shake');
+  }, 800);
 
-  for (
-    let i = 0;
-    i < 55;
-    i++
-  ) {
-    spawnExhaust(
-      1,
-      true
-    );
+  for (let i = 0; i < 55; i++) {
+    spawnExhaust(1, true);
   }
 
-  history.unshift(
-    crashAt
-  );
+  history.unshift(crashAt);
 
   history =
-    history.slice(
-      0,
-      9
-    );
+    history.slice(0, 9);
 
   historyEl.innerHTML =
     history
       .map(
-        v =>
-          `<span class="${
-            v >= 3
-              ? 'hot'
-              : ''
-          }">${v.toFixed(
-            2
-          )}x</span>`
+        value =>
+          `<span>${value.toFixed(2)}x</span>`
       )
       .join('');
 
-  startBtn.disabled =
-    false;
-
+  startBtn.disabled = false;
   startBtn.textContent =
     'START FLIGHT';
 }
 
-// Start flight
+
+/* ---------- START FLIGHT ---------- */
+
 function startFlight() {
-  if (running)
-    return;
+
+  if (running) return;
 
   crashed = false;
 
   round++;
 
-  crashAt = +(
-    1.25 +
-    Math.random() *
-      5.75
-  ).toFixed(2);
+
+  /*
+    PRACTICE ONLY
+
+    When Supabase practice data exists,
+    use the next stored demo round.
+
+    No real-money wager,
+    payout or settlement logic.
+  */
+
+  const databaseRound =
+    practiceRounds[
+      practiceRoundIndex %
+      Math.max(practiceRounds.length, 1)
+    ];
+
+  if (databaseRound) {
+
+    crashAt =
+      Number(
+        databaseRound.crash_multiplier
+      );
+
+    practiceRoundIndex++;
+
+  } else {
+
+    crashAt =
+      Number(
+        (
+          1.25 +
+          Math.random() * 5.75
+        ).toFixed(2)
+      );
+  }
+
 
   running = true;
 
-  t0 =
+  startTime =
     performance.now();
 
-  startBtn.disabled =
-    true;
+  startBtn.disabled = true;
 
   startBtn.textContent =
     'IN FLIGHT…';
@@ -715,19 +688,19 @@ function startFlight() {
   );
 }
 
-// Reset
-function reset() {
-  running = false;
 
+/* ---------- RESET ---------- */
+
+function reset() {
+
+  running = false;
   crashed = false;
 
   round = 0;
 
   history = [];
 
-  cancelAnimationFrame(
-    raf
-  );
+  practiceRoundIndex = 0;
 
   setMultiplier(1);
 
@@ -737,8 +710,7 @@ function reset() {
   historyEl.innerHTML =
     '<span>—</span>';
 
-  startBtn.disabled =
-    false;
+  startBtn.disabled = false;
 
   startBtn.textContent =
     'START FLIGHT';
@@ -756,6 +728,9 @@ function reset() {
   );
 }
 
+
+/* ---------- BUTTONS ---------- */
+
 startBtn.addEventListener(
   'click',
   startFlight
@@ -766,108 +741,136 @@ resetBtn.addEventListener(
   reset
 );
 
-// Animation
-let last =
+
+/* ---------- ANIMATION ---------- */
+
+let lastTime =
   performance.now();
 
 function animate(now) {
-  const dt =
+
+  const delta =
     Math.min(
       0.04,
-      (now - last) /
-        1000
+      (now - lastTime) / 1000
     );
 
-  last = now;
+  lastTime = now;
 
-  // Move clouds
+
+  /* Moving clouds */
+
   clouds.forEach(
-    (c, i) => {
-      c.position.x +=
-        dt *
-        (0.15 + i * 0.035);
+    (cloud, index) => {
 
-      if (
-        c.position.x >
-        24
-      ) {
-        c.position.x = -24;
+      cloud.position.x +=
+        delta *
+        (0.15 + index * 0.035);
+
+      if (cloud.position.x > 24) {
+        cloud.position.x = -24;
       }
     }
   );
 
-  // Propeller
-  plane.userData.prop.rotation.z +=
-    dt * 28;
 
-  // Engine glow
+  /* Propeller */
+
+  plane.userData.propeller.rotation.z +=
+    delta * 28;
+
+
+  /* Engine */
+
   plane.userData.engineGlow.intensity =
     1.4 +
-    Math.sin(
-      now * 0.025
-    ) *
-      0.45;
+    Math.sin(now * 0.025) * 0.45;
 
-  // Particles
+
+  /* Exhaust */
+
   particles.forEach(
-    p => {
-      if (!p.visible)
-        return;
+    particle => {
 
-      p.position.addScaledVector(
-        p.userData.v,
-        dt
+      if (!particle.visible) {
+        return;
+      }
+
+      particle.position.addScaledVector(
+        particle.userData.velocity,
+        delta
       );
 
-      p.userData.v.multiplyScalar(
+      particle.userData.velocity.multiplyScalar(
         0.985
       );
 
-      p.userData.life -=
-        dt;
+      particle.userData.life -=
+        delta;
 
       if (
-        p.userData.life <=
-        0
+        particle.userData.life <= 0
       ) {
-        p.visible = false;
+        particle.visible = false;
       }
     }
   );
 
-  // Flight
-  if (running) {
-    const sec =
-      (now - t0) /
-      1000;
 
-    const v =
+  /* Flight */
+
+  if (running) {
+
+    const seconds =
+      (now - startTime) / 1000;
+
+    const multiplier =
       1 +
       Math.pow(
-        sec * 0.68,
+        seconds * 0.68,
         1.5
       );
 
+
     if (
-      v >= crashAt
+      multiplier >= crashAt
     ) {
+
       crashSequence();
+
     } else {
-      setMultiplier(v);
 
-      statusEl.textContent =
-        sec < 1
-          ? 'ENGINE START · TAKEOFF'
-          : sec < 3
-          ? 'CLIMBING · CAMERA FOLLOW'
-          : 'HIGH ALTITUDE · FULL POWER';
+      setMultiplier(
+        multiplier
+      );
 
-      positionFlight(v);
+      if (seconds < 1) {
+
+        statusEl.textContent =
+          'ENGINE START · TAKEOFF';
+
+      } else if (seconds < 3) {
+
+        statusEl.textContent =
+          'CLIMBING · CAMERA FOLLOW';
+
+      } else {
+
+        statusEl.textContent =
+          'HIGH ALTITUDE · FULL POWER';
+      }
+
+
+      positionFlight(
+        multiplier
+      );
+
 
       if (
         Math.random() <
-        dt * 8
+        delta * 8
       ) {
+
         spawnExhaust(
           1,
           false
@@ -876,16 +879,19 @@ function animate(now) {
     }
   }
 
-  // Crash movement
+
+  /* Crash movement */
+
   else if (crashed) {
+
     plane.position.y -=
-      dt * 2.2;
+      delta * 2.2;
 
     plane.position.x +=
-      dt * 3.4;
+      delta * 3.4;
 
     plane.rotation.z +=
-      dt * 2.4;
+      delta * 2.4;
 
     camera.lookAt(
       plane.position.x * 0.2,
@@ -894,20 +900,81 @@ function animate(now) {
     );
   }
 
+
   renderer.render(
     scene,
     camera
   );
 
-  raf =
+  animationFrame =
     requestAnimationFrame(
       animate
     );
 }
 
+
+/* ---------- SUPABASE ---------- */
+
+async function initPracticeData() {
+
+  if (!supabaseConfigured) {
+
+    statusEl.textContent =
+      'Practice mode · local demo data';
+
+    return;
+  }
+
+
+  statusEl.textContent =
+    'Loading practice rounds…';
+
+
+  const {
+    rounds,
+    error
+  } =
+    await loadPracticeRounds();
+
+
+  if (error) {
+
+    console.warn(
+      'Supabase practice rounds unavailable:',
+      error
+    );
+
+    statusEl.textContent =
+      'Practice mode · database unavailable';
+
+    return;
+  }
+
+
+  practiceRounds =
+    rounds || [];
+
+
+  if (practiceRounds.length) {
+
+    statusEl.textContent =
+      `Practice database ready · ${practiceRounds.length} rounds`;
+
+  } else {
+
+    statusEl.textContent =
+      'Practice database ready · no rounds';
+  }
+}
+
+
+/* ---------- START ---------- */
+
 reset();
 
-raf =
+animationFrame =
   requestAnimationFrame(
     animate
   );
+
+initPracticeData();
