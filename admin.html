@@ -587,7 +587,7 @@ function nn(i){var n=Math.floor(+v(i));return isFinite(n)?n:NaN}
 function emailFor(c){return c.toLowerCase()+"@id.playbook.example"}
 function app(h){$("app").innerHTML=h}
 function err(t){msg=t;render()}
-function tabs(){if(me.role==="admin")return [["masters","Master IDs"],["customers","Customer IDs"],["control","Control panel"],["games","Games Center"],["live","Live cricket"],["satta","Satta King"],["jqk","JQK Cards"],["activity","Activity"],["account","Account"]];if(me.role==="master")return [["dashboard","Dashboard"],["customers","List of Clients"],["analysis","Market Analysis"],["live","Live cricket"],["activity","Activity"],["account","Account"]];return [["customers","My customers"],["activity","Activity"],["account","Account"]]}
+function tabs(){if(me.role==="admin")return [["masters","Master IDs"],["customers","Customer IDs"],["control","Control panel"],["games","Games Center"],["live","Live cricket"],["satta","Satta King"],["jqk","JQK Cards"],["activity","Activity"],["account","Account"]];if(me.role==="master")return [["dashboard","Dashboard"],["customers","List of Clients"],["analysis","Market Analysis"],["live","Live cricket"],["games","Games Center"],["activity","Activity"],["account","Account"]];return [["customers","My customers"],["activity","Activity"],["account","Account"]]}
 async function callFn(b){
   var m={create:["admin_create",{p_name:b.name,p_coins:b.coins,p_max:b.max_customers==null?null:b.max_customers}],
     reset_password:["admin_reset",{p_code:b.code}],
