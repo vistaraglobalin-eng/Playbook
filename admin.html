@@ -544,15 +544,15 @@ input:focus,select:focus{border-color:var(--pm-emerald)!important;box-shadow:0 0
 </head>
 <body>
 <header class="kx-header"><div class="kx-brand"><i class="kx-chip" aria-hidden="true"></i><strong>KingXBet</strong><span>Admin</span></div><button class="kx-menu" id="menuBtn" aria-label="Menu">☰</button><div class="kx-user"><span id="who">Control panel</span><button class="kx-logout" id="out" hidden>Log out</button></div></header>
-<div class="kx-mainnav" id="mainNav"><span data-route="dashboard">Dashboard</span><span data-route="customers">List of Clients</span><span data-route="assign" data-admin-only="1">Assign Agent</span><span data-route="analysis">Market Analysis</span><span data-route="live">Live Market ▾</span><span data-route="live">Live Virtual Market ▾</span><span data-route="reports">Reports ▾</span><span data-route="customers" data-admin-only="1">Multi Login</span></div>
-<div class="nav-mask" id="navMask"></div><aside class="nav-drawer" id="navDrawer"><h3 style="margin:0 0 12px;color:#2f4052">Playbook Admin</h3><button data-route="dashboard">Dashboard</button><button data-route="customers">List of Clients</button><button data-route="assign" data-admin-only="1">Assign Agent</button><button data-route="analysis">Market Analysis</button><button data-route="live">Live Market / Live Cricket</button><button data-route="reports">Reports</button><button data-route="account">Account</button></aside>
+<div class="kx-mainnav" id="mainNav"><span data-route="dashboard">Dashboard</span><span data-route="customers">List of Clients</span><span data-route="assign" data-admin-only="1">Assign Agent</span><span data-route="analysis">Market Analysis</span><span data-route="live">Live Market ▾</span><span data-route="live">Live Virtual Market ▾</span><span data-route="reports">Reports ▾</span><span data-route="games" data-admin-only="1">Games Center</span><span data-route="customers" data-admin-only="1">Multi Login</span></div>
+<div class="nav-mask" id="navMask"></div><aside class="nav-drawer" id="navDrawer"><h3 style="margin:0 0 12px;color:#2f4052">Playbook Admin</h3><button data-route="dashboard">Dashboard</button><button data-route="customers">List of Clients</button><button data-route="assign" data-admin-only="1">Assign Agent</button><button data-route="analysis">Market Analysis</button><button data-route="live">Live Market / Live Cricket</button><button data-route="reports">Reports</button><button data-route="games" data-admin-only="1">Games Center</button><button data-route="account">Account</button></aside>
 <div class="banner">Play-money demo · Coins are virtual · No deposits, withdrawals or payments.</div>
 <main id="app"></main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script>
 // 1) Paste your Supabase project values here (Project settings > API). The anon key is safe to ship.
 var CFG={url:"https://jmvvuitwjixgsmhrdapg.supabase.co",anon:"sb_publishable_VZRaBdHeQk0YAWzJammc1w_9NL6owyx"};
-var GAMES=[["cricket","Cricket"],["casino","Casino"],["roulette","Roulette"],["lucky7","Lucky 7"],["kingjack","King Jack"],["num","1–9"],["satta","Satta King"],["jqk","JQK Cards"]];
+var GAMES=[["cricket","Cricket","Sports","BUILT-IN"],["casino","Casino","Casino","BUILT-IN"],["roulette","Roulette","Casino","BUILT-IN"],["lucky7","Lucky 7","Lottery","BUILT-IN"],["kingjack","King Jack","Card","BUILT-IN"],["num","1–9","Lottery","BUILT-IN"],["satta","Satta King","Lottery","BUILT-IN"],["jqk","JQK Cards","Card","BUILT-IN"],["aviator","Crash / Aviator-style","Crash","DEMO"],["football","Football","Sports","READY"],["baccarat","Baccarat","Casino","INTEGRATION"],["blackjack","Blackjack","Casino","INTEGRATION"],["slots","Slot Lobby","Slots","INTEGRATION"],["fishing","Fishing","Arcade","INTEGRATION"],["cockfight","Cockfight","Arcade","INTEGRATION"],["table","Table Games","Casino","INTEGRATION"],["crash","Crash Games","Crash","INTEGRATION"]];
 var sb=null,me=null,S=null,MS=[],CS=[],LG=[],tab="dashboard",reveal=null,msg="",LCC=null,LCL=[],LCE=null,SKS=[],SKC=null,SKE=null,JQS=null,JQE=null;window.PB_LEDGER=[];window.PB_CLIENT_FILTER="";window.PB_STATUS_FILTER="all";window.PB_SELECTED_ACCOUNT=null;window.PB_SELECTED_STATEMENTS=[];window.PB_LIVE_Q="";window.PB_LIVE_STATUS="all";window.PB_REPORT_Q="";window.PB_REPORT_STATUS="all";
 function $(i){return document.getElementById(i)}
 function v(i){return $(i)?$(i).value.trim():""}
@@ -636,7 +636,7 @@ function render(){
   var h='<div class="tabs" role="tablist">'+tabs().map(function(t){return '<button role="tab" data-act="tab" data-t="'+t[0]+'" aria-selected="'+(t[0]===tab)+'">'+t[1]+'</button>'}).join("")+'</div>';
   if(msg)h+='<p class="msg" role="alert">'+esc(msg)+'</p>';
   if(reveal)h+='<div class="card reveal"><h2>'+esc(reveal.what)+'</h2><div class="meta">ID</div><div class="cred">'+esc(reveal.id)+'</div><div class="meta">Temporary password</div><div class="cred">'+esc(reveal.pw)+'</div><p class="meta">Shown once and not stored. Share it securely and ask the holder to change it.</p><button class="sm" data-act="dismiss">I have saved it</button></div>';
-  var views={dashboard:vDashboard,results:vResults,masters:vMasters,customers:vCustomers,control:vControl,live:vLive,satta:vSatta,jqk:vJqk,activity:vActivity,ledger:vLedger,account:vAccount,assign:vAssign,analysis:vAnalysis,reports:vReports,controlCenter:vControlCenter};
+  var views={dashboard:vDashboard,results:vResults,masters:vMasters,customers:vCustomers,control:vControl,games:vGames,live:vLive,satta:vSatta,jqk:vJqk,activity:vActivity,ledger:vLedger,account:vAccount,assign:vAssign,analysis:vAnalysis,reports:vReports,controlCenter:vControlCenter};
   h+=(views[tab]||vDashboard)();app(h);updateNav();}
 function login(){return '<div class="card narrow"><h2>Sign in</h2><label for="li">Admin or Master ID</label><input id="li" type="text" autocapitalize="characters" autocomplete="username"><label for="lp" style="margin-top:8px">Password</label><input id="lp" type="password" autocomplete="current-password">'+(msg?'<p class="msg" role="alert">'+esc(msg)+'</p>':'')+'<div class="row"><button class="btn" data-act="login">Sign in</button></div><p class="meta">Customer IDs sign in to the games app, not this panel.</p></div>'}
 function btn(a,c,l,cls){return '<button class="sm '+(cls||"")+'" data-act="'+a+'" data-id="'+c.code+'" data-on="'+(c.active?1:0)+'">'+l+'</button>'}
@@ -650,6 +650,7 @@ function navTo(route){window.PB_SELECTED_ACCOUNT=null;window.PB_SELECTED_STATEME
   else if(route==="account")tab="account";
   else if(route==="assign")tab="assign";
   else if(route==="controlCenter")tab="controlCenter";
+  else if(route==="games")tab="games";
   else if(route==="analysis")tab="analysis";
   else tab=route;
   msg="";render();window.scrollTo({top:0,behavior:"smooth"});closeDrawer();
@@ -926,6 +927,12 @@ function vCustomers(){var h="",mine=me.role==="master";
   if(!CS.length)return h+'<div class="empty">No Customer IDs yet.'+(mine?"":" Masters create them from their own panel.")+'</div>';
   return h+CS.map(function(c){var pm=MS.filter(function(m){return m.id===c.parent})[0];
     return '<div class="card"><div class="top"><div><div class="id">'+c.code+'</div><div>'+esc(c.name)+'</div></div><span class="pill '+(c.active?"on":"off")+'">'+(c.active?"Active":"Suspended")+'</span></div><div class="meta">'+fmt(c.coins)+' coins'+(pm?' · Master '+pm.code:'')+'</div><div class="row">'+(mine?'<input type="number" min="1" id="in-'+c.code+'" placeholder="Coins" aria-label="Coins to add"><button class="sm" data-act="coins" data-id="'+c.code+'">Add coins</button>':'')+btn("toggle",c,c.active?"Suspend":"Activate")+btn("reset",c,"Reset password")+btn("del",c,"Delete","bad")+'</div></div>'}).join("")}
+function vGames(){var s=S;if(!s)return '<div class="empty">Settings could not be loaded.</div>';
+  var cats={};GAMES.forEach(function(g){(cats[g[2]]||(cats[g[2]]=[])).push(g)});
+  var body=Object.keys(cats).map(function(cat){return '<div class="card" style="margin:10px 0"><h3 style="margin:0 0 8px;font-size:15px">'+esc(cat)+'</h3>'+cats[cat].map(function(g){var on=!!s.games[g[0]];return '<label class="chk"><input type="checkbox" id="gg-'+g[0]+'"'+(on?' checked':'')+'><b>'+esc(g[1])+'</b> <span class="meta">'+esc(g[3])+'</span></label>'}).join('')+'</div>'}).join('');
+  return '<div class="dash-hero"><div><h1>Games Center</h1><p>Customer Game Library visibility is synchronized with these settings.</p></div><div class="dash-actions"><button data-act="gamesRefresh">↻ Refresh</button><button data-route="dashboard">Dashboard</button></div></div><div class="card"><h2>Customer Game Library</h2><p class="meta">Enabled games appear in the customer library. Disabled games are hidden after reload/sign-in. Provider slots require an authorized integration.</p>'+body+'<label class="chk"><input type="checkbox" id="s4"'+(s.maint?' checked':'')+'>Maintenance mode (pause all games)</label><div class="row"><button class="btn" data-act="saveGames">Save Games Center</button></div></div>';
+}
+
 function vControl(){var s=S;if(!s)return '<div class="empty">Settings could not be loaded.</div>';
   return '<div class="card"><h2>Game settings</h2><p class="meta">Enforced by the server for every customer: the games app reads them at sign-in, and the database checks every round.</p><div class="grid"><div><label for="s1">Default starting coins</label><input id="s1" type="number" min="0" value="'+s.start+'"></div><div><label for="s2">Daily bonus coins</label><input id="s2" type="number" min="0" value="'+s.bonus+'"></div><div><label for="s3">Max stake per round</label><input id="s3" type="number" min="1" value="'+s.maxStake+'"></div></div><h3 style="margin:14px 0 4px;font-size:15px">Games available</h3>'+GAMES.map(function(g){return '<label class="chk"><input type="checkbox" id="g-'+g[0]+'"'+(s.games[g[0]]?" checked":"")+'>'+g[1]+'</label>'}).join("")+'<label class="chk"><input type="checkbox" id="s4"'+(s.maint?" checked":"")+'>Maintenance mode (pause all games)</label><div class="row"><button class="btn" data-act="saveSet">Save settings</button></div></div>'}
 function ago(t){if(!t)return"never";var s=Math.round((Date.now()-new Date(t).getTime())/1000);return s<60?s+"s ago":s<3600?Math.round(s/60)+" min ago":Math.round(s/3600)+" h ago"}
@@ -1140,9 +1147,10 @@ reset:function(t){return run({action:"reset_password",code:t.dataset.id},"Passwo
 del:function(t){return run({action:"delete",code:t.dataset.id})},
 saveSet:async function(){var a=nn("s1"),b=nn("s2"),c=nn("s3");
   if(!(a>=0&&b>=0))throw new Error("Coin amounts must be 0 or more.");if(!(c>=1))throw new Error("Max stake must be at least 1.");
-  var s={start:a,bonus:b,maxStake:c,maint:$("s4").checked,games:{}};GAMES.forEach(function(g){s.games[g[0]]=$("g-"+g[0]).checked?1:0});
-  var r=await sb.from("settings").update({data:s}).eq("id",1);if(r.error)throw new Error(r.error.message);
-  await sb.from("activity").insert({actor:"ADMIN",message:"Updated game settings"});msg="";await load();render()},
+  var s=Object.assign({},S,{start:a,bonus:b,maxStake:c});var r=await sb.from("settings").update({data:s}).eq("id",1);if(r.error)throw new Error(r.error.message);
+  await sb.from("activity").insert({actor:"ADMIN",message:"Updated game economy settings"});msg="";await load();render()},
+saveGames:async function(){var s=Object.assign({},S,{games:Object.assign({},S.games||{}),maint:$("s4").checked});GAMES.forEach(function(g){var el=$("gg-"+g[0]);if(el)s.games[g[0]]=el.checked?1:0});var r=await sb.from("settings").update({data:s}).eq("id",1);if(r.error)throw new Error(r.error.message);await sb.from("activity").insert({actor:"ADMIN",message:"Updated Games Center visibility settings"});msg="Games Center saved.";await load();render()},
+gamesRefresh:async function(){await load();msg="Games Center refreshed.";render()},
 chpw:async function(){var n=$("a1").value;
   var ok=await sb.auth.signInWithPassword({email:emailFor(me.code),password:$("a0").value});
   if(ok.error)throw new Error("Current password is incorrect.");if(n.length<8)throw new Error("Use at least 8 characters.");if(n!==$("a2").value)throw new Error("The two new passwords don't match.");
