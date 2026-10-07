@@ -1207,8 +1207,9 @@ function klOpen(id){
 }
 function klView(){
  const cats=["All","Sports","Casino","Slots","Crash","Lottery","Card","Arcade"];
- const shown=KL.filter(g=>(KLcat==="All"||g[3]===KLcat) && (!KLq || (g[2]+" "+g[3]+" "+g[4]).toLowerCase().includes(KLq.toLowerCase())));
- let h=`<div class="kl-wrap"><div class="kl-head"><button class="cb kl-back" data-act="lobby" aria-label="Back to lobby">‹</button><div><h2>🎮 Game Library</h2><small>KingXBet · all games</small></div></div>
+ const enabled=KL.filter(g=>S&&S.games&&S.games[g[0]]);
+ const shown=enabled.filter(g=>(KLcat==="All"||g[3]===KLcat) && (!KLq || (g[2]+" "+g[3]+" "+g[4]).toLowerCase().includes(KLq.toLowerCase())));
+ let h=`<div class="kl-wrap"><div class="kl-head"><button class="cb kl-back" data-act="lobby" aria-label="Back to lobby">‹</button><div><h2>🎮 Game Library</h2><small>KingXBet · games enabled by Admin</small></div></div>
  <input id="kl-search" class="kl-search" value="${esc(KLq)}" placeholder="Search games..." autocomplete="off">
  <div class="kl-scroll">${cats.map(c=>`<button class="kl-chip${KLcat===c?" sel":""}" data-klcat="${c}">${c}</button>`).join("")}</div>
  <div class="kl-grid">${shown.map(g=>`<button class="kl-card" data-klgame="${g[0]}"><span class="kl-tag">${g[4]}</span><div class="kl-art">${klArt(g[0])}</div><div class="kl-body"><b>${g[2]}</b><small>${g[3]} · ${g[4]==="INTEGRATION"?"Authorized provider required":"KingXBet"}</small></div></button>`).join("")}</div>
