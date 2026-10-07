@@ -1207,9 +1207,8 @@ function klOpen(id){
 }
 function klView(){
  const cats=["All","Sports","Casino","Slots","Crash","Lottery","Card","Arcade"];
- const enabled=KL.filter(g=>S&&S.games&&S.games[g[0]]);
- const shown=enabled.filter(g=>(KLcat==="All"||g[3]===KLcat) && (!KLq || (g[2]+" "+g[3]+" "+g[4]).toLowerCase().includes(KLq.toLowerCase())));
- let h=`<div class="kl-wrap"><div class="kl-head"><button class="cb kl-back" data-act="lobby" aria-label="Back to lobby">‹</button><div><h2>🎮 Game Library</h2><small>KingXBet · games enabled by Admin</small></div></div>
+ const shown=KL.filter(g=>(KLcat==="All"||g[3]===KLcat) && (!KLq || (g[2]+" "+g[3]+" "+g[4]).toLowerCase().includes(KLq.toLowerCase())));
+ let h=`<div class="kl-wrap"><div class="kl-head"><button class="cb kl-back" data-act="lobby" aria-label="Back to lobby">‹</button><div><h2>🎮 Game Library</h2><small>KingXBet · all games</small></div></div>
  <input id="kl-search" class="kl-search" value="${esc(KLq)}" placeholder="Search games..." autocomplete="off">
  <div class="kl-scroll">${cats.map(c=>`<button class="kl-chip${KLcat===c?" sel":""}" data-klcat="${c}">${c}</button>`).join("")}</div>
  <div class="kl-grid">${shown.map(g=>`<button class="kl-card" data-klgame="${g[0]}"><span class="kl-tag">${g[4]}</span><div class="kl-art">${klArt(g[0])}</div><div class="kl-body"><b>${g[2]}</b><small>${g[3]} · ${g[4]==="INTEGRATION"?"Authorized provider required":"KingXBet"}</small></div></button>`).join("")}</div>
@@ -2409,6 +2408,62 @@ try{setTheme(localStorage.getItem("pbtheme")||"light")}catch(e){setTheme("light"
   setTimeout(hideSplash,Math.max(0,1300-(Date.now()-t0))*K);
  }
 })();
+
+/* KingXBet original demo games — virtual/play-money only. No provider assets or wagering APIs. */
+(function(){
+  const DEMO_CSS = `
+  .kx-demo{padding:2px 0 120px;max-width:520px;margin:0 auto}
+  .kx-demo-head{display:flex;align-items:center;gap:10px;margin:4px 0 12px}.kx-demo-head b{font-size:18px;flex:1}.kx-demo-sub{font-size:11px;color:var(--mu)}
+  .kx-demo-panel{background:linear-gradient(145deg,#0c2419,#07120d);color:#fff;border:1px solid #2b6b4d;border-radius:20px;padding:16px;box-shadow:0 12px 35px #0004}
+  .kx-demo-badge{display:inline-block;padding:5px 9px;border-radius:99px;background:#173f2b;border:1px solid #3d8c65;color:#8ff0bb;font-size:10px;font-weight:900;letter-spacing:1px}
+  .kx-demo-score{display:flex;justify-content:space-between;align-items:end;margin:12px 0}.kx-demo-score b{font-size:30px;color:#d9ffe8}.kx-demo-score small{display:block;color:#9fc4ae;font-size:10px;text-transform:uppercase;letter-spacing:1px}
+  .kx-demo-btn{border:0;border-radius:13px;padding:12px 16px;background:linear-gradient(180deg,#32b879,#168957);color:#fff;font-weight:900;box-shadow:0 5px 0 #0c5939;min-height:46px}.kx-demo-btn:active{transform:translateY(2px);box-shadow:0 3px 0 #0c5939}.kx-demo-btn.alt{background:#172c22;border:1px solid #37664e;box-shadow:none}.kx-demo-row{display:flex;gap:8px;flex-wrap:wrap}.kx-demo-row .kx-demo-btn{flex:1;min-width:120px}
+  .kx-demo-mult{text-align:center;padding:26px 10px;border-radius:18px;background:radial-gradient(circle at 50% 35%,#1e6544,#0b2418 62%,#06110c);border:1px solid #326f52;margin:10px 0 14px}.kx-demo-mult b{display:block;font-size:52px;letter-spacing:-2px;color:#fff;text-shadow:0 0 20px #48dc92}.kx-demo-mult small{color:#a8d8bd}
+  .kx-demo-track{height:9px;background:#07100b;border-radius:99px;overflow:hidden;border:1px solid #244b37;margin:10px 0}.kx-demo-track i{display:block;height:100%;width:0;background:linear-gradient(90deg,#2bb673,#c8f56a);border-radius:99px;transition:width .12s linear}
+  .kx-cards{display:flex;justify-content:center;gap:10px;margin:16px 0}.kx-card{width:76px;height:108px;border-radius:10px;background:linear-gradient(145deg,#fff,#ddd);color:#161616;display:flex;flex-direction:column;justify-content:space-between;padding:8px;font:900 18px Georgia,serif;box-shadow:0 7px 18px #0007}.kx-card.red{color:#c51f32}.kx-card .big{font-size:34px;text-align:center;margin:auto}.kx-card.back{background:repeating-linear-gradient(45deg,#173e2b 0 5px,#286447 5px 10px);color:#d7f5e5;border:2px solid #78c69d}.kx-demo-result{text-align:center;margin:10px 0;padding:10px;border-radius:12px;background:#ffffff0d;color:#dff8e9;font-weight:800;min-height:20px}
+  .kx-bac{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}.kx-side{border:1px solid #356d50;border-radius:15px;padding:12px;background:#0a1b12;text-align:center}.kx-side b{display:block;color:#9de8bb;font-size:12px;letter-spacing:1px}.kx-total{font-size:26px;margin-top:8px}.kx-slots{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:18px 0}.kx-reel{height:82px;border-radius:14px;background:linear-gradient(180deg,#f7f7f7,#c9c9c9);color:#161616;display:grid;place-items:center;font-size:42px;box-shadow:inset 0 0 0 2px #fff,0 8px 18px #0006}.kx-reel.win{animation:popIn .4s}.kx-pay{text-align:center;color:#bdebd0;font-size:12px;min-height:18px}.kx-demo-note{font-size:11px;color:#91ad9d;text-align:center;margin-top:12px;line-height:1.45}.kx-target{position:relative;height:250px;border-radius:18px;background:radial-gradient(circle,#163f2b,#07130d 68%);border:1px solid #2e654b;overflow:hidden;margin:12px 0}.kx-target button{position:absolute;width:54px;height:54px;border-radius:50%;border:2px solid #c8f56a;background:#2aa76b;color:#fff;font-weight:900;box-shadow:0 5px 15px #0007}
+  `;
+  const st=document.createElement('style');st.textContent=DEMO_CSS;document.head.appendChild(st);
+
+  const demo={score:Number(localStorage.getItem('kx_demo_score')||0),timer:null,mult:1,alive:false,blackjack:null,arcade:null};
+  const save=()=>localStorage.setItem('kx_demo_score',String(demo.score));
+  const escD=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const back=`<button class="cb sm" data-act="lobby" aria-label="Back">‹</button>`;
+  function demoShell(title,sub,body){$('app').innerHTML=`<div class="kx-demo"><div class="kx-demo-head">${back}<div style="flex:1"><b>${title}</b><div class="kx-demo-sub">${sub}</div></div><span class="kx-demo-badge">DEMO</span></div>${body}<div class="kx-demo-note">Virtual/play-money demonstration only. Original KingXBet demo UI; no deposits, withdrawals, cash-out, or provider code.</div></div>`}
+  function scoreHtml(){return `<div class="kx-demo-score"><div><small>Demo score</small><b id="kxScore">${demo.score}</b></div><div style="text-align:right"><small>Virtual only</small><b style="font-size:16px;color:#9de8bb">0 cash value</b></div></div>`}
+  function aviator(){clearInterval(demo.timer);demo.alive=false;demo.mult=1;demoShell('🚀 SkyRise Demo','Original crash-style multiplier experience',`${scoreHtml()}<div class="kx-demo-panel"><div class="kx-demo-mult"><b id="kxMult">1.00×</b><small id="kxAviMsg">Press START DEMO to begin</small></div><div class="kx-demo-track"><i id="kxTrack"></i></div><div class="kx-demo-row"><button class="kx-demo-btn" id="kxStart">START DEMO</button><button class="kx-demo-btn alt" id="kxStop" disabled>LOCK SCORE</button></div></div>`);$('#kxStart').onclick=aviStart;$('#kxStop').onclick=aviStop}
+  function aviStart(){if(demo.alive)return;demo.alive=true;demo.mult=1;let t=0;$('#kxStart').disabled=true;$('#kxStop').disabled=false;$('#kxAviMsg').textContent='Multiplier is rising…';demo.timer=setInterval(()=>{t+=0.12;demo.mult=1+Math.pow(t,1.25)*0.32;$('#kxMult').textContent=demo.mult.toFixed(2)+'×';$('#kxTrack').style.width=Math.min(100,(demo.mult-1)*12)+'%';if(demo.mult>=6.5){demoCrash()}},120)}
+  function aviStop(){if(!demo.alive)return;clearInterval(demo.timer);demo.alive=false;const pts=Math.max(1,Math.floor(demo.mult*10));demo.score+=pts;save();$('#kxScore').textContent=demo.score;$('#kxAviMsg').textContent='Score locked: +'+pts+' demo points';$('#kxStart').disabled=false;$('#kxStop').disabled=true}
+  function demoCrash(){clearInterval(demo.timer);demo.alive=false;$('#kxAviMsg').textContent='Demo round ended — try again';$('#kxStart').disabled=false;$('#kxStop').disabled=true}
+
+  function card(rank,suit,red){return `<div class="kx-card ${red?'red':''}"><span>${rank}${suit}</span><span class="big">${suit}</span><span style="text-align:right">${rank}</span></div>`}
+  function bjValue(cards){let total=0,aces=0;cards.forEach(c=>{if(c.r==='A'){total+=11;aces++}else total+=c.v});while(total>21&&aces){total-=10;aces--}return total}
+  function deck(){const suits=['♠','♥','♦','♣'],rs=[['A',11],['2',2],['3',3],['4',4],['5',5],['6',6],['7',7],['8',8],['9',9],['10',10],['J',10],['Q',10],['K',10]];return suits.flatMap(s=>rs.map(x=>({r:x[0],v:x[1],s,red:s==='♥'||s==='♦'}))).sort(()=>Math.random()-.5)}
+  function blackjack(){demo.blackjack={d:deck(),p:[],h:[],done:false};demo.blackjack.p.push(demo.blackjack.d.pop(),demo.blackjack.d.pop());demo.blackjack.h.push(demo.blackjack.d.pop(),demo.blackjack.d.pop());bjRender()}
+  function bjRender(){const b=demo.blackjack;if(!b){blackjack();return}const pv=bjValue(b.p),hv=bjValue(b.h);let res='Your turn';if(b.done)res=pv>21?'Bust — demo round over':hv>21?'Dealer busts — demo win':pv>hv?'You win the demo hand':pv<hv?'Dealer wins the demo hand':'Push — tie';demoShell('🂡 Blackjack Demo','Original table-card demo · no wager',`${scoreHtml()}<div class="kx-demo-panel"><div class="kx-demo-result">${res}</div><div class="kx-demo-result">Dealer · ${hv}</div><div class="kx-cards">${card(b.h[0].r,b.h[0].s,b.h[0].red)}${b.done?card(b.h[1].r,b.h[1].s,b.h[1].red):'<div class="kx-card back"><span>★</span><span class="big">KX</span><span>★</span></div>'}</div><div class="kx-demo-result">You · ${pv}</div><div class="kx-cards">${b.p.map(c=>card(c.r,c.s,c.red)).join('')}</div><div class="kx-demo-row"><button class="kx-demo-btn" id="kxHit" ${b.done?'disabled':''}>HIT</button><button class="kx-demo-btn alt" id="kxStand" ${b.done?'disabled':''}>STAND</button><button class="kx-demo-btn alt" id="kxNew">NEW HAND</button></div></div>`);$('#kxHit').onclick=()=>{if(b.done)return;b.p.push(b.d.pop());if(bjValue(b.p)>=21){b.done=true;bjFinish()}else bjRender()};$('#kxStand').onclick=()=>{if(b.done)return;b.done=true;while(bjValue(b.h)<17)b.h.push(b.d.pop());bjFinish()};$('#kxNew').onclick=blackjack}
+  function bjFinish(){const b=demo.blackjack,p=bjValue(b.p),h=bjValue(b.h);if((p<=21&&p>h)||h>21){demo.score+=25;save()}bjRender()}
+
+  function baccarat(){const d=deck();const p=[d.pop(),d.pop()],b=[d.pop(),d.pop()];const val=a=>a.reduce((n,c)=>n+(c.v>9?0:c.v),0)%10;const pv=val(p),bv=val(b);let result=pv>bv?'PLAYER':bv>pv?'BANKER':'TIE';if(result!=='TIE')demo.score+=10;save();demoShell('♦️ Baccarat Demo','Original simplified hand demonstration',`${scoreHtml()}<div class="kx-demo-panel"><div class="kx-bac"><div class="kx-side"><b>PLAYER</b><div class="kx-cards">${p.map(c=>card(c.r,c.s,c.red)).join('')}</div><div class="kx-total">${pv}</div></div><div class="kx-side"><b>BANKER</b><div class="kx-cards">${b.map(c=>card(c.r,c.s,c.red)).join('')}</div><div class="kx-total">${bv}</div></div></div><div class="kx-demo-result">Result: ${result}</div><button class="kx-demo-btn" id="kxBac">DEAL NEXT HAND</button></div>`);$('#kxBac').onclick=baccarat}
+
+  const sy=['🍒','🍋','🔔','⭐','7️⃣','💎','🍀'];
+  function slots(){demoShell('🎰 Neon Reels Demo','Original 3-reel slot-style mini game · virtual only',`${scoreHtml()}<div class="kx-demo-panel"><div class="kx-slots"><div class="kx-reel" id="r1">?</div><div class="kx-reel" id="r2">?</div><div class="kx-reel" id="r3">?</div></div><div class="kx-pay" id="kxPay">Match 3 = +50 · Match 2 = +10 demo points</div><button class="kx-demo-btn" id="kxSpin">SPIN DEMO</button></div>`);$('#kxSpin').onclick=()=>{const a=[0,1,2].map(()=>sy[Math.floor(Math.random()*sy.length)]);['r1','r2','r3'].forEach((id,i)=>{$(id).textContent=a[i];$(id).classList.remove('win');void $(id).offsetWidth;$(id).classList.add('win')});const counts={};a.forEach(x=>counts[x]=(counts[x]||0)+1);const best=Math.max(...Object.values(counts));const pts=best===3?50:best===2?10:0;demo.score+=pts;save();$('#kxScore').textContent=demo.score;$('#kxPay').textContent=pts?`Nice! +${pts} demo points`:'No match — spin again';}}
+
+  function arcade(){let time=15, hits=0;demoShell('🎯 Target Rush Demo','Original reaction mini-game',`${scoreHtml()}<div class="kx-demo-panel"><div class="kx-demo-result"><b id="kxTime">15</b>s · Hits <b id="kxHits">0</b></div><div class="kx-target" id="kxTarget"></div><button class="kx-demo-btn" id="kxArcStart">START 15s</button></div>`);let iv;$('#kxArcStart').onclick=()=>{clearInterval(iv);time=15;hits=0;$('#kxTime').textContent=time;$('#kxHits').textContent=hits;$('#kxArcStart').disabled=true;spawn();iv=setInterval(()=>{time--;$('#kxTime').textContent=time;if(time<=0){clearInterval(iv);demo.score+=hits*2;save();$('#kxScore').textContent=demo.score;$('#kxArcStart').disabled=false;$('#kxTarget').innerHTML='<div style="position:absolute;inset:0;display:grid;place-items:center;color:#bdebd0;font-weight:900">Round complete</div>'}},1000)};function spawn(){const t=$('#kxTarget');if(!t||time<=0)return;const b=document.createElement('button');b.textContent='+';b.style.left=(5+Math.random()*82)+'%';b.style.top=(5+Math.random()*72)+'%';b.onclick=()=>{hits++;$('#kxHits').textContent=hits;b.remove();spawn()};t.innerHTML='';t.appendChild(b)}}
+
+  const oldKlOpen=window.klOpen;
+  window.klOpen=function(id){
+    if(id==='aviator')return aviator();
+    if(id==='blackjack')return blackjack();
+    if(id==='baccarat')return baccarat();
+    if(id==='slots')return slots();
+    if(id==='fishing')return arcade();
+    if(id==='crash')return aviator();
+    if(typeof oldKlOpen==='function')return oldKlOpen(id);
+  };
+  /* Function declarations in the existing file are local to its script scope; rebind the name there too. */
+  try{klOpen=window.klOpen}catch(e){}
+})();
+
 </script>
 </body>
 </html>
