@@ -2149,7 +2149,7 @@ function skResOf(id,d){return SK.res.find(r=>r.market_id===id&&r.draw_date===d)}
 function skResHtml(r,big){if(!r)return big?'<span class="sk-wait">WAIT</span>':"–";if(r.void)return'<span class="sk-void">VOID</span>';return big?`<span class="sk-num">${sk2(r.num)}</span>`:sk2(r.num)}
 function skHome(){if(SK.err&&!SK.st)return `<div class="lempty">Satta King isn't set up yet.<br><small>Ask your admin to run the Satta King update.</small></div>`;
  if(!SK.st)return'<div class="lempty">Loading markets…</div>';const cm=SK.cm||{y:+SK.st.today.slice(0,4),m:+SK.st.today.slice(5,7)};const td=SK.st.today,yd=skDay(td,-1),ms=SK.st.markets.filter(m=>m.active);
- const cm=SK.cm||{y:+SK.st.today.slice(0,4),m:+SK.st.today.slice(5,7)},td=SK.st.today,yd=skDay(td,-1),ms=SK.st.markets.filter(m=>m.active);
+ 
  const nx=ms.slice().sort((x,y)=>Date.parse(x.draw_at)-Date.parse(y.draw_at))[0],lm=lastR&&skMkt(lastR.market_id);
  const order=ms.slice().sort((x,y)=>x.time<y.time?-1:x.time>y.time?1:0);
  const full=order.map((m,i)=>i%5===0);if(order.length&&!full[order.length-1]){let c=0;for(let i=order.length-1;i>=0&&!full[i];i--)c++;if(c%2)full[order.length-1]=true}
