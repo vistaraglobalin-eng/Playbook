@@ -2303,8 +2303,25 @@ $("menu").onclick=()=>{if(me&&prof)openSheet(menuHtml())};
 $("mu").onclick=()=>{setMute(!mute);ac();SND.click()};setMute(mute);
 try{setTheme(localStorage.getItem("pbtheme")||"light")}catch(e){setTheme("light")}
 try{sb=supabase.createClient(CFG.url,CFG.anon)}catch(e){console.error(e);render()}
-(async()=>{const t0=Date.now();try{const s=await Promise.race([sb.auth.getSession(),new Promise((_,r)=>setTimeout(()=>r(new Error("auth timeout")),5000))]);if(s.data.session)await enter();else render()}catch(e){render()}
- setTimeout(()=>{$("splash").classList.add("out");setTimeout(()=>$("splash").remove(),600)},Math.max(0,1300-(Date.now()-t0))*K)})();
-</script>
-</body>
-</html>
+
+setTimeout(()=>{$("splash").classList.add("out");setTimeout(()=>$("splash").remove(),600)},1300*K);
+
+(async()=>{
+  try{
+    const s=await Promise.race([
+      sb.auth.getSession(),
+      new Promise((_,r)=>setTimeout(()=>r(new Error("auth timeout")),5000))
+    ]);
+    if(s.data.session){
+      await Promise.race([
+        enter(),
+        new Promise((_,r)=>setTimeout(()=>r(new Error("enter timeout")),7000))
+      ]);
+    }else{
+      render();
+    }
+  }catch(e){
+    console.error(e);
+    render();
+  }
+})();
