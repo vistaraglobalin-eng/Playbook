@@ -2,7 +2,18 @@ import * as THREE from 'three';
 import './style.css';
 
 import { loadPracticeRounds } from './supabase.js';
+async function refreshPracticeRounds() {
+  const result = await loadPracticeRounds();
 
+  if (result.error) {
+    console.error('Could not load practice rounds:', result.error);
+    return;
+  }
+
+  console.log('Practice rounds loaded:', result.rounds);
+}
+
+refreshPracticeRounds();
 const stage = document.querySelector('#stage');
 const multiplierEl = document.querySelector('#multiplier');
 const statusEl = document.querySelector('#status');
