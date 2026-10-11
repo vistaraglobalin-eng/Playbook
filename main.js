@@ -1,6 +1,8 @@
 import * as THREE from 'three';
 import './style.css';
 
+import { loadPracticeRounds } from './supabase.js';
+
 const stage = document.querySelector('#stage');
 const multiplierEl = document.querySelector('#multiplier');
 const statusEl = document.querySelector('#status');
