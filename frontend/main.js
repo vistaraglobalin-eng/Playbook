@@ -485,6 +485,9 @@ function reset() {
   history = [];
 
   cancelAnimationFrame(raf);
+raf = 0;
+
+setMultiplier(1);
 
   setMultiplier(1);
 
